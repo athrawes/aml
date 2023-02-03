@@ -29,3 +29,5 @@ Aliasing imports
 let { map as list-map } := use "std.collections.list"
 let { map as seq-map } := use "std.collections.seq"
 ```
+
+### Interfaces

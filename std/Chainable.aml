@@ -1,0 +1,10 @@
+type Chainable :: Mappable :=
+    interface chain :: (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
+    interface new :: ^A -> ^M[^A]
+
+    let map := fn -> ma -> chain (fn >> new) ma
+
+    let =<< :: infix := chain
+    let >>= :: infix := swap-args chain
+    let <$> :: infix := map
+    let <&> :: infix := swap-args map

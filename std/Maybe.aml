@@ -1,0 +1,14 @@
+let { ... } = use "std.Chainable"
+
+type Maybe[^A] extends Chainable :=
+    | Some[^A]
+    | None
+
+let new :: ^A -> Maybe[^A] := Some
+
+let chain
+    :: (^A -> Maybe[^B]) -> Maybe[^A] -> Maybe[^B]
+    := fn -> maybe ->
+        match maybe
+        | when maybe is None => None
+        | when maybe is Some(value) => fn value

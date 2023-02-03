@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="FsLexYacc" Version="10.2.0" />
+    <PackageReference Include="llvmsharp" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

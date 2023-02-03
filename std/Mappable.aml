@@ -1,0 +1,5 @@
+/**
+ * Functor
+ */
+type Mappable =
+    interface map :: (^A -> ^B) -> ^F[^A] -> ^F[^B]

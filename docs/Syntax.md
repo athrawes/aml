@@ -6,7 +6,7 @@
 let a := 5
 ```
 
-### Type declaration `^`
+### Type declaration `::`
 
 When binding variables, a type declaration may be provided
 
@@ -16,7 +16,7 @@ let a :: Integer := 5
 
 ### Cases `|`
 
-## Function definition `->`, `infix`, `return`
+## Function definition `->`, `infix`, `^`
 
 Functions may only take in a single value and return a single value.
 
@@ -28,6 +28,7 @@ Functions can be chained
 
 ```aml
 a -> b -> c
+# evaluates to: (a -> (b -> (c)))
 ```
 
 Functions are 1st class citizens, and can be bound to variables and passed
@@ -37,7 +38,8 @@ around like any other value
 let return-42 := _ -> 42
 let fourty-two := return-42 _ |> std.int.to-string # fourty-two is "42"
 
-let operationThatCanFail :: Integer -> Integer -> Result[Float, _]
+let operationThatCanFail
+  :: Integer -> Integer -> Maybe[Float]
   := a -> b -> a / b
 ```
 
@@ -48,21 +50,22 @@ front of the function call), provide a type declaration for your function
 preceded by the `infix` keyword:
 
 ```aml
-let %=
-  :: infix Integer -> Integer -> Integer -> Boolean
-  := a -> b -> remainder ->
-    if (a >= b)
-      ((a - b) %= b remainder)
-      (b is remainder)
+let %
+  :: infix Integer -> Integer -> Maybe[Integer]
+  := a -> b ->
+    (a / b)
+    <&> std.float.to-int
+    <&> (multiply b)
+    <&> (subtract a)
 
-6 %= 3 0 # returns true
+6 % 3 # returns (Some 0)
 ```
 
-As always, AML can automatically fill the types using `_`, but the `infix`
-keyword in a type signature is mandatory for infix functions.
+As always, AML can automatically fill in the types
 
 ```aml
-let ** :: infix _
+let **
+  :: infix
   := x -> y -> match y
     | when y is 0
       => 1
@@ -78,6 +81,8 @@ let { b, c } := a # b is 1, c is 2
 let { b as d } := a # partial destructuring is allowed, and aliasing is available
 ```
 
+## Modules `interface`, `extends`
+
 ### Tuples `[]`
 
 ## Type declarations `type`
@@ -90,7 +95,7 @@ let a := { b: { c: 42 } }
 a.b.c # 42
 ```
 
-## Unit `_`
+## Unit `_`, `()`
 
 When specified as a function parameter, ignores this parameter.
 
@@ -116,3 +121,5 @@ let sql-prepared-statement := sql-query "John"
 ```
 
 ## Primitive values: `"`, `'`, `0`, `0.0`, `true, false`, `{}`, `[]`
+
+## Pattern matching: `match`, `|`, `=>`
