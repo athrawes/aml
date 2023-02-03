@@ -1,0 +1,7 @@
+let io := use "posix.io"
+
+let functionA := a -> a
+let functionB := a -> a - 1
+
+let main := _ ->
+    io.return (functionA (functionB 1))

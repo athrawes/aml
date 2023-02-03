@@ -1,0 +1,7 @@
+let io := use "posix.io"
+
+let typedFunction :: Integer -> Integer := a -> a
+let typedValue :: String := "Hello, world!"
+
+let main :: List[String] -> IO[Integer]
+    := argv -> io.return 0

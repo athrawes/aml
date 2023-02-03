@@ -1,0 +1,3 @@
+let io := use "posix.io"
+let main := _ ->
+    io.return 0
