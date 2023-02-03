@@ -10,8 +10,8 @@ module Result extends Effect =
 
   /** @inheritdoc */
   then
-    : (A -> Result<B, F>) -> Result<A, E> -> Result<B, E|F>
-    = callback -> result ->
+    : Result<A, E> -> (A -> Result<B, F>) -> Result<B, E|F>
+    = result -> callback ->
       match result
       | Ok [ value ] => callback value
       | Err => result

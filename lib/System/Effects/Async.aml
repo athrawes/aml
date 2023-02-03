@@ -1,10 +1,15 @@
 Effect = use "System/Control/Effect"
 
-Async<A> = _
+Async<A> :
+  | Pending<A>
+  | Resolved<A>
 
 module Async<A> extends Effect =
-  from = Async
+  from = Async.Pending
 
   then
-    : (A -> Async<B>) -> Async<A> -> Async<B>
-    = callback -> promise -> TODO
+    : Async<A> -> (A -> Async<B>) -> Async<B>
+    = async -> callback ->
+      await async |> callback
+
+  await: Async<A> -> A = todo!

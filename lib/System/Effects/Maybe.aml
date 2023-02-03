@@ -10,8 +10,8 @@ module Maybe extends Effect =
 
   /** @inheritdoc */
   then
-    : (A -> Maybe<B>) -> Maybe<A> -> Maybe<B>
-    = callback -> maybe ->
+    : Maybe<A> -> (A -> Maybe<B>) -> Maybe<B>
+    = maybe -> callback ->
       match maybe
       | Some [ value ] => callback value
       | _ => None

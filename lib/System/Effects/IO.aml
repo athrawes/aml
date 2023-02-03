@@ -1,6 +1,6 @@
 module IO extends Effect =
   /** @inheritdoc */
-  from = TODO
+  from = todo!
 
   /** @inheritdoc */
-  then = fn -> value -> TODO
+  then = io -> callback -> todo!
