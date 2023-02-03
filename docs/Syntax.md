@@ -16,7 +16,7 @@ let a :: Integer := 5
 
 ### Cases `|`
 
-## Function definition `->`
+## Function definition `->`, `infix`, `return`
 
 Functions may only take in a single value and return a single value.
 
@@ -39,6 +39,35 @@ let fourty-two := return-42 _ |> std.int.to-string # fourty-two is "42"
 
 let operationThatCanFail :: Integer -> Integer -> Result[Float, _]
   := a -> b -> a / b
+```
+
+### Infix functions
+
+To define an infix function, (ie, a function whose argument may be placed in
+front of the function call), provide a type declaration for your function
+preceded by the `infix` keyword:
+
+```aml
+let %=
+  :: infix Integer -> Integer -> Integer -> Boolean
+  := a -> b -> remainder ->
+    if (a >= b)
+      ((a - b) %= b remainder)
+      (b is remainder)
+
+6 %= 3 0 # returns true
+```
+
+As always, AML can automatically fill the types using `_`, but the `infix`
+keyword in a type signature is mandatory for infix functions.
+
+```aml
+let ** :: infix _
+  := x -> y -> match y
+    | when y is 0
+      => 1
+    | when (y is Integer) and (y > 1)
+      => (x + x) ** (y - 1)
 ```
 
 ## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`
@@ -72,15 +101,18 @@ When used in a guard expression, represents the default case.
 
 ## Expression grouping `()`
 
-## Infix functions `\``
-
-```aml
-let `infixDivision` = a / b
-6 infixDivision 3 # 2
-```
-
 ## Comments `#`, `//`, `/* */`
 
 ### Documentation Comments `/** */`
+
+## Macros `` expr`macro` ``, `${}`
+
+```aml
+let sql-query
+  :: ^T -> SqlQuery
+  := name -> sql`SELECT * FROM \`users\` WHERE 'name' = ${name}`
+
+let sql-prepared-statement := sql-query "John"
+```
 
 ## Primitive values: `"`, `'`, `0`, `0.0`, `true, false`, `{}`, `[]`

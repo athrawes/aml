@@ -2,7 +2,7 @@ namespace AML
 
 module AST =
     type Identifier = string
-    type InfixOperator = string
+    type InfixKeyword = string
     type VariableDeclaration = string
     type TypeBind = string
     type SymbolBind = string
@@ -14,20 +14,13 @@ module AST =
     type StructOpen = string
     type StructClose = string
     type SplatOperator = string
-    type FieldSeparator = string
     type StructEntryNameValueSeperator = string
     type GroupOpen = string
     type GroupClose = string
     type EndOfLine = string
-
-    type keyword =
-        | VariableDeclaration
-        | TypeDeclaration
-        | StructFieldAliasOperator
-
-    type VariableIdentifier =
-        | Identifier
-        | InfixIdentifier of InfixOperator * Identifier * InfixOperator
+    type FieldSeparator =
+        | Comma of string
+        | EndOfLine of EndOfLine
 
     type TypeParameter = TypeParameterOpener * Identifier
 
@@ -36,28 +29,34 @@ module AST =
         | Generic of TypeParameter * Identifier * (FunctionOperator * TypeSignature) option
 
     type Function = Identifier * FunctionOperator * Expression
+
+    and CalledFunction =
+        | NamedFunctionCall of Identifier * Identifier
+        | AnonymousFunctionCall of GroupOpen * Function * GroupClose * Identifier
+
     and SubExpression =
-        | Identifier
-        | Primitive
-        | Function
+        | Identifier of Identifier
+        | Primitive of Primitive
+        | Function of Function
+
     and Expression =
         | SimpleEnclosedExpression of GroupOpen * SubExpression * GroupClose
         | NestedEnclosedExpression of GroupOpen * Expression * GroupClose
         | LineExpression of Expression * EndOfLine
-    and Structure =
-        StructOpen *
-        ( SplatOperator * FieldSeparator option ) option *
-        ( Identifier * StructEntryNameValueSeperator * Expression * FieldSeparator option  ) list option *
-        StructClose
-    and Primitive =
-        | Number
-        | String
-        | Boolean
-        | Structure
+        | CalledFunction of CalledFunction
 
-    type letDeclaration =
-        VariableDeclaration *
-        VariableIdentifier *
-        (TypeBind * TypeSignature) option *
-        SymbolBind *
-        Expression
+    and Statement =
+        | LetDeclaration of LetDeclaration
+        | CalledFunction of CalledFunction
+
+    and LetDeclaration =
+        VariableDeclaration * Identifier * (TypeBind * InfixKeyword option * TypeSignature) option * SymbolBind * Expression
+
+    and Primitive =
+        | Number of Number
+        | String of String
+        | Boolean of Boolean
+        | Structure of Structure
+
+    and Structure =
+        StructOpen * (Identifier * StructEntryNameValueSeperator * Expression * FieldSeparator) list option * (SplatOperator * FieldSeparator) option * StructClose
