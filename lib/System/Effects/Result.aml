@@ -1,12 +1,11 @@
 Effect = use "System/Control/Effect"
 
-Result<A, E>:
+module Result<A, E> extends Effect =
   | Ok<A>
   | Error<E>
 
-module Result extends Effect =
   # @inheritdoc
-  from = Result.Ok
+  from = Ok
 
   # @inheritdoc
   then

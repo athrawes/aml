@@ -1,3 +1,4 @@
+# @docs-from ./Thenable.docs.md#Thenable
 module Thenable =
   # @docs-from ./Thenable.docs.md#`then`
   then: M<A> -> (A -> M<B>) -> M<B>

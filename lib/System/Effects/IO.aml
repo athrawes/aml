@@ -1,6 +1,16 @@
-module IO extends Effect =
-  # @inheritdoc
-  from = todo!
+Effect = use "System/Control/Effect"
+
+module IO<A> extends Effect =
+  | Pending
+  | Running
+  | Complete<A>
 
   # @inheritdoc
-  then = io -> callback -> todo!
+  from = Complete
+
+  # @inheritdoc
+  then = io -> callback ->
+    match io
+    | Complete [ value ] -> callback value
+    | Running -> todo!
+    | Pending -> todo!

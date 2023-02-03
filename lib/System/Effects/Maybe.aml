@@ -1,17 +1,14 @@
 Effect = use "System/Control/Effect"
 
-Maybe<A>:
+module Maybe<A> extends Effect =
   | Some<A>
   | None
 
-module Maybe extends Effect =
   # @inheritdoc
-  from: A -> Maybe<A> = Maybe.Some
+  from = Some
 
   # @inheritdoc
-  then
-    : Maybe<A> -> (A -> Maybe<B>) -> Maybe<B>
-    = maybe -> callback ->
-      match maybe
+  then = maybe -> callback ->
+    match maybe
     | Some [ value ] -> callback value
     | None -> None

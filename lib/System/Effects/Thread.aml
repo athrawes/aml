@@ -1,0 +1,14 @@
+Effect = use "System/Control/Effect"
+
+module Thread<A> extends Effect =
+  | Pending
+  | Finished<A>
+
+  # @inheritdoc
+  from = Finished
+
+  # @inheritdoc
+  then = thread -> callback ->
+    match thread
+    | Finished [ value ] -> callback value
+    | Pending -> todo!

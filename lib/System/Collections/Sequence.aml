@@ -2,4 +2,8 @@ Effect = use "System/Control/Effect"
 
 module Sequence extends Effect =
   # @inheritdoc
-  from: A -> Sequence<A>
+  from: self
+
+  # @inheritdoc
+  then = sequence -> callback ->
+    todo!

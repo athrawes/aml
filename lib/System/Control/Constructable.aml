@@ -1,8 +1,4 @@
+# @docs-from ./Constructable.docs.md#Constructable
 module Constructable =
-  # Creates a new instance of the current `Constructable` over the type of the
-  # value given.
-  #
-  # ```aml
-  # value = Maybe.from 42 # Maybe<Integer>
-  # ```
+  # @docs-from ./Constructable.docs.md#`from`
   from: A -> M<A>

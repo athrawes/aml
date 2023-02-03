@@ -1,17 +1,14 @@
 Effect = use "System/Control/Effect"
 
-Async<A> :
-  | Pending<A>
+module Async<A> extends Effect =
+  | Pending
   | Resolved<A>
 
-module Async<A> extends Effect =
   # @inheritdoc
-  from = Async.Pending
+  from = Resolved
 
   # @inheritdoc
-  then
-    : Async<A> -> (A -> Async<B>) -> Async<B>
-    = async -> callback ->
-      await async |> callback
-
-  await: Async<A> -> A = todo!
+  then = async -> callback ->
+    match async
+    | Resolved [ value ] -> callback value
+    | Pending -> todo!
