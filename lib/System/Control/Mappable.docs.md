@@ -18,14 +18,6 @@ List.from [1, 2, 3]
 |> map (multiply 2) # List<Integer> (4, 6, 8)
 ```
 
-## `fmap`
-
-An alias for `map`
-
-```aml
-fmap: M<A> -> (A -> B) -> M<B>
-```
-
 ## `<$>`
 
 An infix alias for `map`
