@@ -7,7 +7,7 @@ let Effect[^M] extend
 
     /** @inheritdoc */
     let apply := fn -> value ->
-        fn >>= ((<&>) value)
+        fn >>= ((swap-args map) value)
 
     /** @inheritdoc */
     let map := fn -> value ->
