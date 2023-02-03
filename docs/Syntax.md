@@ -35,8 +35,11 @@ Functions are 1st class citizens, and can be bound to variables and passed
 around like any other value
 
 ```aml
+let { to-string } = use "System.Number.Integer.to-string"
+
 let return-42 := _ -> 42
-let fourty-two := return-42 _ |> System.int.to-string # fourty-two is "42"
+let fourty-two := compose return-42 to-string
+fourty-two () # fourty-two is "42"
 
 let operationThatCanFail
   :: Integer -> Integer -> Maybe[Float]
@@ -50,11 +53,13 @@ front of the function call), provide a type declaration for your function
 preceded by the `infix` keyword:
 
 ```aml
+let { to-integer } := use "System.Number.Float"
+
 let %
   :: infix Integer -> Integer -> Maybe[Integer]
   := a -> b ->
     (a / b)
-    <&> System.Number.Float.to-int
+    <&> to-integer
     <&> (multiply b)
     <&> (subtract a)
 
@@ -64,12 +69,7 @@ let %
 As always, AML can automatically fill in the types
 
 ```aml
-let **
-  :: infix
-  := x -> y ->
-    if (y is 0)
-      (1)
-      ((x + x) ** (y - 1))
+let + :: infix := add
 ```
 
 ## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `extend`
@@ -123,6 +123,6 @@ let sql-query
 let sql-prepared-statement := sql-query "John"
 ```
 
-## Primitive values: `"`, `'`, `0`, `0.0`, `true, false`, `{}`, `[]`
+## Primitive values: `"`, `'`, `0`, `0.0`, `True, False`, `{}`, `[]`
 
 ## Pattern matching: `match`, `|`, `=>`
