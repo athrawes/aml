@@ -1,0 +1,11 @@
+let State extend Effect :=
+    /** @inheritdoc */
+    let from := TODO
+
+    /** @inheritdoc */
+    let then := TODO
+
+    /**
+     *
+     */
+    let get :: State[^T] -> ^T := TODO

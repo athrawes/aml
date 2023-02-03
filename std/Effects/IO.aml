@@ -1,0 +1,6 @@
+let IO extend Effect :=
+    /** @inheritdoc */
+    let from := TODO
+
+    /** @inheritdoc */
+    let then := fn -> value -> TODO

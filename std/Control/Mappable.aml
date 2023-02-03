@@ -1,11 +1,18 @@
 /**
  * @docs-from ./Mappable.docs.md#Mappable
  */
-let Mappable[^F] :=
+let Mappable :=
     /**
      * @docs-from ./Mappable.docs.md#`map`
      */
-    let map :: (^A -> ^B) -> ^F[^A] -> ^F[^B]
+    type map :: (^A -> ^B) -> ^F[^A] -> ^F[^B]
+
+    /**
+     * @docs-from ./Mappable.docs.md#`fmap`
+     * @include map
+     * @reduce-autosuggest
+     */
+    let fmap := map
 
     /**
      * @docs-from ./Mappable.docs.md#`<$>`

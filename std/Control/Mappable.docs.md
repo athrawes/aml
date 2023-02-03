@@ -18,6 +18,14 @@ List.from [1, 2, 3]
 |> map (value -> value / 2) # List[Float] (1.0, 2.0, 3.0)
 ```
 
+## `fmap`
+
+An alias for `then`
+
+```aml
+fmap :: ^F[^A] -> (^A -> ^B) -> ^F[^B]
+```
+
 ## `<$>`
 
 An infix alias for `then`

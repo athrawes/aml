@@ -1,0 +1,17 @@
+let Effect := use "std.Control.Effect"
+
+type Maybe[^A] ::
+    | Some[^A] := value -> { value }
+    | None := _ -> {}
+
+let Maybe extend Effect :=
+    /** @inheritdoc */
+    let from :: ^A -> Maybe[^A] := Some
+
+    /** @inheritdoc */
+    let then
+        :: (^A -> Maybe[^B]) -> Maybe[^A] -> Maybe[^B]
+        := callback -> maybe ->
+            match maybe
+            | Some { value } => callback value
+            | _ => None

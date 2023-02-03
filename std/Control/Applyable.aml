@@ -1,0 +1,17 @@
+let Applyable :=
+    /**
+     * @docs-from ./Applyable.docs.md#`apply`
+     */
+    type apply :: ^A[^T -> ^U] -> ^A[^T] -> ^A[^U]
+
+    /**
+     * @docs-from ./Applyable.docs.md#`<*>`
+     * @include apply
+     */
+    let <*> :: infix := apply
+
+    /**
+     * @docs-from ./Applyable.docs.md#`<**>`
+     * @include apply
+     */
+    let <**> :: infix := swap-args apply
