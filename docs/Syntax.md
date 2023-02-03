@@ -191,4 +191,4 @@ sql-prepared-statement = sql-query "John"
 
 ## Primitive values: `"`, `'`, `0`, `0.0`, `true, false`, `{}`, `[]`
 
-## Pattern matching: `match`, `|`, `=>`
+## Pattern matching: `match`, `|`, `->`

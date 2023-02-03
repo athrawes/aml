@@ -13,5 +13,5 @@ module Result extends Effect =
     : Result<A, E> -> (A -> Result<B, F>) -> Result<B, E|F>
     = result -> callback ->
       match result
-      | Ok [ value ] => callback value
-      | Err => result
+      | Ok [ value ] -> callback value
+      | Err -> result
