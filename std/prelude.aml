@@ -65,3 +65,9 @@ let is :: infix ^T -> ^T -> Boolean
 
 let id :: ^T -> ^T
   := a -> a
+
+let if :: Boolean -> ^T -> ^T -> ^T
+  := condition -> if-true -> if-false ->
+    match condition
+    | true -> if-true
+    | false -> if-false
