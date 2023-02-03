@@ -72,7 +72,7 @@ let **
       ((x + x) ** (y - 1))
 ```
 
-## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`
+## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `extend`
 
 ```aml
 let a := { b: 1, c: 2 }
@@ -83,7 +83,7 @@ let { b as d } := a # partial destructuring is allowed, and aliasing is availabl
 Punning is allowed:
 
 ```aml
-value -> { value } # ^T -> Structure[^T]
+value -> { value } # ^T -> Struct[^T]
 ```
 
 ### Tuples `[]`
@@ -97,8 +97,6 @@ a.b.c # 42
 ```
 
 ## Type declarations `type`
-
-## Modules `interface`, `extend`
 
 ## Unit `_`, `()`
 
