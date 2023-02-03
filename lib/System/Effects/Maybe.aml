@@ -1,9 +1,10 @@
 Effect = use "System/Control/Effect"
 
-module Maybe<A> extends Effect =
+type Maybe<A>:
   | Some<A>
   | None
 
+module Maybe extends Effect =
   # @inheritdoc
   from = Some
 

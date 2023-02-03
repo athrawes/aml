@@ -1,9 +1,10 @@
 Effect = use "System/Control/Effect"
 
-module Thread<A> extends Effect =
+type Thread<A>:
   | Pending
   | Finished<A>
 
+module Thread extends Effect =
   # @inheritdoc
   from = Finished
 

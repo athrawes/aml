@@ -1,9 +1,10 @@
 Effect = use "System/Control/Effect"
 
-module Async<A> extends Effect =
+type Async<A>:
   | Pending
   | Resolved<A>
 
+module Async extends Effect =
   # @inheritdoc
   from = Resolved
 

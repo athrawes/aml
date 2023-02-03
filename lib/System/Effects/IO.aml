@@ -1,10 +1,11 @@
 Effect = use "System/Control/Effect"
 
-module IO<A> extends Effect =
+type IO<A>:
   | Pending
   | Running
   | Complete<A>
 
+module IO extends Effect =
   # @inheritdoc
   from = Complete
 
