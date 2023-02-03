@@ -5,4 +5,4 @@ module Effect extends Constructable, Mappable, Applyable, Thenable =
 
   /** @inheritdoc */
   map = callback -> value ->
-    chain (callback >> from) value
+    value >>= (callback >> from)

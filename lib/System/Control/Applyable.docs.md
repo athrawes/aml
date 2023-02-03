@@ -18,7 +18,7 @@ apply function-list values-list # List<Integer> (3, 4, 5, 11, 12, 13)
 ## `<*>`
 
 ```aml
-<*> : infix M<A -> B> -> M<A> -> M<B>
+(<*>): M<A -> B> -> M<A> -> M<B>
 ```
 
 An infix alias of `apply`.
@@ -26,7 +26,7 @@ An infix alias of `apply`.
 ## `<**>`
 
 ```aml
-<**> : infix M<A> -> M<A -> B> -> M<B>
+(<**>): M<A> -> M<A -> B> -> M<B>
 ```
 
 An infix alias of `apply`, but with the arguments reversed.

@@ -15,26 +15,14 @@ current type.
 |> then (value -> value / 5) # Maybe<Float> (4.2)
 ```
 
-## `chain`
-
-```aml
-chain: M<A> -> (A -> M<B>) -> M<B>
-```
-
 An alias for `then`
-
-## `bind`
-
-```aml
-bind: M<A> -> (A -> M<B>) -> M<B>
-```
 
 An alias for `then`
 
 ## `>>=`
 
 ```aml
->>= : infix M<A> -> (A -> M<B>) -> M<B>
+(>>=): M<A> -> (A -> M<B>) -> M<B>
 ```
 
 An infix alias for `then`
@@ -48,7 +36,7 @@ An infix alias for `then`
 ## `=<<`
 
 ```aml
-=<< : infix (A -> M<B>) -> M<A> -> M<B>
+(=<<): (A -> M<B>) -> M<A> -> M<B>
 ```
 
 An infix alias for `then`, but with the arguments reversed
@@ -57,10 +45,10 @@ An infix alias for `then`, but with the arguments reversed
 (value -> value / 2) =<< (Maybe.from 42) # Maybe<Float> (21)
 ```
 
-## `chain-compose`
+## `chain`
 
 ```aml
-chain-compose: (A -> M<B>) -> (B -> M<C>) -> A -> M<C>
+chain: (A -> M<B>) -> (B -> M<C>) -> A -> M<C>
 ```
 
 Composes two functions by chaining.
@@ -71,7 +59,7 @@ Composes two functions by chaining.
 
 fetch-json
   : URL -> Async<Result<JsonValue, _>>
-  = chain-compose
+  = chain
     GET
     (response -> decodeAsync response.Body)
 ```
@@ -79,14 +67,29 @@ fetch-json
 ## `>=>`
 
 ```aml
->=> : infix (A -> M<B>) -> (B -> M<C>) -> A -> M<C>
+(>=>): (A -> M<B>) -> (B -> M<C>) -> A -> M<C>
 ```
 
-An infix alias for `chain-compose`
+An infix alias for `chain`
 
 ```aml
 { decodeAsync } = use "System/Text/JSON"
 { GET } = use "System/Web/Http"
 
 fetch-json = GET >=> (response -> decodeAsync response.Body)
+```
+
+## `<=<`
+
+```aml
+(<=<): (B -> M<C>) -> (A -> M<B>) -> A -> M<C>
+```
+
+An infix alias for `chain`, but with the arguments reversed
+
+```aml
+{ decodeAsync } = use "System/Text/JSON"
+{ GET } = use "System/Web/Http"
+
+fetch-json = (response -> decodeAsync response.Body) <=< GET
 ```

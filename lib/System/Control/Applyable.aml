@@ -8,10 +8,10 @@ module Applyable =
    * @docs-from ./Applyable.docs.md#`<*>`
    * @include apply
    */
-  <*> : infix = apply
+  (<*>) = apply
 
   /**
    * @docs-from ./Applyable.docs.md#`<**>`
    * @include apply
    */
-  <**> : infix = swap-args apply
+  (<**>) = swap-args apply

@@ -13,5 +13,5 @@ module Maybe extends Effect =
     : (A -> Maybe<B>) -> Maybe<A> -> Maybe<B>
     = callback -> maybe ->
       match maybe
-      | Some { value } => callback value
+      | Some [ value ] => callback value
       | _ => None

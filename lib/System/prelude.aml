@@ -1,56 +1,47 @@
 add: Number -> Number -> Number
-+ : infix = add
+(+) = add
 
 subtract: Number -> Number -> Number
-- : infix = subtract
+(-) = subtract
 
 multiply: Number -> Number -> Number
-* : infix = multiply
+(*) = multiply
 
 divide: Number -> Number -> Maybe<Number>
-/ : infix = divide
-
-pow: Number -> Number -> Number
-** : infix = pow
+(/) = divide
 
 pipe: A -> (A -> B) -> B
   = argument -> function -> function argument
 
-|> : infix = pipe
-<| : infix = swap-args pipe
+(|>) = pipe
+(<|) = swap-args (|>)
 
 compose: (A -> B) -> (B -> C) -> A -> C
   = callback-a -> callback-b -> argument ->
     argument |> callback-a |> callback-b
 
->> : infix = compose
-<< : infix = swap-args compose
+(>>) = compose
+(<<) = swap-args (>>)
 
 swap-args: (A -> B -> C) -> (B -> A -> C)
   = callback -> a -> b -> callback b a
 
-and: infix Boolean -> Boolean -> Boolean
+(and): Boolean -> Boolean -> Boolean
 
-or: infix Boolean -> Boolean -> Boolean
+(or): Boolean -> Boolean -> Boolean
 
-xor: infix Boolean -> Boolean -> Boolean
+(xor): Boolean -> Boolean -> Boolean
 
 not: Boolean -> Boolean
 
 bitshift-left: A -> Integer -> A
 
-<<< : infix = bitshift-left
+(<<<) = bitshift-left
 
 bitshift-right: A -> Integer -> A
 
->>> : infix = bitshift-right
+(>>>) = bitshift-right
 
-is: infix A -> A -> Boolean
+(is): A -> A -> Boolean
 
 id: A -> A = a -> a
-
-if: Boolean -> A -> A -> A
-  = condition -> if-true -> if-false ->
-    match condition
-    | True => if-true
-    | False => if-false

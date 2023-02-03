@@ -5,41 +5,33 @@ module Thenable =
   then: M<A> -> (A -> M<B>) -> M<B>
 
   /**
-   * @docs-from ./Thenable.docs.md#`chain`
+   * @docs-from ./Thenable.docs.md#`>>=`
    * @include then
-   * @reduce-autosuggest
    */
-  chain = then
-
-  /**
-   * @docs-from ./Thenable.docs.md#`bind`
-   * @include then
-   * @reduce-autosuggest
-   */
-  bind = then
+  (>>=) = then
 
   /**
    * @docs-from ./Thenable.docs.md#`=<<`
    * @include then
    */
-  =<< : infix = swap-args then
+  (=<<) = swap-args (>>=)
 
   /**
-   * @docs-from ./Thenable.docs.md#`>>=`
-   * @include then
+   * @docs-from ./Thenable.docs.md#`chain`
    */
-  >>= : infix = then
-
-  /**
-   * @docs-from ./Thenable.docs.md#`chain-compose`
-   */
-  chain-compose
+  chain
     : (A -> M<B>) -> (B -> M<C>) -> (A -> M<C>)
-    = callback-ab -> callback-bc ->
-      callback-ab >> (chain callback-bc)
+    = callback-a-mb -> callback-b-mc
+      callback-a-mb >> ((swap-args then) callback-b-mc)
 
   /**
    * @docs-from ./Thenable.docs.md#`>=>`
-   * @include chain-compose
+   * @include chain
    */
-  >=> : infix = chain-compose
+  (>=>) = chain
+
+  /**
+   * @docs-from ./Thenable.docs.md#`<=<`
+   * @include chain
+   */
+  (<=<) = swap-args (>=>)

@@ -7,4 +7,4 @@ module Async<A> extends Effect =
 
   then
     : (A -> Async<B>) -> Async<A> -> Async<B>
-    = callback -> promise ->
+    = callback -> promise -> TODO

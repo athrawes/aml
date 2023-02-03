@@ -18,10 +18,10 @@ module Mappable =
    * @docs-from ./Mappable.docs.md#`<$>`
    * @include map
    */
-  <$> : infix = map
+  (<$>) = map
 
   /**
    * @docs-from ./Mappable.docs.md#`<&>`
    * @include map
    */
-  <&> : infix = swap-args map
+  (<&>) = swap-args map

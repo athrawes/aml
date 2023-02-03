@@ -79,11 +79,10 @@ operationThatCanFail
 ### Infix functions
 
 To define an infix function, (ie, a function whose argument may be placed in
-front of the function call), provide a type declaration for your function
-preceded by the `infix` keyword:
+front of the function call), place the name of the function in parenthesis:
 
 ```aml
-% : infix Integer -> Integer -> Maybe<Integer>
+(%): Integer -> Integer -> Maybe<Integer>
   = a -> b ->
     (a / b)
     >>= to-integer
@@ -96,7 +95,7 @@ preceded by the `infix` keyword:
 As always, AML can automatically fill in the types
 
 ```aml
-+ : infix = add # Integer -> Integer
+(+) = add # Integer -> Integer
 ```
 
 ## Scopes and expressions `( )`
@@ -153,6 +152,11 @@ value -> { value } # A -> Map<String, A>
 ```
 
 ### Tuples `[]`
+
+```aml
+a = [1, 2, 3]
+[b, c] = a
+```
 
 ### Struct member accessor `.`
 
