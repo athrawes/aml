@@ -1,14 +1,17 @@
-let { ... } = use "std.Chainable"
+let Effect := use "std.Effect"
 
-type Maybe[^A] extends Chainable :=
-    | Some[^A]
+type Maybe[^A] :=
+    | Some of ^A
     | None
 
-let new :: ^A -> Maybe[^A] := Some
+let Maybe[^A] extend Effect[Maybe[^A]] :=
+    /** @inheritdoc */
+    let from :: ^A -> Maybe[^A] := Some
 
-let chain
-    :: (^A -> Maybe[^B]) -> Maybe[^A] -> Maybe[^B]
-    := fn -> maybe ->
-        match maybe
-        | when maybe is None => None
-        | when maybe is Some(value) => fn value
+    /** @inheritdoc */
+    let then
+        :: (^A -> Maybe[^B]) -> Maybe[^A] -> Maybe[^B]
+        := fn -> maybe ->
+            match maybe
+            | Some(value) => fn value
+            | _ => None

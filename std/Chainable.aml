@@ -1,10 +1,24 @@
-type Chainable :: Mappable :=
-    interface chain :: (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
-    interface new :: ^A -> ^M[^A]
+let Chainable[^M] :=
+    /**
+     * @docs-from ./Chainable.docs.md#`then`
+     */
+    let then :: (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
 
-    let map := fn -> ma -> chain (fn >> new) ma
+    /**
+     * @docs-from ./Chainable.docs.md#`chain`
+     * @include then
+     * @reduce-autosuggest
+     */
+    let chain := then
 
-    let =<< :: infix := chain
-    let >>= :: infix := swap-args chain
-    let <$> :: infix := map
-    let <&> :: infix := swap-args map
+    /**
+     * @docs-from ./Chainable.docs.md#`=<<`
+     * @include then
+     */
+    let =<< :: infix := then
+
+    /**
+     * @docs-from ./Chainable.docs.md#`>>=`
+     * @include then
+     */
+    let >>= :: infix := swap-args then

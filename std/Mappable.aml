@@ -1,5 +1,20 @@
 /**
- * Functor
+ * @docs-from ./Mappable.docs.md#Mappable
  */
-type Mappable =
-    interface map :: (^A -> ^B) -> ^F[^A] -> ^F[^B]
+let Mappable[^F] :=
+    /**
+     * @docs-from ./Mappable.docs.md#`map`
+     */
+    let map :: (^A -> ^B) -> ^F[^A] -> ^F[^B]
+
+    /**
+     * @docs-from ./Mappable.docs.md#`<$>`
+     * @include map
+     */
+    let <$> :: infix := map
+
+    /**
+     * @docs-from ./Mappable.docs.md#`<&>`
+     * @include map
+     */
+    let <&> :: infix := swap-args map

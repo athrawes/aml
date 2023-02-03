@@ -1,0 +1,14 @@
+let Effect[^M] extend
+    Constructable[^M],
+    Mappable[^M],
+    Applyable[^M],
+    Chainable[^M],
+    :=
+
+    /** @inheritdoc */
+    let apply := fn -> value ->
+        fn >>= ((<&>) value)
+
+    /** @inheritdoc */
+    let map := fn -> value ->
+        chain (fn >> from) value

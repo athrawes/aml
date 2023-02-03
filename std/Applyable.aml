@@ -1,0 +1,5 @@
+let Applyable[^A] :=
+    let apply :: ^A[^T -> ^U] -> ^A[^T] -> ^A[^U]
+
+    let <*> :: infix := apply
+    let <**> :: infix := swap-args apply
