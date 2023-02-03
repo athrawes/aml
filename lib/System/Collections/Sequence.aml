@@ -1,4 +1,4 @@
-Effect = use "System.Control.Effect"
+Effect = use "System/Control/Effect"
 
 module Sequence extends Effect =
   /** @inheritdoc */

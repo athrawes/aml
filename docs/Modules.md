@@ -5,7 +5,7 @@
 Importing everything from a module
 
 ```aml
-{ ... } = use "System.Collections"
+{ ... } = use "System/Collections"
 
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
@@ -17,7 +17,7 @@ Importing multiple items from a module
 Note: multi-item imports may span multiple lines
 
 ```aml
-{ to-upper, to-lower } = use "System.String"
+{ to-upper, to-lower } = use "System/String"
 
 "Hello, World!" |> to-upper # "HELLO, WORLD!"
 "Hello, World!" |> to-lower # "hello, world!"
@@ -26,8 +26,8 @@ Note: multi-item imports may span multiple lines
 Aliasing imports
 
 ```aml
-{ map as list-map } = use "System.Collections.List"
-{ map as seq-map } = use "System.Collections.Sequence"
+{ map as list-map } = use "System/Collections/List"
+{ map as seq-map } = use "System/Collections/Sequence"
 ```
 
 ## Declaring a module

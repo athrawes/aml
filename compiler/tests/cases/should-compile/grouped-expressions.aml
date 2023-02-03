@@ -1,4 +1,4 @@
-IO = use "System.Effects.IO"
+IO = use "System/Effects/IO"
 
 functionA = a -> a
 functionB = a -> a - 1

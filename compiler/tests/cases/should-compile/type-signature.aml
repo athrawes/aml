@@ -1,4 +1,4 @@
-IO = use "System.Effects.IO"
+IO = use "System/Effects/IO"
 
 typedFunction: Integer -> Integer = a -> a
 typedValue: String = "Hello, world!"

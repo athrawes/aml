@@ -33,6 +33,17 @@ my-function: A -> String
 ```aml
 my-function: &'a -> String
 other-fn: &A'a -> String
+another-fn: &A -> String
+```
+
+### Type Bounds
+
+```aml
+my-function
+  : A -> B -> C
+    where A extends D, E
+    where B extends Map
+  = a -> b -> c
 ```
 
 ### Cases `|`
@@ -138,7 +149,7 @@ a = { b: 1, c: 2 }
 Punning is allowed:
 
 ```aml
-value -> { value } # A -> Struct<String, A>
+value -> { value } # A -> Map<String, A>
 ```
 
 ### Tuples `[]`

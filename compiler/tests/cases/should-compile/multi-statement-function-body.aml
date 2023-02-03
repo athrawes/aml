@@ -1,4 +1,4 @@
-IO = use "System.Effects.IO"
+IO = use "System/Effects/IO"
 main = _ ->
   a = 42
   IO.from a

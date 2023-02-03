@@ -1,7 +1,7 @@
-{ HttpClient, Url } = use "System.Web"
-Async = use "System.Effects.Async"
-JSON = use "System.Text.JSON"
-List = use "System.Collections.List"
+{ HttpClient, Url } = use "System/Web"
+Async = use "System/Effects/Async"
+JSON = use "System/Text/JSON"
+List = use "System/Collections/List"
 
 Dog: {
   name: String
