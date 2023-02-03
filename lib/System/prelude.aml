@@ -1,57 +1,55 @@
-unit unitless
+add: Number -> Number -> Number
++ : infix = add
 
-let add : Number -> Number -> Number
-let + : infix = add
+subtract: Number -> Number -> Number
+- : infix = subtract
 
-let subtract : Number -> Number -> Number
-let - : infix = subtract
+multiply: Number -> Number -> Number
+* : infix = multiply
 
-let multiply : Number -> Number -> Number
-let * : infix = multiply
+divide: Number -> Number -> Maybe<Number>
+/ : infix = divide
 
-let divide : Number -> Number -> Maybe[Number]
-let / : infix = divide
+pow: Number -> Number -> Number
+** : infix = pow
 
-let pow : Number -> Number -> Number
-let ** : infix = pow
-
-let pipe : ^T -> (^T -> ^U) -> ^U
+pipe: A -> (A -> B) -> B
   = argument -> function -> function argument
 
-let |> : infix = pipe
-let <| : infix = swap-args pipe
+|> : infix = pipe
+<| : infix = swap-args pipe
 
-let compose : (^T -> ^U) -> (^U -> ^V) -> ^T -> ^V
+compose: (A -> B) -> (B -> C) -> A -> C
   = callback-a -> callback-b -> argument ->
     argument |> callback-a |> callback-b
 
-let >> : infix = compose
-let << : infix = swap-args compose
+>> : infix = compose
+<< : infix = swap-args compose
 
-let swap-args : (^T -> ^U -> ^V) -> (^U -> ^T -> ^V)
+swap-args: (A -> B -> C) -> (B -> A -> C)
   = callback -> a -> b -> callback b a
 
-let and : infix ^T -> ^T -> ^T
+and: infix Boolean -> Boolean -> Boolean
 
-let or : infix ^T -> ^T -> ^T
+or: infix Boolean -> Boolean -> Boolean
 
-let xor : infix ^T -> ^T -> ^T
+xor: infix Boolean -> Boolean -> Boolean
 
-let not : Boolean -> Boolean
+not: Boolean -> Boolean
 
-let bitshift-left : ^T -> Integer -> ^T
+bitshift-left: A -> Integer -> A
 
-let <<< : infix = bitshift-left
+<<< : infix = bitshift-left
 
-let bitshift-right : ^T -> Integer -> ^T
+bitshift-right: A -> Integer -> A
 
-let >>> : infix = bitshift-right
+>>> : infix = bitshift-right
 
-let is : infix ^T -> ^T -> Boolean
+is: infix A -> A -> Boolean
 
-let id : ^T -> ^T = a -> a
+id: A -> A = a -> a
 
-let if : Boolean -> ^T -> ^T -> ^T
+if: Boolean -> A -> A -> A
   = condition -> if-true -> if-false ->
     match condition
     | True => if-true

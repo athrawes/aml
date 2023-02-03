@@ -1,0 +1,37 @@
+{ HttpClient, Url } = use "System.Web"
+Async = use "System.Effects.Async"
+JSON = use "System.Text.JSON"
+List = use "System.Collections.List"
+
+Dog: {
+  name: String
+  age: Integer
+  breed: String
+}
+
+download: URL -> Async<Maybe<Dog>> =
+  url -> HttpClient.GET url
+    >>= JSON.parse
+    >>= value ->
+      if (isDog value)
+        (Some value)
+        None
+
+download-many
+  : URL -> Async<List<Maybe<Dog>>>
+  = url ->
+    Async.parallel (List.from [
+      download url
+      download url
+      download url
+      download url
+      download url
+    ])
+
+main = _ ->
+  url = Url.from "http://example.com/"
+
+  download-many url
+  |> Async.await
+
+  0

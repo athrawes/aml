@@ -5,7 +5,7 @@
 Importing everything from a module
 
 ```aml
-let { ... } = use "System.Collections"
+{ ... } = use "System.Collections"
 
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
@@ -17,7 +17,7 @@ Importing multiple items from a module
 Note: multi-item imports may span multiple lines
 
 ```aml
-let { to-upper, to-lower } = use "System.String"
+{ to-upper, to-lower } = use "System.String"
 
 "Hello, World!" |> to-upper # "HELLO, WORLD!"
 "Hello, World!" |> to-lower # "hello, world!"
@@ -26,8 +26,8 @@ let { to-upper, to-lower } = use "System.String"
 Aliasing imports
 
 ```aml
-let { map as list-map } = use "System.Collections.List"
-let { map as seq-map } = use "System.Collections.Sequence"
+{ map as list-map } = use "System.Collections.List"
+{ map as seq-map } = use "System.Collections.Sequence"
 ```
 
 ## Declaring a module
@@ -36,5 +36,5 @@ Declaring a module is as simple as
 
 ```aml
 module MyModule =
-    # methods, constants, etc...
+  # methods, constants, etc...
 ```

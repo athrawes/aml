@@ -1,5 +1,17 @@
-let Effect = use "System.Control.Effect"
+Effect = use "System.Control.Effect"
 
-type Result[^R, ^E] =
-    | Ok[^R]
-    | Error[^E]
+Result<A, E>:
+  | Ok<A>
+  | Error<E>
+
+module Result extends Effect =
+  /** @inheritdoc */
+  from = Result.Ok
+
+  /** @inheritdoc */
+  then
+    : (A -> Result<B, F>) -> Result<A, E> -> Result<B, E|F>
+    = callback -> result ->
+      match result
+      | Ok { value } => callback value
+      | Err => result

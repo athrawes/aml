@@ -2,7 +2,7 @@
 
 Borrowing some concepts from Haskell, AML has fully managed effects. Most
 noticibly, this means that most functions in the `IO` namespace don't
-immediately perform an operation, and instead return an `IO[^T]` computation
+immediately perform an operation, and instead return an `IO<A>` computation
 which must be passed to the `IO.run` function in order to be executed.
 
 For example, to write "Hello, World!" to stdout, you'd write:
@@ -12,12 +12,12 @@ IO.stdout "Hello, World!"
 |> IO.run
 ```
 
-`IO[^T]` has all of the usual FP goodies one would expect here, allowing users
-to bind, map, apply, and compose IO operations. To be more specific, `IO[^T]` is
+`IO<A>` has all of the usual FP goodies one would expect here, allowing users
+to bind, map, apply, and compose IO operations. To be more specific, `IO<A>` is
 an [Effect, AKA Monad](./Monads.md). This makes creating IO piplines a breeze:
 
 ```aml
-let prompt =
+prompt =
   IO.stdin "please input an integer: "
   |> map String.to-integer
   |> then match

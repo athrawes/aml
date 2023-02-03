@@ -1,45 +1,45 @@
 module Thenable =
-    /**
-     * @docs-from ./Thenable.docs.md#`then`
-     */
-    type then = (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
+  /**
+   * @docs-from ./Thenable.docs.md#`then`
+   */
+  then: (A -> M<B>) -> M<A> -> M<B>
 
-    /**
-     * @docs-from ./Thenable.docs.md#`chain`
-     * @include then
-     * @reduce-autosuggest
-     */
-    let chain = then
+  /**
+   * @docs-from ./Thenable.docs.md#`chain`
+   * @include then
+   * @reduce-autosuggest
+   */
+  chain = then
 
-    /**
-     * @docs-from ./Thenable.docs.md#`bind`
-     * @include then
-     * @reduce-autosuggest
-     */
-    let bind = then
+  /**
+   * @docs-from ./Thenable.docs.md#`bind`
+   * @include then
+   * @reduce-autosuggest
+   */
+  bind = then
 
-    /**
-     * @docs-from ./Thenable.docs.md#`=<<`
-     * @include then
-     */
-    let =<< : infix = then
+  /**
+   * @docs-from ./Thenable.docs.md#`=<<`
+   * @include then
+   */
+  =<< : infix = then
 
-    /**
-     * @docs-from ./Thenable.docs.md#`>>=`
-     * @include then
-     */
-    let >>= : infix = swap-args then
+  /**
+   * @docs-from ./Thenable.docs.md#`>>=`
+   * @include then
+   */
+  >>= : infix = swap-args then
 
-    /**
-     * @docs-from ./Thenable.docs.md#`chain-compose`
-     */
-    let chain-compose
-        : (^A -> ^M[^B]) -> (^B -> ^M[^C]) -> (^A -> ^M[^C])
-        = callback-ab -> callback-bc ->
-            callback-ab >> (chain callback-bc)
+  /**
+   * @docs-from ./Thenable.docs.md#`chain-compose`
+   */
+  chain-compose
+    : (A -> M<B>) -> (B -> M<C>) -> (A -> M<C>)
+    = callback-ab -> callback-bc ->
+      callback-ab >> (chain callback-bc)
 
-    /**
-     * @docs-from ./Thenable.docs.md#`>=>`
-     * @include chain-compose
-     */
-    let >=> : infix = chain-compose
+  /**
+   * @docs-from ./Thenable.docs.md#`>=>`
+   * @include chain-compose
+   */
+  >=> : infix = chain-compose

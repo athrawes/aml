@@ -1,17 +1,17 @@
 module Applyable =
-    /**
-     * @docs-from ./Applyable.docs.md#`apply`
-     */
-    type apply = ^A[^T -> ^U] -> ^A[^T] -> ^A[^U]
+  /**
+   * @docs-from ./Applyable.docs.md#`apply`
+   */
+  apply: M<A -> B> -> M<A> -> M<B>
 
-    /**
-     * @docs-from ./Applyable.docs.md#`<*>`
-     * @include apply
-     */
-    let <*> : infix = apply
+  /**
+   * @docs-from ./Applyable.docs.md#`<*>`
+   * @include apply
+   */
+  <*> : infix = apply
 
-    /**
-     * @docs-from ./Applyable.docs.md#`<**>`
-     * @include apply
-     */
-    let <**> : infix = swap-args apply
+  /**
+   * @docs-from ./Applyable.docs.md#`<**>`
+   * @include apply
+   */
+  <**> : infix = swap-args apply

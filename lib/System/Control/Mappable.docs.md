@@ -1,21 +1,21 @@
 # Mappable
 
 Defines things that can be 'mapped' over; that is, things which, when given
-a function from type ^A to type ^B, can use that function to transform the
+a function from type A to type B, can use that function to transform the
 values within in a well-defined way.
 
 ## `map`
 
 ```aml
-map : ^F[^A] -> (^A -> ^B) -> ^F[^B]
+map: M<A> -> (A -> B) -> M<B>
 ```
 
 A function to apply a given mapping function to the current effect.
 
 ```aml
 List.from [1, 2, 3]
-|> map (multiply 2) # List[Integer] (2, 4, 6)
-|> map (multiply 2) # List[Integer] (4, 6, 8)
+|> map (multiply 2) # List<Integer> (2, 4, 6)
+|> map (multiply 2) # List<Integer> (4, 6, 8)
 ```
 
 ## `fmap`
@@ -23,7 +23,7 @@ List.from [1, 2, 3]
 An alias for `map`
 
 ```aml
-fmap : ^F[^A] -> (^A -> ^B) -> ^F[^B]
+fmap: M<A> -> (A -> B) -> M<B>
 ```
 
 ## `<$>`
@@ -31,13 +31,13 @@ fmap : ^F[^A] -> (^A -> ^B) -> ^F[^B]
 An infix alias for `map`
 
 ```aml
-<$> : ^F[^A] -> (^A -> ^B) -> ^F[^B]
+<$> : M<A> -> (A -> B) -> M<B>
 ```
 
 ```aml
 List.from [1, 2, 3]
-<$> (multiply 2) # List[Integer] (2, 4, 6)
-<$> (multiply 2) # List[Integer] (4, 6, 8)
+<$> (multiply 2) # List<Integer> (2, 4, 6)
+<$> (multiply 2) # List<Integer> (4, 6, 8)
 ```
 
 ## `<&>`
@@ -45,7 +45,7 @@ List.from [1, 2, 3]
 An infix alias for `map`, but with the arguments for this function reversed.
 
 ```aml
-<&> : (^A -> ^B) -> ^F[^A] -> ^F[^B]
+<&> : (A -> B) -> M<A> -> M<B>
 ```
 
 ```aml

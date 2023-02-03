@@ -2,26 +2,26 @@
  * @docs-from ./Mappable.docs.md#Mappable
  */
 module Mappable =
-    /**
-     * @docs-from ./Mappable.docs.md#`map`
-     */
-    type map = (^A -> ^B) -> ^F[^A] -> ^F[^B]
+  /**
+   * @docs-from ./Mappable.docs.md#`map`
+   */
+  map: (A -> B) -> M<A> -> M<B>
 
-    /**
-     * @docs-from ./Mappable.docs.md#`fmap`
-     * @include map
-     * @reduce-autosuggest
-     */
-    let fmap = map
+  /**
+   * @docs-from ./Mappable.docs.md#`fmap`
+   * @include map
+   * @reduce-autosuggest
+   */
+  fmap = map
 
-    /**
-     * @docs-from ./Mappable.docs.md#`<$>`
-     * @include map
-     */
-    let <$> : infix = map
+  /**
+   * @docs-from ./Mappable.docs.md#`<$>`
+   * @include map
+   */
+  <$> : infix = map
 
-    /**
-     * @docs-from ./Mappable.docs.md#`<&>`
-     * @include map
-     */
-    let <&> : infix = swap-args map
+  /**
+   * @docs-from ./Mappable.docs.md#`<&>`
+   * @include map
+   */
+  <&> : infix = swap-args map

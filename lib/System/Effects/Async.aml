@@ -1,0 +1,10 @@
+Effect = use "System.Control.Effect"
+
+Async<A> = _
+
+module Async<A> extends Effect =
+  from = Async
+
+  then
+    : (A -> Async<B>) -> Async<A> -> Async<B>
+    = callback -> promise ->

@@ -1,7 +1,8 @@
-let IO = use "System.Effects.IO"
+IO = use "System.Effects.IO"
 
-let typedFunction: Integer -> Integer = a -> a
-let typedValue: String = "Hello, world!"
+typedFunction: Integer -> Integer = a -> a
+typedValue: String = "Hello, world!"
 
-let main: List[String] -> IO[Integer]
-    = argv -> IO.from 0
+main
+  : List<String> -> IO<Integer>
+  = argv -> IO.from 0

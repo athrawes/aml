@@ -1,36 +1,43 @@
 # Syntax
 
-## Variable binding `let`, `=`, `:`, `^`
+## Variable binding `=`, `:`, `'`
 
 ```aml
-let a = 5
+a = 5
 ```
 
 Let bindings are expressions that evaluate to the value they are assigned to
 
 ```aml
-let a = 5
+a = 5
 |> to-string # "5"; also, `a` is bound to an integer 5
 ```
 
-### Type declaration `:`, `^`
+### Type declaration `:`
 
 When binding variables, a type declaration may be provided
 
 ```aml
-let a : Integer = 5
+a: Integer = 5
 ```
 
-In cases where the type is intended to be generic, placing a `^` character
-indicates such a type parameter:
+If the symbol provided cannot be resolved to a known type, AML interprets the
+parameter as a generic type parameter:
 
 ```aml
-type my-function : ^T -> String
+my-function: A -> String
+```
+
+### References & Lifetime annotations
+
+```aml
+my-function: &'a -> String
+other-fn: &A'a -> String
 ```
 
 ### Cases `|`
 
-## Function definition `->`, `infix`, `^`
+## Function definition `->`, `infix`
 
 Functions may only take in a single value and return a single value.
 
@@ -49,12 +56,12 @@ Functions are 1st class citizens, and can be bound to variables and passed
 around like any other value
 
 ```aml
-let return-42 = _ -> 42
-let fourty-two = compose return-42 to-string
+return-42 = _ -> 42
+fourty-two = compose return-42 to-string
 fourty-two () # fourty-two is "42"
 
-let operationThatCanFail
-  : Integer -> Integer -> Maybe[Float]
+operationThatCanFail
+  : Integer -> Integer -> Maybe<Float>
   = a -> b -> a / b
 ```
 
@@ -65,13 +72,12 @@ front of the function call), provide a type declaration for your function
 preceded by the `infix` keyword:
 
 ```aml
-let %
-  : infix Integer -> Integer -> Maybe[Integer]
+% : infix Integer -> Integer -> Maybe<Integer>
   = a -> b ->
     (a / b)
-    |> map to-integer
-    |> map (multiply b)
-    |> map (subtract a)
+    >>= to-integer
+    >>= multiply b
+    >>= (subtract a)
 
 6 % 3 # returns (Some 0)
 ```
@@ -79,43 +85,40 @@ let %
 As always, AML can automatically fill in the types
 
 ```aml
-let + : infix = add # :: Integer -> Integer
++ : infix = add # Integer -> Integer
 ```
 
 ## Scopes and expressions `( )`
 
-AML is an expression-based language; there are no statements, as such. As
-previously noted, binding variables using `let` expressions are expressions
-which evaluate to the value of the bound variable.
-
+AML is an expression-based language.
 This applies to function definitions as well:
 
 ```aml
-let call-and-add-two = fn -> 2 + (fn 1)
+call-and-add-two = fn -> 2 + (fn 1)
 
-let add-one = add 1 # Number -> Number
+add-one = add 1 # Number -> Number
 |> call-and-add-two # 4; add-one is passed to call-and-add-two
 ```
 
-Note the lack of indentation in this example; this indicates to AML that we want
-to evaluate the second line as continuing at the same level as the first. This
-is equivelant to:
+Note the lack of indentation in this example; this indicates to AML that we
+want to evaluate the second line as continuing at the same level as the first.
+This is equivelant to:
 
 ```aml
-let call-and-add-two = fn -> 2 + (fn 1)
+call-and-add-two = fn -> 2 + (fn 1)
 
-(let add-one = add 1) |> call-and-add-two # 4
+(add-one = add 1) |> call-and-add-two # 4
 ```
 
 To indicate that subsequent lines should be considered as part of the scope of
 the function definition, simply indent the subsequent lines:
 
 ```aml
-let add-two
+add-two
   : Integer -> Integer
   = arg ->
-    let one = 1
-    let two = add one one
+    one = 1
+    two = add one one
 
     two + arg
 ```
@@ -127,15 +130,15 @@ Parenthesis may be used to group expressions
 ## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `extends` `module`
 
 ```aml
-let a = { b: 1, c: 2 }
-let { b, c } = a   # b is 1, c is 2
-let { b as d } = a # partial destructuring is allowed, and aliasing is available
+a = { b: 1, c: 2 }
+{ b, c } = a   # b is 1, c is 2
+{ b as d } = a # partial destructuring is allowed, and aliasing is available
 ```
 
 Punning is allowed:
 
 ```aml
-value -> { value } # ^T -> Struct[^T]
+value -> { value } # A -> Struct<String, A>
 ```
 
 ### Tuples `[]`
@@ -143,12 +146,10 @@ value -> { value } # ^T -> Struct[^T]
 ### Struct member accessor `.`
 
 ```aml
-let a = { b: { c: 42 } }
+a = { b: { c: 42 } }
 
 a.b.c # 42
 ```
-
-## Type declarations `type`
 
 ## Unit `_`, `()`
 
@@ -166,11 +167,11 @@ When used in a guard expression, represents the default case.
 ## Macros `` expr`macro` ``, `${}`
 
 ```aml
-let sql-query
-  : ^T -> SqlQuery
-  = name -> sql`SELECT * FROM \`users\` WHERE 'name' = ${name}`
+sql-query
+  : T -> SqlQuery
+  = sql`SELECT * FROM \`users\` WHERE 'name' = ${name}`
 
-let sql-prepared-statement = sql-query "John"
+sql-prepared-statement = sql-query "John"
 ```
 
 ## Primitive values: `"`, `'`, `0`, `0.0`, `true, false`, `{}`, `[]`
