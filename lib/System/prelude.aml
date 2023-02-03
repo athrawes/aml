@@ -11,20 +11,20 @@ divide: Number -> Number -> Maybe<Number>
 (/) = divide
 
 pipe: A -> (A -> B) -> B
-  = argument -> function -> function argument
+  = argument -> callback -> callback argument
 
 (|>) = pipe
 (<|) = swap-args (|>)
 
 compose: (A -> B) -> (B -> C) -> A -> C
-  = callback-a -> callback-b -> argument ->
-    argument |> callback-a |> callback-b
+  = callback-a-b -> callback-b-c -> a ->
+    a |> callback-a-b |> callback-b-c
 
 (>>) = compose
 (<<) = swap-args (>>)
 
 swap-args: (A -> B -> C) -> (B -> A -> C)
-  = callback -> a -> b -> callback b a
+  = callback -> (b -> a -> callback a b)
 
 (and): Boolean -> Boolean -> Boolean
 
