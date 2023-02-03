@@ -66,11 +66,10 @@ As always, AML can automatically fill in the types
 ```aml
 let **
   :: infix
-  := x -> y -> match y
-    | when y is 0
-      => 1
-    | when (y is Integer) and (y > 1)
-      => (x + x) ** (y - 1)
+  := x -> y ->
+    if (y is 0)
+      (1)
+      ((x + x) ** (y - 1))
 ```
 
 ## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`
@@ -81,11 +80,7 @@ let { b, c } := a # b is 1, c is 2
 let { b as d } := a # partial destructuring is allowed, and aliasing is available
 ```
 
-## Modules `interface`, `extend`
-
 ### Tuples `[]`
-
-## Type declarations `type`
 
 ### Struct member accessor `.`
 
@@ -94,6 +89,10 @@ let a := { b: { c: 42 } }
 
 a.b.c # 42
 ```
+
+## Type declarations `type`
+
+## Modules `interface`, `extend`
 
 ## Unit `_`, `()`
 
