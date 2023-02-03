@@ -17,7 +17,7 @@ to bind, map, apply, and compose IO operations. To be more specific, `IO[^T]` is
 an [Effect, AKA Monad](./Monads.md). This makes creating IO piplines a breeze:
 
 ```aml
-let prompt :=
+let prompt =
   IO.stdin "please input an integer: " # IO[String]
   <&> String.to-integer # IO[Result[Integer, _]]
   <&> result -> # IO _

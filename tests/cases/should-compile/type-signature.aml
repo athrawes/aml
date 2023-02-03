@@ -1,7 +1,7 @@
-let IO := use "System.Effects.IO"
+let IO = use "System.Effects.IO"
 
-let typedFunction :: Integer -> Integer := a -> a
-let typedValue :: String := "Hello, world!"
+let typedFunction: Integer -> Integer = a -> a
+let typedValue: String = "Hello, world!"
 
-let main :: List[String] -> IO[Integer]
-    := argv -> IO.from 0
+let main: List[String] -> IO[Integer]
+    = argv -> IO.from 0

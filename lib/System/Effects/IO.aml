@@ -1,6 +1,6 @@
-let IO extend Effect :=
+module IO extends Effect =
     /** @inheritdoc */
-    let from := TODO
+    let from = TODO
 
     /** @inheritdoc */
-    let then := fn -> value -> TODO
+    let then = fn -> value -> TODO

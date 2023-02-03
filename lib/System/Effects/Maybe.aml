@@ -1,17 +1,17 @@
-let Effect := use "System.Control.Effect"
+let Effect = use "System.Control.Effect"
 
-type Maybe[^A] ::
-    | Some[^A] := value -> { value }
-    | None := _ -> {}
+type Maybe[^T] :
+    | Some[^T] = value -> { value }
+    | None = _ -> ()
 
-let Maybe extend Effect :=
+module Maybe extends Effect =
     /** @inheritdoc */
-    let from :: ^A -> Maybe[^A] := Some
+    let from : ^T -> Maybe[^T] = Maybe.Some
 
     /** @inheritdoc */
     let then
-        :: (^A -> Maybe[^B]) -> Maybe[^A] -> Maybe[^B]
-        := callback -> maybe ->
+        : (^A -> Maybe[^B]) -> Maybe[^A] -> Maybe[^B]
+        = callback -> maybe ->
             match maybe
             | Some { value } => callback value
             | _ => None

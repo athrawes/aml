@@ -3,7 +3,7 @@
 ## `then`
 
 ```aml
-then :: (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
+then : (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
 ```
 
 A method which allowes chaining functions which return instances of the
@@ -18,7 +18,7 @@ current type.
 ## `chain`
 
 ```aml
-chain :: (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
+chain : (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
 ```
 
 An alias for `then`
@@ -26,7 +26,7 @@ An alias for `then`
 ## `bind`
 
 ```aml
-bind :: (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
+bind : (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
 ```
 
 An alias for `then`
@@ -34,7 +34,7 @@ An alias for `then`
 ## `=<<`
 
 ```aml
-=<< :: infix (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
+=<< : infix (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
 ```
 
 An infix alias for `then`
@@ -46,7 +46,7 @@ An infix alias for `then`
 ## `>>=`
 
 ```aml
->>= :: infix ^M[^A] -> (^A -> ^M[^B]) -> ^M[^B]
+>>= : infix ^M[^A] -> (^A -> ^M[^B]) -> ^M[^B]
 ```
 
 An infix alias for `then`, but with the arguments reversed to allow for
@@ -61,15 +61,15 @@ left to right composition order.
 ## `chain-compose`
 
 ```aml
-chain-compose :: (^A -> ^M[^B]) -> (^B -> ^M[^C]) -> ^A -> ^M[^C]
+chain-compose : (^A -> ^M[^B]) -> (^B -> ^M[^C]) -> ^A -> ^M[^C]
 ```
 
 Composes two functions by chaining.
 
 ```aml
 let sleep-then-return
-    :: Integer -> Async[String]
-    := chain-compose
+    : Integer -> Async[String]
+    = chain-compose
         Async.sleep # (Integer -> Async[Unit])
         (_ -> Async.resolve "Finished Sleeping") # (Unit -> Async[String])
 ```
@@ -77,7 +77,7 @@ let sleep-then-return
 ## `>=>`
 
 ```aml
->=> :: infix (^A -> ^M[^B]) -> (^B -> ^M[^C]) -> ^A -> ^M[^C]
+>=> : infix (^A -> ^M[^B]) -> (^B -> ^M[^C]) -> ^A -> ^M[^C]
 ```
 
 An infix alias for `chain-compose`

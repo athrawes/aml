@@ -1,78 +1,78 @@
-let IEC :=
+let IEC =
     unit bit
-    unit b := bit
+    unit b = bit
 
-    unit kilobit := 1,000 * bit
-    unit Kb := kilobit
+    unit kilobit = 1,000 * bit
+    unit Kb = kilobit
 
-    unit kibibit := (2 ** 10) * bit
-    unit Kib := kibibit
+    unit kibibit = (2 ** 10) * bit
+    unit Kib = kibibit
 
-    unit megabit := 1,000,000 * bit
-    unit Mb := megabit
+    unit megabit = 1,000,000 * bit
+    unit Mb = megabit
 
-    unit mebibit := (2 ** 20) * bit
-    unit Mib := mibibit
+    unit mebibit = (2 ** 20) * bit
+    unit Mib = mibibit
 
-    unit gigabit := 1,000,000,000 * bit
-    unit Gb := gigabit
+    unit gigabit = 1,000,000,000 * bit
+    unit Gb = gigabit
 
-    unit gibibit := (2 ** 30) * bit
-    unit Gib := gibibit
+    unit gibibit = (2 ** 30) * bit
+    unit Gib = gibibit
 
-    unit terabit := 1,000,000,000,000 * bit
-    unit Tb := terabit
+    unit terabit = 1,000,000,000,000 * bit
+    unit Tb = terabit
 
-    unit tebibit := (2 ** 40) * bit
-    unit Tib := tibibit
+    unit tebibit = (2 ** 40) * bit
+    unit Tib = tibibit
 
-    unit petabit := 1,000,000,000,000,000 * bit
-    unit Pb := petabit
+    unit petabit = 1,000,000,000,000,000 * bit
+    unit Pb = petabit
 
-    unit pebibit := (2 ** 50) * bit
-    unit Pib := pebibit
+    unit pebibit = (2 ** 50) * bit
+    unit Pib = pebibit
 
-    unit exabit := 1,000,000,000,000,000,000 * bit
-    unit Eb := exabit
+    unit exabit = 1,000,000,000,000,000,000 * bit
+    unit Eb = exabit
 
-    unit exbibit := (2 ** 60) * bit
-    unit Eib := exbibit
+    unit exbibit = (2 ** 60) * bit
+    unit Eib = exbibit
 
-    unit byte := 8 * bit
-    unit B := byte
+    unit byte = 8 * bit
+    unit B = byte
 
-    unit kilobyte := 1,000 * byte
-    unit KB := kilobyte
+    unit kilobyte = 1,000 * byte
+    unit KB = kilobyte
 
-    unit kibibyte := (2 ** 10) * byte
-    unit KiB := kibibyte
+    unit kibibyte = (2 ** 10) * byte
+    unit KiB = kibibyte
 
-    unit megabyte := 1,000,000 * byte
-    unit MB := megabyte
+    unit megabyte = 1,000,000 * byte
+    unit MB = megabyte
 
-    unit mebibyte := (2 ** 20) * byte
-    unit MiB := mibibyte
+    unit mebibyte = (2 ** 20) * byte
+    unit MiB = mibibyte
 
-    unit gigabyte := 1,000,000,000 * byte
-    unit GB := gigabyte
+    unit gigabyte = 1,000,000,000 * byte
+    unit GB = gigabyte
 
-    unit gibibyte := (2 ** 30) * byte
-    unit GiB := gibibyte
+    unit gibibyte = (2 ** 30) * byte
+    unit GiB = gibibyte
 
-    unit terabyte := 1,000,000,000,000 * byte
-    unit TB := terabyte
+    unit terabyte = 1,000,000,000,000 * byte
+    unit TB = terabyte
 
-    unit tebibyte := (2 ** 40) * byte
-    unit TiB := tibibyte
+    unit tebibyte = (2 ** 40) * byte
+    unit TiB = tibibyte
 
-    unit petabyte := 1,000,000,000,000,000 * byte
-    unit PB := petabyte
+    unit petabyte = 1,000,000,000,000,000 * byte
+    unit PB = petabyte
 
-    unit pebibyte := (2 ** 50) * byte
-    unit PiB := pebibyte
+    unit pebibyte = (2 ** 50) * byte
+    unit PiB = pebibyte
 
-    unit exabyte := 1,000,000,000,000,000,000 * byte
-    unit EB := exabyte
+    unit exabyte = 1,000,000,000,000,000,000 * byte
+    unit EB = exabyte
 
-    unit exbibyte := (2 ** 60) * byte
-    unit EiB := exbibyte
+    unit exbibyte = (2 ** 60) * byte
+    unit EiB = exbibyte

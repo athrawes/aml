@@ -1,8 +1,8 @@
-let Effect extend Constructable, Mappable, Applyable, Chainable :=
+module Effect extends Constructable, Mappable, Applyable, Chainable =
     /** @inheritdoc */
-    let apply := callback -> value ->
+    let apply = callback -> value ->
         callback >>= ((swap-args map) value)
 
     /** @inheritdoc */
-    let map := callback -> value ->
+    let map = callback -> value ->
         chain (callback >> from) value

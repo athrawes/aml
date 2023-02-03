@@ -1,0 +1,5 @@
+let Effect = use "System.Control.Effect"
+
+module Sequence extends Effect =
+    /** @inheritdoc */
+    let from : ^T -> Sequence[^T]

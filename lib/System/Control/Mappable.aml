@@ -1,27 +1,27 @@
 /**
  * @docs-from ./Mappable.docs.md#Mappable
  */
-let Mappable :=
+let Mappable =
     /**
      * @docs-from ./Mappable.docs.md#`map`
      */
-    type map :: (^A -> ^B) -> ^F[^A] -> ^F[^B]
+    type map = (^A -> ^B) -> ^F[^A] -> ^F[^B]
 
     /**
      * @docs-from ./Mappable.docs.md#`fmap`
      * @include map
      * @reduce-autosuggest
      */
-    let fmap := map
+    let fmap = map
 
     /**
      * @docs-from ./Mappable.docs.md#`<$>`
      * @include map
      */
-    let <$> :: infix := map
+    let <$> : infix = map
 
     /**
      * @docs-from ./Mappable.docs.md#`<&>`
      * @include map
      */
-    let <&> :: infix := swap-args map
+    let <&> : infix = swap-args map

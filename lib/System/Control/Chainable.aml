@@ -1,45 +1,45 @@
-let Chainable :=
+let Chainable =
     /**
      * @docs-from ./Chainable.docs.md#`then`
      */
-    type then :: (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
+    type then = (^A -> ^M[^B]) -> ^M[^A] -> ^M[^B]
 
     /**
      * @docs-from ./Chainable.docs.md#`chain`
      * @include then
      * @reduce-autosuggest
      */
-    let chain := then
+    let chain = then
 
     /**
      * @docs-from ./Chainable.docs.md#`bind`
      * @include then
      * @reduce-autosuggest
      */
-    let bind := then
+    let bind = then
 
     /**
      * @docs-from ./Chainable.docs.md#`=<<`
      * @include then
      */
-    let =<< :: infix := then
+    let =<< : infix = then
 
     /**
      * @docs-from ./Chainable.docs.md#`>>=`
      * @include then
      */
-    let >>= :: infix := swap-args then
+    let >>= : infix = swap-args then
 
     /**
      * @docs-from ./Chainable.docs.md#`chain-compose`
      */
     let chain-compose
-        :: (^A -> ^M[^B]) -> (^B -> ^M[^C]) -> (^A -> ^M[^C])
-        := callback-ab -> callback-bc ->
+        : (^A -> ^M[^B]) -> (^B -> ^M[^C]) -> (^A -> ^M[^C])
+        = callback-ab -> callback-bc ->
             callback-ab >> (chain callback-bc)
 
     /**
      * @docs-from ./Chainable.docs.md#`>=>`
      * @include chain-compose
      */
-    let >=> :: infix := chain-compose
+    let >=> : infix = chain-compose

@@ -7,49 +7,47 @@ values within in a well-defined way.
 ## `map`
 
 ```aml
-map :: ^F[^A] -> (^A -> ^B) -> ^F[^B]
+map : ^F[^A] -> (^A -> ^B) -> ^F[^B]
 ```
 
 A function to apply a given mapping function to the current effect.
 
 ```aml
 List.from [1, 2, 3]
-|> map (value -> value * 2) # List[Integer] (2, 4, 6)
-|> map (value -> value / 2) # List[Float] (1.0, 2.0, 3.0)
+|> map (multiply 2) # List[Integer] (2, 4, 6)
+|> map (multiply 2) # List[Integer] (4, 6, 8)
 ```
 
 ## `fmap`
 
-An alias for `then`
+An alias for `map`
 
 ```aml
-fmap :: ^F[^A] -> (^A -> ^B) -> ^F[^B]
+fmap : ^F[^A] -> (^A -> ^B) -> ^F[^B]
 ```
 
 ## `<$>`
 
-An infix alias for `then`
+An infix alias for `map`
 
 ```aml
-<$> :: ^F[^A] -> (^A -> ^B) -> ^F[^B]
+<$> : ^F[^A] -> (^A -> ^B) -> ^F[^B]
 ```
 
 ```aml
-(List.from [1, 2, 3]) <$> (value -> value 2) # List[Integer] (2, 4, 6)
+List.from [1, 2, 3]
+<$> (multiply 2) # List[Integer] (2, 4, 6)
+<$> (multiply 2) # List[Integer] (4, 6, 8)
 ```
 
 ## `<&>`
 
-An infix alias for `then`, but with the arguments for this function reversed.
-This makes pipelines easier to write.
+An infix alias for `map`, but with the arguments for this function reversed.
 
 ```aml
-<&> :: (^A -> ^B) -> ^F[^A] -> ^F[^B]
+<&> : (^A -> ^B) -> ^F[^A] -> ^F[^B]
 ```
 
 ```aml
-(List.from [1, 2, 3])
-<&> (value -> value * 2) # List[Integer] (2, 4, 6)
-<&> (value -> value / 2) # List[Float] (1.0, 2.0, 3.0)
-<&> Integer.fromFloat # List[Integer] (1, 2, 3)
+(multiply 2) <&> (List.from [1, 2, 3])
 ```

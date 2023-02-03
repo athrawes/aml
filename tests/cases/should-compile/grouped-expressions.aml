@@ -1,7 +1,7 @@
-let IO := use "System.Effects.IO"
+let IO = use "System.Effects.IO"
 
-let functionA := a -> a
-let functionB := a -> a - 1
+let functionA = a -> a
+let functionB = a -> a - 1
 
-let main := _ ->
+let main = _ ->
     IO.from (functionA (functionB 1))

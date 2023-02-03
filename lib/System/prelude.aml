@@ -1,58 +1,58 @@
 unit unitless
 
-let add :: Number -> Number -> Number
-let + :: infix := add
+let add : Number -> Number -> Number
+let + : infix = add
 
-let subtract :: Number -> Number -> Number
-let - :: infix := subtract
+let subtract : Number -> Number -> Number
+let - : infix = subtract
 
-let multiply :: Number -> Number -> Number
-let * :: infix := multiply
+let multiply : Number -> Number -> Number
+let * : infix = multiply
 
-let divide :: Number -> Number -> Maybe[Number]
-let / :: infix := divide
+let divide : Number -> Number -> Maybe[Number]
+let / : infix = divide
 
-let to-the-power-of :: Number -> Number -> Number
-let ** :: infix := to-the-power-of
+let pow : Number -> Number -> Number
+let ** : infix = pow
 
-let pipe :: ^T -> (^T -> ^U) -> ^U
-  := argument -> function -> function argument
+let pipe : ^T -> (^T -> ^U) -> ^U
+  = argument -> function -> function argument
 
-let |> :: infix := pipe
-let <| :: infix := swap-args pipe
+let |> : infix = pipe
+let <| : infix = swap-args pipe
 
-let compose :: (^T -> ^U) -> (^U -> ^V) -> ^T -> ^V
-  := callback-a -> callback-b -> argument ->
+let compose : (^T -> ^U) -> (^U -> ^V) -> ^T -> ^V
+  = callback-a -> callback-b -> argument ->
     argument |> callback-a |> callback-b
 
-let >> :: infix = compose
-let << :: infix = swap-args compose
+let >> : infix = compose
+let << : infix = swap-args compose
 
-let swap-args :: (^T -> ^U -> ^V) -> (^U -> ^T -> ^V)
-  := callback -> a -> b -> callback b a
+let swap-args : (^T -> ^U -> ^V) -> (^U -> ^T -> ^V)
+  = callback -> a -> b -> callback b a
 
-let and :: infix ^T -> ^T -> ^T
+let and : infix ^T -> ^T -> ^T
 
-let or :: infix ^T -> ^T -> ^T
+let or : infix ^T -> ^T -> ^T
 
-let xor :: infix ^T -> ^T -> ^T
+let xor : infix ^T -> ^T -> ^T
 
-let not :: Boolean -> Boolean
+let not : Boolean -> Boolean
 
-let bitshift-left :: ^T -> Integer -> ^T
+let bitshift-left : ^T -> Integer -> ^T
 
-let <<< :: infix := bitshift-left
+let <<< : infix = bitshift-left
 
-let bitshift-right :: ^T -> Integer -> ^T
+let bitshift-right : ^T -> Integer -> ^T
 
-let >>> :: infix := bitshift-right
+let >>> : infix = bitshift-right
 
-let is :: infix ^T -> ^T -> Boolean
+let is : infix ^T -> ^T -> Boolean
 
-let id :: ^T -> ^T := a -> a
+let id : ^T -> ^T = a -> a
 
-let if :: Boolean -> ^T -> ^T -> ^T
-  := condition -> if-true -> if-false ->
+let if : Boolean -> ^T -> ^T -> ^T
+  = condition -> if-true -> if-false ->
     match condition
     | True => if-true
     | False => if-false
