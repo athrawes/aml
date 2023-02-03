@@ -1,10 +1,10 @@
 let Effect = use "System.Control.Effect"
 
-type Maybe[^T] :
-    | Some[^T] = value -> { value }
-    | None = _ -> ()
+type Maybe[^T] =
+    | Some[^T]
+    | None
 
-module Maybe extends Effect =
+module for Maybe extends Effect =
     /** @inheritdoc */
     let from : ^T -> Maybe[^T] = Maybe.Some
 

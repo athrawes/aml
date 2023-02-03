@@ -25,3 +25,10 @@ type SignedInteger =
 type Integer =
   | UnsignedInteger
   | SignedInteger
+
+type f32 = INTRINSIC_FLOAT_32BIT
+type f64 = INTRINSIC_FLOAT_64BIT
+
+type Float = f32 | f64
+
+type Number = Integer | Float

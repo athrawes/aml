@@ -2,20 +2,22 @@ let SI =
     unit second
     unit s = second
 
-    unit millisecond = second / 1_000
+    unit millisecond = second / 1,000
     unit ms = millisecond
 
-    unit microsecond = second / 1_000_000
+    unit microsecond = second / 1,000,000
     unit us = microsecond
 
     unit minute = 60 * second
     unit min = minute
 
-    unit hour = 3_600 * second
+    unit hour = 60 * minute
     unit h = hour
 
-    unit day = 86_400 * second
+    unit day = 24 * hour
     unit d = day
+
+    unit week = 7 * day
 
     unit meter
     unit m = meter
@@ -23,16 +25,16 @@ let SI =
     unit centimeter = meter / 100
     unit cm = centimeter
 
-    unit millimeter = meter / 1_000
+    unit millimeter = meter / 1,000
     unit mm = millimeter
 
-    unit kilometer = meter * 1_000
+    unit kilometer = meter * 1,000
     unit km = kilometer
 
     unit gram
     unit g = gram
 
-    unit kilogram = 1_000 * gram
+    unit kilogram = 1,000 * gram
     unit kg = kilogram
 
     unit ampere
@@ -44,7 +46,7 @@ let SI =
     unit celcius = kelvin + 273.15
     unit C = celcius
 
-    unit mole
+    unit mole = 6.02214076e23
     unit mol = mole
 
     unit candela

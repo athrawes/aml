@@ -18,16 +18,15 @@ an [Effect, AKA Monad](./Monads.md). This makes creating IO piplines a breeze:
 
 ```aml
 let prompt =
-  IO.stdin "please input an integer: " # IO[String]
-  <&> String.to-integer # IO[Result[Integer, _]]
-  <&> result -> # IO _
-    match result
+  IO.stdin "please input an integer: "
+  |> map String.to-integer
+  |> then match
     | Ok { value } =>
       if (value % 2 is 0)
-        (IO.stdout "Number is even")
-        (IO.stdout "Number is odd")
+        (IO.stdout "Number is even\n")
+        (IO.stdout "Number is odd\n")
     | _ =>
-      IO.stderr "Invalid input, please try again."
+      IO.stderr "Invalid input, please try again.\n"
 
 # IO has not actually occurred at this point, we've just created the
 # computations to do so.

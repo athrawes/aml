@@ -1,4 +1,4 @@
-let Applyable =
+module Applyable =
     /**
      * @docs-from ./Applyable.docs.md#`apply`
      */

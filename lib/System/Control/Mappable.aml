@@ -1,7 +1,7 @@
 /**
  * @docs-from ./Mappable.docs.md#Mappable
  */
-let Mappable =
+module Mappable =
     /**
      * @docs-from ./Mappable.docs.md#`map`
      */

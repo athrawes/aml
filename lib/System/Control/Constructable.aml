@@ -1,4 +1,4 @@
-let Constructable =
+module Constructable =
     /**
      * Creates a new instance of the current `Constructable` over the type of
      * the value given.

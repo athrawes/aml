@@ -1,0 +1,5 @@
+let Effect = use "System.Control.Effect"
+
+type Result[^R, ^E] =
+    | Ok[^R]
+    | Error[^E]
