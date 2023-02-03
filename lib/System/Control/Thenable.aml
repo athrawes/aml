@@ -2,7 +2,7 @@ module Thenable =
   /**
    * @docs-from ./Thenable.docs.md#`then`
    */
-  then: (A -> M<B>) -> M<A> -> M<B>
+  then: M<A> -> (A -> M<B>) -> M<B>
 
   /**
    * @docs-from ./Thenable.docs.md#`chain`
@@ -22,13 +22,13 @@ module Thenable =
    * @docs-from ./Thenable.docs.md#`=<<`
    * @include then
    */
-  =<< : infix = then
+  =<< : infix = swap-args then
 
   /**
    * @docs-from ./Thenable.docs.md#`>>=`
    * @include then
    */
-  >>= : infix = swap-args then
+  >>= : infix = then
 
   /**
    * @docs-from ./Thenable.docs.md#`chain-compose`

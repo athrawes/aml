@@ -5,7 +5,7 @@ module Mappable =
   /**
    * @docs-from ./Mappable.docs.md#`map`
    */
-  map: (A -> B) -> M<A> -> M<B>
+  map: M<A> -> (A -> B) -> M<B>
 
   /**
    * @docs-from ./Mappable.docs.md#`fmap`

@@ -11,8 +11,8 @@ current type.
 
 ```aml
 (Maybe.from 42)
-|> Maybe.then (value -> value / 2) # Maybe<Float> (21.0)
-|> Maybe.then (value -> value / 5) # Maybe<Float> (4.2)
+|> then (value -> value / 2) # Maybe<Float> (21.0)
+|> then (value -> value / 5) # Maybe<Float> (4.2)
 ```
 
 ## `chain`
@@ -66,11 +66,14 @@ chain-compose: (A -> M<B>) -> (B -> M<C>) -> A -> M<C>
 Composes two functions by chaining.
 
 ```aml
-sleep-then-return
-  : Integer -> Async<String>
+{ decodeAsync } = use "System/Text/JSON"
+{ GET } = use "System/Web/Http"
+
+fetch-json
+  : URL -> Async<Result<JsonValue, _>>
   = chain-compose
-    Async.sleep # (Integer -> Async<Unit>)
-    (_ -> Async.resolve "Finished Sleeping") # (Unit -> Async<String>)
+    GET
+    (response -> decodeAsync response.Body)
 ```
 
 ## `>=>`
@@ -82,5 +85,8 @@ sleep-then-return
 An infix alias for `chain-compose`
 
 ```aml
-Async.sleep >=> (_ -> Async.resolve "Finished Sleeping")
+{ decodeAsync } = use "System/Text/JSON"
+{ GET } = use "System/Web/Http"
+
+fetch-json = GET >=> (response -> decodeAsync response.Body)
 ```
