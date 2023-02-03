@@ -1,4 +1,4 @@
-let IO := use "std.Effects.IO"
+let IO := use "System.Effects.IO"
 let main := _ ->
     let a := 42
     IO.from a

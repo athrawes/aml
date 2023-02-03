@@ -5,19 +5,19 @@
 Importing everything from a module
 
 ```aml
-let { ... } := use "std.collections"
+let { ... } := use "System.Collections"
 
-# All items from the std.collections namespace, including `list` and `seq`, have
+# All items from the System.Collections namespace, including `list` and `seq`, have
 # been imported into the current namespace
 
-list.fill 3 (el -> el + 1) |> list.to-seq |> seq.map (el -> el * 2)
+List.fill 3 (el -> el + 1) |> List.to-sequence |> map (el -> el * 2)
 ```
 
 Importing multiple items from a module
 Note: multi-item imports may span multiple lines
 
 ```aml
-let { to-string, to-lower } := use "std.string"
+let { to-string, to-lower } := use "System.String"
 
 "Hello, World!" |> to-upper # "HELLO, WORLD!"
 "Hello, World!" |> to-lower # "hello, world!"
@@ -26,8 +26,6 @@ let { to-string, to-lower } := use "std.string"
 Aliasing imports
 
 ```aml
-let { map as list-map } := use "std.collections.list"
-let { map as seq-map } := use "std.collections.seq"
+let { map as list-map } := use "System.Collections.List"
+let { map as seq-map } := use "System.Collections.Sequence"
 ```
-
-### Interfaces

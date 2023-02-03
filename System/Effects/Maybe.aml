@@ -1,4 +1,4 @@
-let Effect := use "std.Control.Effect"
+let Effect := use "System.Control.Effect"
 
 type Maybe[^A] ::
     | Some[^A] := value -> { value }

@@ -36,7 +36,7 @@ around like any other value
 
 ```aml
 let return-42 := _ -> 42
-let fourty-two := return-42 _ |> std.int.to-string # fourty-two is "42"
+let fourty-two := return-42 _ |> System.int.to-string # fourty-two is "42"
 
 let operationThatCanFail
   :: Integer -> Integer -> Maybe[Float]
@@ -54,7 +54,7 @@ let %
   :: infix Integer -> Integer -> Maybe[Integer]
   := a -> b ->
     (a / b)
-    <&> std.float.to-int
+    <&> System.Number.Float.to-int
     <&> (multiply b)
     <&> (subtract a)
 
@@ -78,6 +78,12 @@ let **
 let a := { b: 1, c: 2 }
 let { b, c } := a # b is 1, c is 2
 let { b as d } := a # partial destructuring is allowed, and aliasing is available
+```
+
+Punning is allowed:
+
+```aml
+value -> { value } # ^T -> Structure[^T]
 ```
 
 ### Tuples `[]`
