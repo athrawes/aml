@@ -1,0 +1,27 @@
+type u8 := INTRINSIC_UNSIGNED_8BIT
+type u16 := INTRINSIC_UNSIGNED_16BIT
+type u32 := INTRINSIC_UNSIGNED_32BIT
+type u64 := INTRINSIC_UNSIGNED_64BIT
+type u128 := INTRINSIC_UNSIGNED_128BIT
+type signed-integer :=
+  | u8
+  | u16
+  | u32
+  | u64
+  | u128
+
+type i8 := INTRINSIC_SIGNED_8BIT
+type i16 := INTRINSIC_SIGNED_16BIT
+type i32 := INTRINSIC_SIGNED_32BIT
+type i64 := INTRINSIC_SIGNED_64BIT
+type i128 := INTRINSIC_SIGNED_128BIT
+type signed-integer :=
+  | i8
+  | i16
+  | i32
+  | i64
+  | i128
+
+type integer :=
+  | unsigned-integer
+  | signed-integer

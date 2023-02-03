@@ -1,0 +1,67 @@
+let `+` :: ^T -> ^T -> ^T
+  | where ^T is Integer
+    := a -> b  -> INTRINSIC_INTEGER_ADDITION a b
+  | where ^T is Float
+    := a -> b -> INTRINSIC_FLOAT_ADDITION a b
+
+let `-` :: ^T -> ^T -> ^T
+  | where ^T is Integer
+    := a -> b -> INTRINSIC_INTEGER_SUBTRACTION a b
+  | where ^T is Float
+    := a -> b -> INTRINSIC_FLOAT_SUBTRACTION a b
+
+let `*` :: ^T -> ^T -> ^T
+  | where ^T is Integer
+    := a -> b -> INTRINSIC_INTEGER_MULTIPLICATION a b
+  | where ^T is Float
+    := a -> b -> INTRINSIC_FLOAT_MULTIPLICATION a b
+
+let `/` :: ^T -> ^T -> Maybe[^T]
+  | where ^T is Integer
+    := a -> b -> match b
+      | 0 -> None
+      | _ -> Some(INTRINSIC_INTEGER_DIVISION a b)
+  | where ^T is Float
+    := a -> b -> match b
+      | 0.0 -> None
+      | _   -> Some(INTRINSIC_FLOAT_DIVISION a b)
+
+let `|>` :: ^T -> (^T -> ^U) -> ^U
+  := argument -> function -> function argument
+
+let `>>` :: (^T -> ^U) -> (^U -> ^V) -> ^T -> ^V
+  := function1
+    -> function2
+    -> argument
+    -> argument |> function1 |> function2
+
+let `and` :: ^T -> ^T -> ^T
+  | where (^T is Number) or (^T is Boolean)
+    := a -> b -> INTRINSIC_AND a b
+
+let `or` :: ^T -> ^T -> ^T
+  | where (^T is Number) or (^T is Boolean)
+    := a -> b -> INTRINSIC_OR a b
+
+let `xor` :: ^T -> ^T -> ^T
+  | where (^T is Number) or (^T is Boolean)
+    := a -> b -> INTRINSIC_XOR a b
+
+let not :: Boolean -> Boolean
+  := a -> INTRINSIC_NOT a
+
+let `<<<` :: ^T -> Integer -> ^T
+  | where (^T is Number)
+    := a -> b -> INTRINSIC_BITWISE_LEFT_SHIFT a b
+
+let `>>>` :: ^T -> Integer -> ^T
+  | where (^T is Number)
+    := a -> b -> INTRINSIC_BITWISE_RIGHT_SHIFT a b
+
+let `is` :: ^T -> ^T -> Boolean
+  | where ^T is Boolean
+    := a -> b -> INTRINSIC_COMPARE a b
+  | _ := _ -> _ -> false
+
+let id :: ^T -> ^T
+  := a -> a

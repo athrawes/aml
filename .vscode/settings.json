@@ -1,0 +1,6 @@
+{
+    "editor.tabSize": 4,
+    "markdownlint.config": {
+        "no-hard-tabs": { "code_blocks": false }
+    }
+}
