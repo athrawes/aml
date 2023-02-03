@@ -1,3 +1,4 @@
 Sequence = use "System/Collections/Sequence"
 
-module List extends Sequence =
+module List :> Sequence =
+  todo!

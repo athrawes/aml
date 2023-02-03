@@ -1,8 +1,8 @@
 # @docs-from ./Effect.docs.md#Effect
-module Effect extends Constructable, Mappable, Applyable, Thenable =
+module Effect :> Constructable, Mappable, Applyable, Thenable =
   # @inheritdoc
   apply = value -> callback ->
-    callback >>= ((swap-args map) value)
+    callback >>= (map value)
 
   # @inheritdoc
   map = value -> callback ->

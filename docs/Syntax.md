@@ -31,8 +31,15 @@ my-function: A -> String
 ### References & Lifetime annotations
 
 ```aml
+# a function whose argument's type is inferred but is a reference with a
+# lifetime of 'a
 my-function: &'a -> String
+
+# a function whose argument's type is A and is a reference with a lifetime of 'a
 other-callback: &A'a -> String
+
+# a function whose argument's type is A and is a reference with an inferred
+# lifetime
 another-callback: &A -> String
 ```
 
@@ -41,8 +48,8 @@ another-callback: &A -> String
 ```aml
 my-function
   : A -> B -> C
-    where A extends D, E
-    where B extends Map
+    ? A :> D, E
+    ? B :> Map
   = a -> b -> c
 ```
 
@@ -86,7 +93,7 @@ front of the function call), place the name of the function in parenthesis:
   = a -> b ->
     (a / b)
     >>= to-integer
-    >>= multiply b
+    >>= (multiply b)
     >>= (subtract a)
 
 6 % 3 # returns (Some 0)
@@ -137,10 +144,10 @@ add-two
 
 Parenthesis may be used to group expressions
 
-## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `extends` `module`
+## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `:>` `module`
 
 ```aml
-a = { b: 1, c: 2 }
+a = { b = 1, c = 2 }
 { b, c } = a   # b is 1, c is 2
 { b as d } = a # partial destructuring is allowed, and aliasing is available
 ```
@@ -161,7 +168,7 @@ a = [1, 2, 3]
 ### Struct member accessor `.`
 
 ```aml
-a = { b: { c: 42 } }
+a = { b = { c = 42 } }
 
 a.b.c # 42
 ```

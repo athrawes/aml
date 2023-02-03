@@ -1,0 +1,468 @@
+[
+  [
+    11,
+    {
+      "tokenIndex": 0,
+      "children": [
+        {
+          "kind": "identifier",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "startColumn": 1,
+          "endColumn": 2,
+          "value": "IO"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "startColumn": 3,
+          "endColumn": 3,
+          "value": " "
+        },
+        {
+          "kind": "binding",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "startColumn": 4,
+          "endColumn": 4,
+          "value": "="
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "startColumn": 5,
+          "endColumn": 5,
+          "value": " "
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "startColumn": 6,
+          "endColumn": 8,
+          "value": "use"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "startColumn": 9,
+          "endColumn": 9,
+          "value": " "
+        },
+        {
+          "kind": "string",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "startColumn": 10,
+          "endColumn": 28,
+          "value": "\"System/Effects/IO\""
+        },
+        {
+          "kind": "newline",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "startColumn": 29,
+          "endColumn": 29,
+          "value": "\n"
+        },
+        {
+          "kind": "newline",
+          "lineStart": 2,
+          "lineEnd": 2,
+          "startColumn": 1,
+          "endColumn": 1,
+          "value": "\n"
+        }
+      ]
+    }
+  ],
+  [
+    36,
+    {
+      "tokenIndex": 11,
+      "children": [
+        {
+          "kind": "identifier",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 1,
+          "endColumn": 9,
+          "value": "functionA"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 10,
+          "endColumn": 10,
+          "value": " "
+        },
+        {
+          "kind": "binding",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 11,
+          "endColumn": 11,
+          "value": "="
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 12,
+          "endColumn": 12,
+          "value": " "
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 13,
+          "endColumn": 13,
+          "value": "a"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 14,
+          "endColumn": 14,
+          "value": " "
+        },
+        {
+          "kind": "function",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 15,
+          "endColumn": 16,
+          "value": "->"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 17,
+          "endColumn": 17,
+          "value": " "
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 18,
+          "endColumn": 18,
+          "value": "a"
+        },
+        {
+          "kind": "newline",
+          "lineStart": 3,
+          "lineEnd": 3,
+          "startColumn": 19,
+          "endColumn": 19,
+          "value": "\n"
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 1,
+          "endColumn": 9,
+          "value": "functionB"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 10,
+          "endColumn": 10,
+          "value": " "
+        },
+        {
+          "kind": "binding",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 11,
+          "endColumn": 11,
+          "value": "="
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 12,
+          "endColumn": 12,
+          "value": " "
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 13,
+          "endColumn": 13,
+          "value": "a"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 14,
+          "endColumn": 14,
+          "value": " "
+        },
+        {
+          "kind": "function",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 15,
+          "endColumn": 16,
+          "value": "->"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 17,
+          "endColumn": 17,
+          "value": " "
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 18,
+          "endColumn": 18,
+          "value": "a"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 19,
+          "endColumn": 19,
+          "value": " "
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 20,
+          "endColumn": 20,
+          "value": "-"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 21,
+          "endColumn": 21,
+          "value": " "
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 22,
+          "endColumn": 22,
+          "value": "1"
+        },
+        {
+          "kind": "newline",
+          "lineStart": 4,
+          "lineEnd": 4,
+          "startColumn": 23,
+          "endColumn": 23,
+          "value": "\n"
+        },
+        {
+          "kind": "newline",
+          "lineStart": 5,
+          "lineEnd": 5,
+          "startColumn": 1,
+          "endColumn": 1,
+          "value": "\n"
+        }
+      ]
+    }
+  ],
+  [
+    56,
+    {
+      "tokenIndex": 36,
+      "children": [
+        {
+          "kind": "identifier",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 1,
+          "endColumn": 4,
+          "value": "main"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 5,
+          "endColumn": 5,
+          "value": " "
+        },
+        {
+          "kind": "binding",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 6,
+          "endColumn": 6,
+          "value": "="
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 7,
+          "endColumn": 7,
+          "value": " "
+        },
+        {
+          "kind": "infer",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 8,
+          "endColumn": 8,
+          "value": "_"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 9,
+          "endColumn": 9,
+          "value": " "
+        },
+        {
+          "kind": "function",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 10,
+          "endColumn": 11,
+          "value": "->"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 12,
+          "endColumn": 12,
+          "value": " "
+        },
+        {
+          "kind": "identifier",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 13,
+          "endColumn": 19,
+          "value": "IO.from"
+        },
+        {
+          "kind": "whitespace",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 20,
+          "endColumn": 20,
+          "value": " "
+        },
+        {
+          "tokenIndex": 47,
+          "children": [
+            {
+              "kind": "groupOpen",
+              "lineStart": 6,
+              "lineEnd": 6,
+              "startColumn": 21,
+              "endColumn": 21,
+              "value": "("
+            },
+            {
+              "kind": "identifier",
+              "lineStart": 6,
+              "lineEnd": 6,
+              "startColumn": 22,
+              "endColumn": 30,
+              "value": "functionA"
+            },
+            {
+              "kind": "whitespace",
+              "lineStart": 6,
+              "lineEnd": 6,
+              "startColumn": 31,
+              "endColumn": 31,
+              "value": " "
+            },
+            {
+              "tokenIndex": 50,
+              "children": [
+                {
+                  "kind": "groupOpen",
+                  "lineStart": 6,
+                  "lineEnd": 6,
+                  "startColumn": 32,
+                  "endColumn": 32,
+                  "value": "("
+                },
+                {
+                  "kind": "identifier",
+                  "lineStart": 6,
+                  "lineEnd": 6,
+                  "startColumn": 33,
+                  "endColumn": 41,
+                  "value": "functionB"
+                },
+                {
+                  "kind": "whitespace",
+                  "lineStart": 6,
+                  "lineEnd": 6,
+                  "startColumn": 42,
+                  "endColumn": 42,
+                  "value": " "
+                },
+                {
+                  "kind": "identifier",
+                  "lineStart": 6,
+                  "lineEnd": 6,
+                  "startColumn": 43,
+                  "endColumn": 43,
+                  "value": "1"
+                },
+                {
+                  "kind": "groupClose",
+                  "lineStart": 6,
+                  "lineEnd": 6,
+                  "startColumn": 44,
+                  "endColumn": 44,
+                  "value": ")"
+                }
+              ]
+            },
+            {
+              "kind": "groupClose",
+              "lineStart": 6,
+              "lineEnd": 6,
+              "startColumn": 45,
+              "endColumn": 45,
+              "value": ")"
+            }
+          ]
+        },
+        {
+          "kind": "newline",
+          "lineStart": 6,
+          "lineEnd": 6,
+          "startColumn": 46,
+          "endColumn": 46,
+          "value": "\n"
+        }
+      ]
+    }
+  ]
+]

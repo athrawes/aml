@@ -1,0 +1,11 @@
+IO = use "System/Effects/IO"
+
+# This function should fail to compile as the returned closure will have
+# enclosed a reference to the variable `a` which is still scoped to `fn`
+fn = _ ->
+  a = 1
+  _ -> a
+
+main = _ ->
+  fn ()
+  IO.from 0

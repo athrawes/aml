@@ -1,6 +1,6 @@
 Effect = use "System/Control/Effect"
 
-module Sequence extends Effect =
+module Sequence :> Effect =
   # @inheritdoc
   from: self
 

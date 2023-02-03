@@ -5,7 +5,7 @@ type IO<A>:
   | Running
   | Complete<A>
 
-module IO extends Effect =
+module IO :> Effect =
   # @inheritdoc
   from = Complete
 
