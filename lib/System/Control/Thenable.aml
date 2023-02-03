@@ -1,37 +1,25 @@
 module Thenable =
-  /**
-   * @docs-from ./Thenable.docs.md#`then`
-   */
+  # @docs-from ./Thenable.docs.md#`then`
   then: M<A> -> (A -> M<B>) -> M<B>
 
-  /**
-   * @docs-from ./Thenable.docs.md#`>>=`
-   * @include then
-   */
+  # @docs-from ./Thenable.docs.md#`>>=`
+  # @include then
   (>>=) = then
 
-  /**
-   * @docs-from ./Thenable.docs.md#`=<<`
-   * @include then
-   */
+  # @docs-from ./Thenable.docs.md#`=<<`
+  # @include then
   (=<<) = swap-args (>>=)
 
-  /**
-   * @docs-from ./Thenable.docs.md#`chain`
-   */
+  # @docs-from ./Thenable.docs.md#`chain`
   chain
     : (A -> M<B>) -> (B -> M<C>) -> (A -> M<C>)
     = callback-a-mb -> callback-b-mc
       callback-a-mb >> ((swap-args then) callback-b-mc)
 
-  /**
-   * @docs-from ./Thenable.docs.md#`>=>`
-   * @include chain
-   */
+  # @docs-from ./Thenable.docs.md#`>=>`
+  # @include chain
   (>=>) = chain
 
-  /**
-   * @docs-from ./Thenable.docs.md#`<=<`
-   * @include chain
-   */
+  # @docs-from ./Thenable.docs.md#`<=<`
+  # @include chain
   (<=<) = swap-args (>=>)

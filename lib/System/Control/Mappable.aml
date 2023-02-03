@@ -1,20 +1,12 @@
-/**
- * @docs-from ./Mappable.docs.md#Mappable
- */
+# @docs-from ./Mappable.docs.md#Mappable
 module Mappable =
-  /**
-   * @docs-from ./Mappable.docs.md#`map`
-   */
+  # @docs-from ./Mappable.docs.md#`map`
   map: M<A> -> (A -> B) -> M<B>
 
-  /**
-   * @docs-from ./Mappable.docs.md#`<$>`
-   * @include map
-   */
+  # @docs-from ./Mappable.docs.md#`<$>`
+  # @include map
   (<$>) = map
 
-  /**
-   * @docs-from ./Mappable.docs.md#`<&>`
-   * @include map
-   */
+  # @docs-from ./Mappable.docs.md#`<&>`
+  # @include map
   (<&>) = swap-args map

@@ -175,9 +175,10 @@ destructured value.
 
 When used in a guard expression, represents the default case.
 
-## Comments `#`, `//`, `/* */`
+## Comments `#`
 
-### Documentation Comments `/** */`
+Comments immediately above modules and functions are interpreted as
+documentation comments.
 
 ## Macros `` expr`macro` ``, `${}`
 

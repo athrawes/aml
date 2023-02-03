@@ -1,25 +1,8 @@
 module Constructable =
-  /**
-   * Creates a new instance of the current `Constructable` over the type of
-   * the value given.
-   *
-   * @example
-   * ```aml
-   * value = Maybe.from 42 # Maybe<Integer>
-   * ```
-   */
+  # Creates a new instance of the current `Constructable` over the type of the
+  # value given.
+  #
+  # ```aml
+  # value = Maybe.from 42 # Maybe<Integer>
+  # ```
   from: A -> M<A>
-
-  /**
-   * `return`
-   *
-   * An alias for `from`. Not to be confused with a traditional return
-   * statement; this is a function which constructs a new effect for a given
-   * value, as in Haskell's `return` function.
-   *
-   * ---
-   *
-   * @include from
-   * @reduce-autosuggest
-   */
-  return = from

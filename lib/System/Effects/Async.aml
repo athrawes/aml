@@ -5,8 +5,10 @@ Async<A> :
   | Resolved<A>
 
 module Async<A> extends Effect =
+  # @inheritdoc
   from = Async.Pending
 
+  # @inheritdoc
   then
     : Async<A> -> (A -> Async<B>) -> Async<B>
     = async -> callback ->

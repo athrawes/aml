@@ -1,5 +1,5 @@
 Effect = use "System/Control/Effect"
 
 module Sequence extends Effect =
-  /** @inheritdoc */
+  # @inheritdoc
   from: A -> Sequence<A>

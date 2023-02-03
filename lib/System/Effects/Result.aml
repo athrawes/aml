@@ -5,10 +5,10 @@ Result<A, E>:
   | Error<E>
 
 module Result extends Effect =
-  /** @inheritdoc */
+  # @inheritdoc
   from = Result.Ok
 
-  /** @inheritdoc */
+  # @inheritdoc
   then
     : Result<A, E> -> (A -> Result<B, F>) -> Result<B, E|F>
     = result -> callback ->

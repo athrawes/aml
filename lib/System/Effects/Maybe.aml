@@ -5,10 +5,10 @@ Maybe<A>:
   | None
 
 module Maybe extends Effect =
-  /** @inheritdoc */
+  # @inheritdoc
   from: A -> Maybe<A> = Maybe.Some
 
-  /** @inheritdoc */
+  # @inheritdoc
   then
     : Maybe<A> -> (A -> Maybe<B>) -> Maybe<B>
     = maybe -> callback ->

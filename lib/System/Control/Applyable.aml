@@ -1,17 +1,11 @@
 module Applyable =
-  /**
-   * @docs-from ./Applyable.docs.md#`apply`
-   */
+  # @docs-from ./Applyable.docs.md#`apply`
   apply: M<A> -> M<A -> B> -> M<B>
 
-  /**
-   * @docs-from ./Applyable.docs.md#`<*>`
-   * @include apply
-   */
+  # @docs-from ./Applyable.docs.md#`<*>`
+  # @include apply
   (<*>) = apply
 
-  /**
-   * @docs-from ./Applyable.docs.md#`<**>`
-   * @include apply
-   */
+  # @docs-from ./Applyable.docs.md#`<**>`
+  # @include apply
   (<**>) = swap-args apply

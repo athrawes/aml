@@ -1,8 +1,8 @@
 module Effect extends Constructable, Mappable, Applyable, Thenable =
-  /** @inheritdoc */
+  # @inheritdoc
   apply = callback -> value ->
     callback >>= ((swap-args map) value)
 
-  /** @inheritdoc */
+  # @inheritdoc
   map = callback -> value ->
     value >>= (callback >> from)
