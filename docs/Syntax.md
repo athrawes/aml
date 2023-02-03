@@ -81,7 +81,7 @@ let { b, c } := a # b is 1, c is 2
 let { b as d } := a # partial destructuring is allowed, and aliasing is available
 ```
 
-## Modules `interface`, `extends`
+## Modules `interface`, `extend`
 
 ### Tuples `[]`
 
