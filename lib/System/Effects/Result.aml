@@ -1,16 +1,15 @@
 Effect = use "System/Control/Effect"
 
-module Result<A, E> extends Effect =
+type Result<A, E>:
   | Ok<A>
   | Error<E>
 
+module Result extends Effect =
   # @inheritdoc
   from = Ok
 
   # @inheritdoc
-  then
-    : Result<A, E> -> (A -> Result<B, F>) -> Result<B, E|F>
-    = result -> callback ->
-      match result
-      | Ok [ value ] -> callback value
-      | Err -> result
+  then = result -> callback ->
+    match result
+    | Ok [ value ] -> callback value
+    | Err -> result

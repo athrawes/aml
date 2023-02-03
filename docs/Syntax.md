@@ -32,8 +32,8 @@ my-function: A -> String
 
 ```aml
 my-function: &'a -> String
-other-fn: &A'a -> String
-another-fn: &A -> String
+other-callback: &A'a -> String
+another-callback: &A -> String
 ```
 
 ### Type Bounds
@@ -48,7 +48,7 @@ my-function
 
 ### Cases `|`
 
-## Function definition `->`, `infix`
+## Function definition `->`, `( )`
 
 Functions may only take in a single value and return a single value.
 
@@ -69,7 +69,7 @@ around like any other value
 ```aml
 return-42 = _ -> 42
 fourty-two = compose return-42 to-string
-fourty-two () # fourty-two is "42"
+fourty-two _ # fourty-two is "42"
 
 operationThatCanFail
   : Integer -> Integer -> Maybe<Float>
@@ -104,7 +104,7 @@ AML is an expression-based language.
 This applies to function definitions as well:
 
 ```aml
-call-and-add-two = fn -> 2 + (fn 1)
+call-and-add-two = callback -> 2 + (callback 1)
 
 add-one = add 1 # Number -> Number
 |> call-and-add-two # 4; add-one is passed to call-and-add-two
@@ -115,7 +115,7 @@ want to evaluate the second line as continuing at the same level as the first.
 This is equivelant to:
 
 ```aml
-call-and-add-two = fn -> 2 + (fn 1)
+call-and-add-two = callback -> 2 + (callback 1)
 
 (add-one = add 1) |> call-and-add-two # 4
 ```
@@ -166,7 +166,7 @@ a = { b: { c: 42 } }
 a.b.c # 42
 ```
 
-## Unit `_`, `()`
+## Unit `_`
 
 When specified as a function parameter, ignores this parameter.
 
@@ -190,6 +190,6 @@ sql-query
 sql-prepared-statement = sql-query "John"
 ```
 
-## Primitive values: `"`, `'`, `0`, `0.0`, `true, false`, `{}`, `[]`
+## Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `[]`
 
 ## Pattern matching: `match`, `|`, `->`
