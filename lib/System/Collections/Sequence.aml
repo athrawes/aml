@@ -1,9 +1,0 @@
-Effect = use "System/Control/Effect"
-
-module Sequence :> Effect =
-  # @inheritdoc
-  from: self
-
-  # @inheritdoc
-  then = sequence -> callback ->
-    todo!
