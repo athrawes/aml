@@ -48,8 +48,8 @@ another-callback: &A -> String
 ```aml
 my-function
   : A -> B -> C
-    ? A :> D, E
-    ? B :> Map
+    where A :> D, E
+    where B :> Map
   = a -> b -> c
 ```
 
@@ -144,12 +144,13 @@ add-two
 
 Parenthesis may be used to group expressions
 
-## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `:>` `module`
+## Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `:>` `module`, `_`
 
 ```aml
 a = { b = 1, c = 2 }
 { b, c } = a   # b is 1, c is 2
 { b as d } = a # partial destructuring is allowed, and aliasing is available
+{ _ as Name } = use "Some/Module" # collect all from structure/module as alias
 ```
 
 Punning is allowed:
