@@ -49,7 +49,9 @@ module List :> Effect =
   # @include then
   flatMap = then
 
-  flatten: List<List<T>> -> List<T>
+  # Flattens one level of a multi-dimensional list.
+  flatten
+    : List<List<T>> -> List<T>
     = lists ->
       match lists
       | Empty -> lists
@@ -58,7 +60,11 @@ module List :> Effect =
           | Some { value } -> append head (flatten value)
           | None -> head
 
-  append: List<T> -> List<T> -> List<T>
+  # Appends two lists together. The lists are appended left to right, so the
+  # elements from the first list provided come first in the list, and the
+  # elements from the second list provided come later.
+  append
+    : List<T> -> List<T> -> List<T>
     = first -> second ->
       match first
       | Empty -> second
