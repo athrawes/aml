@@ -25,14 +25,15 @@ module List :> Effect =
     }
 
   # @inheritdoc
+  # @override
   map = list -> callback ->
     match list
     | Empty -> list
     | NonEmpty { head, tail } -> {
         head = Some(callback head.value),
         tail = match tail
-              | Some { value } -> map value callback
-              | None -> None
+               | Some { value } -> map value callback
+               | None -> None
       }
 
   # @inheritdoc
