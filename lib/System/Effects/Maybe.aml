@@ -1,15 +1,18 @@
 Effect = use "System/Control/Effect"
 
-type Maybe<A>:
-  | Some<A>
-  | None
-
 module Maybe :> Effect =
+  type Some<A> = value -> { value }
+  type None = _
+
+  type Maybe<A> =
+    | Some<A>
+    | None
+
   # @inheritdoc
   from = Some
 
   # @inheritdoc
   then = maybe -> callback ->
     match maybe
-    | Some [ value ] -> callback value
+    | Some { value } -> callback value
     | None -> None

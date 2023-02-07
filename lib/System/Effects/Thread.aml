@@ -1,15 +1,18 @@
 Effect = use "System/Control/Effect"
 
-type Thread<A>:
-  | Pending
-  | Finished<A>
-
 module Thread :> Effect =
+  type Finished<A> = value -> { value }
+  type Pending = _
+
+  type Thread<A>:
+    | Pending
+    | Finished<A>
+
   # @inheritdoc
   from = Finished
 
   # @inheritdoc
   then = thread -> callback ->
     match thread
-    | Finished [ value ] -> callback value
+    | Finished { value } -> callback value
     | Pending -> todo!

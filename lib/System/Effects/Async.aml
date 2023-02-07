@@ -1,15 +1,18 @@
 Effect = use "System/Control/Effect"
 
-type Async<A>:
-  | Pending
-  | Resolved<A>
-
 module Async :> Effect =
+  type Resolved<A> = value -> { value }
+  type Pending = _
+
+  type Async<A> =
+    | Resolved<A>
+    | Pending
+
   # @inheritdoc
   from = Resolved
 
   # @inheritdoc
   then = async -> callback ->
     match async
-    | Resolved [ value ] -> callback value
+    | Resolved { value } -> callback value
     | Pending -> todo!
