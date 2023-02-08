@@ -1,4 +1,12 @@
 module Pair =
+  type Pair<A,B>
+    | A -> B -> True  -> A
+    | A -> B -> False -> B
+
+  # Constructs a new pair from two arguments
+  from: Pair<A,B>
+    = a -> b -> which -> which a b
+
   # Grabs the first item from a Pair
   fst
     : Pair<A,B> -> A
@@ -8,8 +16,3 @@ module Pair =
   snd
     : Pair<A,B> -> B
     = False
-
-  type Pair<A,B>
-    | A -> B -> True  -> A
-    | A -> B -> False -> B
-    = a -> b -> which -> which a b
