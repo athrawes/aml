@@ -9,4 +9,4 @@ module Applyable =
 
   # @docs-from ./Applyable.docs.md#`<**>`
   # @include apply
-  (<**>) = swap-args apply
+  (<**>) = flip (<*>)

@@ -14,16 +14,16 @@ pipe: A -> (A -> B) -> B
   = argument -> callback -> callback argument
 
 (|>) = pipe
-(<|) = swap-args (|>)
+(<|) = flip (|>)
 
 compose: (A -> B) -> (B -> C) -> A -> C
   = callback-a-b -> callback-b-c -> a ->
     a |> callback-a-b |> callback-b-c
 
 (>>) = compose
-(<<) = swap-args (>>)
+(<<) = flip (>>)
 
-swap-args: (A -> B -> C) -> (B -> A -> C)
+flip: (A -> B -> C) -> (B -> A -> C)
   = callback -> (b -> a -> callback a b)
 
 (and): Boolean -> Boolean -> Boolean

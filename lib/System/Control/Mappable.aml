@@ -9,4 +9,4 @@ module Mappable =
 
   # @docs-from ./Mappable.docs.md#`<&>`
   # @include map
-  (<&>) = swap-args map
+  (<&>) = flip (<$>)

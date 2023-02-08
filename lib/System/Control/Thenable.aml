@@ -9,13 +9,13 @@ module Thenable =
 
   # @docs-from ./Thenable.docs.md#`=<<`
   # @include then
-  (=<<) = swap-args (>>=)
+  (=<<) = flip (>>=)
 
   # @docs-from ./Thenable.docs.md#`chain`
   chain
     : (A -> M<B>) -> (B -> M<C>) -> (A -> M<C>)
     = callback-a-mb -> callback-b-mc
-      callback-a-mb >> ((swap-args then) callback-b-mc)
+      callback-a-mb >> ((flip then) callback-b-mc)
 
   # @docs-from ./Thenable.docs.md#`>=>`
   # @include chain
@@ -23,4 +23,4 @@ module Thenable =
 
   # @docs-from ./Thenable.docs.md#`<=<`
   # @include chain
-  (<=<) = swap-args (>=>)
+  (<=<) = flip (>=>)
