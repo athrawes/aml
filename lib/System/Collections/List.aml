@@ -49,13 +49,7 @@ module List :> Effect =
     = first -> second ->
       match first
       | Empty -> second
-      | NonEmpty pair ->
-          match (Pair.snd pair)
-          | Empty -> {
-              head = (Pair.fst pair),
-              tail = second
-            }
-          | NonEmpty _ -> {
-              head = (Pair.fst pair),
-              tail = append (Pair.snd pair) second
-            }
+      | NonEmpty pair -> {
+          head = (Pair.fst pair),
+          tail = append (Pair.snd pair) second
+        }
