@@ -8,17 +8,16 @@ module List :> Effect =
 
   # @inheritdoc
   from: T -> List.NonEmpty<T>
-    = value -> Pair.from value _
+    = value -> Pair.from value List.Empty
 
   # @inheritdoc
   # @override
   map = list -> callback ->
     match list
     | Empty -> list
-    | NonEmpty pair -> {
-        head = callback (Pair.fst pair),
-        tail = map (Pair.snd pair) callback
-      }
+    | NonEmpty pair -> Pair.from
+        (callback (Pair.fst pair))
+        (map (Pair.snd pair) callback)
 
   # @inheritdoc
   then = list -> callback ->
@@ -41,17 +40,37 @@ module List :> Effect =
       | Empty -> List.Empty
       | NonEmpty pair -> concat (Pair.fst pair) (flatten (Pair.snd pair))
 
-  # Appends two lists together. The lists are concatenated left to right, so the
-  # elements from the first list provided come first in the list, and the
-  # elements from the second list provided come later.
+  # Returns a new list which is the result of appending two lists together. The
+  # lists are concatenated left to right, so the elements from the first list
+  # provided come first in the list, and the elements from the second list
+  # provided come later.
   concat
     : List<T> -> List<T> -> List<T>
     = first -> second ->
       match first
       | Empty -> second
-      | NonEmpty pair -> {
-          head = (Pair.fst pair),
-          tail = concat (Pair.snd pair) second
-        }
+      | NonEmpty pair -> Pair.from
+          (Pair.fst pair)
+          (concat (Pair.snd pair) second)
 
+  # An infix alias for `concat`.
+  # @include concat
   (++) = concat
+
+  # Returns a new list with a given item prepended to it.
+  prepend
+    : T -> List<T> -> List<T>
+    = Pair.from
+
+  # An infix alias for `prepend`.
+  # @include prepend
+  (::) = prepend
+
+  # Returns a new list which is in the reverse order of the input list.
+  reverse: List<T> -> List<T>
+    = list ->
+      match list
+      | Empty -> list
+      | NonEmpty pair -> concat
+          (reverse(Pair.snd pair))
+          (List.from(Pair.fst pair))
