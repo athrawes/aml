@@ -39,17 +39,19 @@ module List :> Effect =
     = lists ->
       match lists
       | Empty -> List.Empty
-      | NonEmpty pair -> append (Pair.fst pair) (flatten (Pair.snd pair))
+      | NonEmpty pair -> concat (Pair.fst pair) (flatten (Pair.snd pair))
 
-  # Appends two lists together. The lists are appended left to right, so the
+  # Appends two lists together. The lists are concatenated left to right, so the
   # elements from the first list provided come first in the list, and the
   # elements from the second list provided come later.
-  append
+  concat
     : List<T> -> List<T> -> List<T>
     = first -> second ->
       match first
       | Empty -> second
       | NonEmpty pair -> {
           head = (Pair.fst pair),
-          tail = append (Pair.snd pair) second
+          tail = concat (Pair.snd pair) second
         }
+
+  (++) = concat
