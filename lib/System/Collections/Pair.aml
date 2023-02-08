@@ -1,0 +1,15 @@
+module Pair =
+  # Grabs the first item from a Pair
+  fst
+    : Pair<A,B> -> A
+    = True
+
+  # Grabs the second item from a Pair
+  snd
+    : Pair<A,B> -> B
+    = False
+
+  type Pair<A,B>
+    | A -> B -> True  -> A
+    | A -> B -> False -> B
+    = a -> b -> which -> which a b

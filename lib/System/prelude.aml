@@ -27,12 +27,16 @@ flip: (A -> B -> C) -> (B -> A -> C)
   = callback -> (b -> a -> callback a b)
 
 (and): Boolean -> Boolean -> Boolean
+  = a -> b -> a b a
 
 (or): Boolean -> Boolean -> Boolean
+  = a -> b -> a a b
 
 (xor): Boolean -> Boolean -> Boolean
+  = is >> not
 
 not: Boolean -> Boolean
+  = condition -> flip condition
 
 bitshift-left: A -> Integer -> A
 
