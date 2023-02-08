@@ -1,6 +1,6 @@
 # Syntax
 
-## Variable binding `=`, `:`, `'`
+## Variable binding `=`, `:`, `'`, `where`, `:>`
 
 ```aml
 a = 5

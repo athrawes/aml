@@ -1,4 +1,8 @@
 {
+  "name": "another-ml",
+  "displayName": "AML",
+  "description": "",
+  "version": "0.0.1",
   "dependencies": {
     "glob": "^8.0.3",
     "ramda": "^0.28.0",
@@ -9,5 +13,33 @@
   "devDependencies": {
     "@types/glob": "^8.0.0",
     "@types/node": "^18.11.10"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "aml",
+        "aliases": [
+          "AML",
+          "aml"
+        ],
+        "extensions": [
+          ".aml"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "aml",
+        "scopeName": "source.aml",
+        "path": "./syntaxes/aml.tmLanguage.json"
+      }
+    ]
   }
 }

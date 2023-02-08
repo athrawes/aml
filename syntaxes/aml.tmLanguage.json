@@ -1,0 +1,73 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "AML",
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#entity"
+		},
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"comment": {
+			"patterns": [
+				{
+					"name": "comment.block.aml",
+					"match": "#( (.*))*",
+					"captures": {
+						"2": {
+							"name": "comment.block.documentation"
+						}
+					}
+				}
+			]
+		},
+		"entity": {
+			"patterns": [
+				{
+					"name": "variable.parameter.aml",
+					"match": "(?<!\\|\\s*\\w*)(\\w+)(?=\\s+->)"
+				},
+				{
+					"name": "entity.other.inherited-class",
+					"match": "(?<= :> )([^, ]+)"
+				}
+			]
+		},
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.control.aml",
+					"match": "\\b(as|of|where)\\b"
+				},
+				{
+					"name": "keyword.operator.aml",
+					"match": "\\b(_|:|\\->|:>|\\.\\.\\.|\\=)\\b"
+				},
+				{
+					"name": "storage.type.aml",
+					"match": "\\b(type|module)\\b"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.aml",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.aml",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.aml"
+}
