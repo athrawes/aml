@@ -1,39 +1,23 @@
 Effect = use "System/Control/Effect"
-{ _ as Maybe, Some, None } = use "System/Effects/Maybe"
+Pair = use "System/Collections/Pair"
 
 module List :> Effect =
   type List<T> =
-    | Empty of {
-        head: None,
-        tail: None,
-      }
-    | NonEmpty of {
-        head: Some<T>,
-        tail: Maybe<List<T>>,
-      }
-
-  empty: List<_>.Empty = {
-    head = None,
-    tail = None,
-  }
+    | Empty of _
+    | NonEmpty of Pair<T,List<T>>
 
   # @inheritdoc
   from: T -> List.NonEmpty<T>
-    = value -> {
-      head = Some value,
-      tail = None,
-    }
+    = value -> Pair.from value _
 
   # @inheritdoc
   # @override
   map = list -> callback ->
     match list
     | Empty -> list
-    | NonEmpty { head, tail } -> {
-        head = Some(callback head.value),
-        tail = match tail
-               | Some { value } -> map value callback
-               | None -> None
+    | NonEmpty pair -> {
+        head = callback (Pair.fst pair),
+        tail = map (Pair.snd pair) callback
       }
 
   # @inheritdoc
@@ -54,11 +38,8 @@ module List :> Effect =
     : List<List<T>> -> List<T>
     = lists ->
       match lists
-      | Empty -> lists
-      | NonEmpty { head, tail } ->
-          match tail
-          | Some { value } -> append head (flatten value)
-          | None -> head
+      | Empty -> List.Empty
+      | NonEmpty pair -> append (Pair.fst pair) (flatten (Pair.snd pair))
 
   # Appends two lists together. The lists are appended left to right, so the
   # elements from the first list provided come first in the list, and the
@@ -68,10 +49,13 @@ module List :> Effect =
     = first -> second ->
       match first
       | Empty -> second
-      | NonEmpty { head, tail } ->
-          match tail
-          | Some { value } -> {
-              head = head,
-              tail = Some(append value second)
+      | NonEmpty pair ->
+          match (Pair.snd pair)
+          | Empty -> {
+              head = (Pair.fst pair),
+              tail = second
             }
-          | None -> { head, tail = Some second }
+          | NonEmpty _ -> {
+              head = (Pair.fst pair),
+              tail = append (Pair.snd pair) second
+            }
