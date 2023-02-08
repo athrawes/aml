@@ -60,7 +60,7 @@ my-function
 Functions may only take in a single value and return a single value.
 
 ```aml
-a -> b # takes an arguement `a`, and returns the value contained in `b`
+a -> b # takes an argument `a`, and returns the value contained in `b`
 ```
 
 Functions can be chained
@@ -75,8 +75,8 @@ around like any other value
 
 ```aml
 return-42 = _ -> 42
-fourty-two = compose return-42 to-string
-fourty-two _ # fourty-two is "42"
+forty-two = compose return-42 to-string
+forty-two _ # forty-two is "42"
 
 operationThatCanFail
   : Integer -> Integer -> Maybe<Float>
@@ -119,7 +119,7 @@ add-one = add 1 # Number -> Number
 
 Note the lack of indentation in this example; this indicates to AML that we
 want to evaluate the second line as continuing at the same level as the first.
-This is equivelant to:
+This is equivalent to:
 
 ```aml
 call-and-add-two = callback -> 2 + (callback 1)

@@ -1,6 +1,11 @@
 {
     "editor.tabSize": 4,
     "markdownlint.config": {
-        "no-hard-tabs": { "code_blocks": false }
-    }
+        "no-hard-tabs": {
+            "code_blocks": false
+        }
+    },
+    "cSpell.words": [
+        "Applyable"
+    ]
 }

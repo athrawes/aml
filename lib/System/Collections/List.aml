@@ -25,7 +25,7 @@ module List :> Effect =
     flatten (map list callback)
 
   # An alias for `List.then`, which may be more intuitive in many contexts.
-  # Since the callback paramter maps each element in the origin list to an
+  # Since the callback parameter maps each element in the origin list to an
   # entire list of its own, `list.flatMap` takes the origin list,
   # applies the callback parameter to each argument, and then flattens the
   # resulting list of lists into a single list.
