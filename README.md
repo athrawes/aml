@@ -99,7 +99,7 @@ map: MyModule<A> -> (A -> B) -> MyModule<B>
 and not
 
 ```aml
-map: MyModule<A> -> (A -> B) -> MyModule<_> -> MyModule.id -> MyModule<B>
+map: MyModule<_> -> MyModule.id -> MyModule<A> -> (A -> B) -> MyModule<B>
 ```
 
 A simpler example might be as follows:
