@@ -47,6 +47,7 @@ let tokenizers = [
     tokenizeCharacter('string', '"'),
     tokenizeCharacter('valueSeparator', ','),
     tokenizeCharacter('caseArm', '|'),
+    tokenizePattern('decorator', /@\w+/),
     tokenizePattern('comment', /#[^\n]*/g),
     tokenizePattern('infer', /(?<=\s)_(?=\s)/g),
     tokenizePattern('type', /:(?=\s)/g),
