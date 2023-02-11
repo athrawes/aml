@@ -45,15 +45,23 @@
 			"patterns": [
 				{
 					"name": "keyword.control.aml",
-					"match": "\\b(as|of|where)\\b"
+					"match": "\\b(as|of|where|match)\\b"
 				},
 				{
 					"name": "keyword.operator.aml",
-					"match": "\\b(_|:|\\->|:>|\\.\\.\\.|\\=)\\b"
+					"match": "\\b(:|:>|\\.\\.\\.|\\=|\\|)\\b"
 				},
 				{
 					"name": "storage.type.aml",
 					"match": "\\b(type|module)\\b"
+				},
+				{
+					"name": "storage.type.function.arrow.aml",
+					"match": "->"
+				},
+				{
+					"name": "keyword.other.unit",
+					"match": "\\_"
 				}
 			]
 		},
