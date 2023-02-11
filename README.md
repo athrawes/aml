@@ -264,6 +264,22 @@ sql-query
 sql-prepared-statement = sql-query "John"
 ```
 
+### Interop `extern`
+
+Functions and values from other languages can be imported by using the `extern`
+keyword.
+
+```aml
+module File =
+  type File
+
+  fopen: String -> String -> Maybe<File>
+    = filename -> mode ->
+      let f = String.toCharList filename
+      let m = String.toCharList mode
+      extern fopen [f, m]
+```
+
 ### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `[]`
 
 ### Pattern matching: `match`, `|`, `->`
