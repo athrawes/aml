@@ -1,3 +1,5 @@
+_ = extern NULL
+
 add: Number -> Number -> Number
 (+) = add
 
