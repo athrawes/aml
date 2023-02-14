@@ -6,7 +6,7 @@
 then: M<A> -> (A -> M<B>) -> M<B>
 ```
 
-A method which allowes chaining functions which return instances of the
+A method which allows chaining functions which return instances of the
 current type.
 
 ```aml
@@ -59,9 +59,7 @@ Composes two functions by chaining.
 
 fetch-json
   : URL -> Async<Result<JsonValue, _>>
-  = chain
-    GET
-    (response -> decodeAsync response.Body)
+  = chain GET (response -> decodeAsync response.Body)
 ```
 
 ## `>=>`
@@ -92,4 +90,17 @@ An infix alias for `chain`, but with the arguments reversed
 { GET } = use "System/Web/Http"
 
 fetch-json = (response -> decodeAsync response.Body) <=< GET
+```
+
+## `flatten`
+
+```aml
+flatten: M<M<A>> -> M<A>
+```
+
+Flattens two levels of wrapping into a single level
+
+```aml
+nested-value = Some (Some 5) // Maybe<Maybe<Integer>>
+optional-value = flatten nested-value // Maybe<Integer>
 ```

@@ -24,3 +24,6 @@ module Thenable =
   # @docs-from ./Thenable.docs.md#`<=<`
   # @include chain
   (<=<) = flip (>=>)
+
+  # @docs-from ./Thenable.docs.md#`flatten`
+  flatten: M<M<A>> -> M<A> = self -> then self id
