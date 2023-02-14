@@ -14,7 +14,7 @@ module Async :> Effect =
   # @inheritdoc
   then
     : Async<A> -> (A -> Async<B>) -> Async<B>
-    = async -> callback ->
-      match async
-      | Resolved { value } -> callback value
+    = self -> callback ->
+      match self
+      | Resolved { value } -> callback self
       | Pending { suspended } -> Pending<B> (_ -> then (suspended _) callback)

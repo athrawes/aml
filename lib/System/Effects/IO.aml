@@ -14,8 +14,8 @@ module IO :> Effect =
   from = Complete
 
   # @inheritdoc
-  then = io -> callback ->
-    match io
+  then = self -> callback ->
+    match self
     | Complete { value } -> callback value
     | Running -> todo!
     | Pending -> todo!

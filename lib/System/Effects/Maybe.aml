@@ -12,7 +12,7 @@ module Maybe :> Effect =
   from = Some
 
   # @inheritdoc
-  then = maybe -> callback ->
-    match maybe
+  then = self -> callback ->
+    match self
     | Some { value } -> callback value
     | None -> None

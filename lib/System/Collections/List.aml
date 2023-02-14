@@ -8,7 +8,7 @@ module List :> Effect =
 
   # @inheritdoc
   from: T -> List.NonEmpty<T>
-    = value -> Pair.from value List.Empty
+    = self -> Pair.from self List.Empty
 
   # @inheritdoc
   # @override

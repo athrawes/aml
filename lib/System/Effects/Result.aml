@@ -11,7 +11,7 @@ module Result :> Effect =
   from = Ok
 
   # @inheritdoc
-  then = result -> callback ->
-    match result
+  then = self -> callback ->
+    match self
     | Ok { value } -> callback value
-    | Err -> result
+    | Err -> self
