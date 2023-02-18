@@ -3,12 +3,12 @@ Effect = use "System/Control/Effect"
 module IO :> Effect =
   type Pending = _
   type Running = _
-  type Complete<A> = value -> { value }
+  type Complete<'a> = value -> { value }
 
-  type IO<A>:
+  type IO<'a>:
     | Pending
     | Running
-    | Complete<A>
+    | Complete<'a>
 
   # @inheritdoc
   from = Complete

@@ -1,13 +1,13 @@
 # Mappable
 
 Defines things that can be 'mapped' over; that is, things which, when given
-a function from type A to type B, can use that function to transform the
+a function from type 'a to type 'b, can use that function to transform the
 values within in a well-defined way.
 
 ## `map`
 
 ```aml
-map: M<A> -> (A -> B) -> M<B>
+map: 'm<'a> -> ('a -> 'b) -> 'm<'b>
 ```
 
 A function to apply a given mapping function to the current effect.
@@ -23,7 +23,7 @@ List.from [1, 2, 3]
 An infix alias for `map`
 
 ```aml
-<$> : M<A> -> (A -> B) -> M<B>
+<$> : 'm<'a> -> ('a -> 'b) -> 'm<'b>
 ```
 
 ```aml
@@ -37,7 +37,7 @@ List.from [1, 2, 3]
 An infix alias for `map`, but with the arguments for this function reversed.
 
 ```aml
-<&> : (A -> B) -> M<A> -> M<B>
+<&> : ('a -> 'b) -> 'm<'a> -> 'm<'b>
 ```
 
 ```aml

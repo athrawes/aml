@@ -3,7 +3,7 @@
 ## `then`
 
 ```aml
-then: M<A> -> (A -> M<B>) -> M<B>
+then: 'm<'a> -> ('a -> 'm<'b>) -> 'm<'b>
 ```
 
 A method which allows chaining functions which return instances of the
@@ -22,7 +22,7 @@ An alias for `then`
 ## `>>=`
 
 ```aml
-(>>=): M<A> -> (A -> M<B>) -> M<B>
+(>>=): 'm<'a> -> ('a -> 'm<'b>) -> 'm<'b>
 ```
 
 An infix alias for `then`
@@ -36,7 +36,7 @@ An infix alias for `then`
 ## `=<<`
 
 ```aml
-(=<<): (A -> M<B>) -> M<A> -> M<B>
+(=<<): ('a -> 'm<'b>) -> 'm<'a> -> 'm<'b>
 ```
 
 An infix alias for `then`, but with the arguments reversed
@@ -48,7 +48,7 @@ An infix alias for `then`, but with the arguments reversed
 ## `chain`
 
 ```aml
-chain: (A -> M<B>) -> (B -> M<C>) -> A -> M<C>
+chain: ('a -> 'm<'b>) -> ('b -> 'm<'c>) -> 'a -> 'm<'c>
 ```
 
 Composes two functions by chaining.
@@ -65,7 +65,7 @@ fetch-json
 ## `>=>`
 
 ```aml
-(>=>): (A -> M<B>) -> (B -> M<C>) -> A -> M<C>
+(>=>): ('a -> 'm<'b>) -> ('b -> 'm<'c>) -> 'a -> 'm<'c>
 ```
 
 An infix alias for `chain`
@@ -80,7 +80,7 @@ fetch-json = GET >=> (response -> decodeAsync response.Body)
 ## `<=<`
 
 ```aml
-(<=<): (B -> M<C>) -> (A -> M<B>) -> A -> M<C>
+(<=<): ('b -> 'm<'c>) -> ('a -> 'm<'b>) -> 'a -> 'm<'c>
 ```
 
 An infix alias for `chain`, but with the arguments reversed
@@ -95,7 +95,7 @@ fetch-json = (response -> decodeAsync response.Body) <=< GET
 ## `flatten`
 
 ```aml
-flatten: M<M<A>> -> M<A>
+flatten: 'm<'m<'a>> -> 'm<'a>
 ```
 
 Flattens two levels of wrapping into a single level

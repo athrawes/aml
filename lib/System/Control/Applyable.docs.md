@@ -3,7 +3,7 @@
 ## `apply`
 
 ```aml
-apply: M<A> -> M<A -> B> -> M<B>
+apply: 'm<'a> -> 'm<'a -> 'b> -> 'm<'b>
 ```
 
 Applies functions within an effect to values within the same effect.
@@ -18,7 +18,7 @@ apply values-list function-list # List<Integer> (3, 4, 5, 11, 12, 13)
 ## `<*>`
 
 ```aml
-(<*>): M<A> -> M<A -> B> -> M<B>
+(<*>): 'm<'a> -> 'm<'a -> 'b> -> 'm<'b>
 ```
 
 An infix alias of `apply`.
@@ -26,7 +26,7 @@ An infix alias of `apply`.
 ## `<**>`
 
 ```aml
-(<**>): M<A -> B> -> M<A> -> M<B>
+(<**>): 'm<'a -> 'b> -> 'm<'a> -> 'm<'b>
 ```
 
 An infix alias of `apply`, but with the arguments reversed.

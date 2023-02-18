@@ -1,7 +1,7 @@
 # @docs-from ./Thenable.docs.md#Thenable
 module Thenable =
   # @docs-from ./Thenable.docs.md#`then`
-  then: M<A> -> (A -> M<B>) -> M<B>
+  then: 'm<'a> -> ('a -> 'm<'b>) -> 'm<'b>
 
   # @docs-from ./Thenable.docs.md#`>>=`
   # @include then
@@ -13,7 +13,7 @@ module Thenable =
 
   # @docs-from ./Thenable.docs.md#`chain`
   chain
-    : (A -> M<B>) -> (B -> M<C>) -> (A -> M<C>)
+    : ('a -> 'm<'b>) -> ('b -> 'm<'c>) -> ('a -> 'm<'c>)
     = callback-a-mb -> callback-b-mc
       callback-a-mb >> ((flip then) callback-b-mc)
 
@@ -26,4 +26,4 @@ module Thenable =
   (<=<) = flip (>=>)
 
   # @docs-from ./Thenable.docs.md#`flatten`
-  flatten: M<M<A>> -> M<A> = self -> then self id
+  flatten: 'm<'m<'a>> -> 'm<'a> = self -> then self id

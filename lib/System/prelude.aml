@@ -12,20 +12,20 @@ multiply: Number -> Number -> Number
 divide: Number -> Number -> Maybe<Number>
 (/) = divide
 
-pipe: A -> (A -> B) -> B
+pipe: 'a -> ('a -> 'b) -> 'b
   = argument -> callback -> callback argument
 
 (|>) = pipe
 (<|) = flip (|>)
 
-compose: (A -> B) -> (B -> C) -> A -> C
+compose: ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
   = callback-a-b -> callback-b-c -> a ->
     a |> callback-a-b |> callback-b-c
 
 (>>) = compose
 (<<) = flip (>>)
 
-flip: (A -> B -> C) -> (B -> A -> C)
+flip: ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
   = callback -> (b -> a -> callback a b)
 
 (and): Boolean -> Boolean -> Boolean
@@ -40,14 +40,14 @@ flip: (A -> B -> C) -> (B -> A -> C)
 not: Boolean -> Boolean
   = condition -> flip condition
 
-bitshift-left: A -> Integer -> A
+bitshift-left: 'a -> Integer -> 'a
 
 (<<<) = bitshift-left
 
-bitshift-right: A -> Integer -> A
+bitshift-right: 'a -> Integer -> 'a
 
 (>>>) = bitshift-right
 
-(is): A -> A -> Boolean
+(is): 'a -> 'a -> Boolean
 
-id: A -> A = a -> a
+id: 'a -> 'a = a -> a

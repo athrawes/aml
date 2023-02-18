@@ -2,12 +2,12 @@ Effect = use "System/Control/Effect"
 Pair = use "System/Collections/Pair"
 
 module List :> Effect =
-  type List<T> =
+  type List<'t> =
     | Empty of _
-    | NonEmpty of Pair<T,List<T>>
+    | NonEmpty of Pair<'t,List<'t>>
 
   # @inheritdoc
-  from: T -> List.NonEmpty<T>
+  from: 't -> List.NonEmpty<'t>
     = self -> Pair.from self List.Empty
 
   # @inheritdoc
@@ -34,7 +34,7 @@ module List :> Effect =
 
   # Flattens one level of a multi-dimensional list.
   flatten
-    : List<List<T>> -> List<T>
+    : List<List<'t>> -> List<'t>
     = lists ->
       match lists
       | Empty -> List.Empty
@@ -45,7 +45,7 @@ module List :> Effect =
   # provided come first in the list, and the elements from the second list
   # provided come later.
   concat
-    : List<T> -> List<T> -> List<T>
+    : List<'t> -> List<'t> -> List<'t>
     = first -> second ->
       match first
       | Empty -> second
@@ -59,7 +59,7 @@ module List :> Effect =
 
   # Returns a new list with a given item prepended to it.
   prepend
-    : T -> List<T> -> List<T>
+    : 't -> List<'t> -> List<'t>
     = Pair.from
 
   # An infix alias for `prepend`.
@@ -67,7 +67,7 @@ module List :> Effect =
   (::) = prepend
 
   # Returns a new list which is in the reverse order of the input list.
-  reverse: List<T> -> List<T>
+  reverse: List<'t> -> List<'t>
     = list ->
       match list
       | Empty -> list

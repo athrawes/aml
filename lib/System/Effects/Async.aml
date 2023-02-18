@@ -1,20 +1,20 @@
 Effect = use "System/Control/Effect"
 
 module Async :> Effect =
-  type Resolved<A>
-  type Pending<A> of (_ -> Resolved<A>)
+  type Resolved<'a>
+  type Pending<'a> of (_ -> Resolved<'a>)
 
-  type Async<A> =
-    | Resolved<A>
-    | Pending<A>
+  type Async<'a> =
+    | Resolved<'a>
+    | Pending<'a>
 
   # @inheritdoc
   from = Resolved
 
   # @inheritdoc
   then
-    : Async<A> -> (A -> Async<B>) -> Async<B>
+    : Async<'a> -> ('a -> Async<'b>) -> Async<'b>
     = self -> callback ->
       match self
       | Resolved { value } -> callback self
-      | Pending { suspended } -> Pending<B> (_ -> then (suspended _) callback)
+      | Pending { suspended } -> Pending<'b> (_ -> then (suspended _) callback)

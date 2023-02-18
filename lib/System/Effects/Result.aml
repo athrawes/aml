@@ -1,11 +1,11 @@
 Effect = use "System/Control/Effect"
 
 module Result :> Effect =
-  type Ok<A> = value -> { value }
-  type Error<E> = value -> { value }
-  type Result<A, E>:
-    | Ok<A>
-    | Error<E>
+  type Ok<'a> = value -> { value }
+  type Error<'e> = value -> { value }
+  type Result<'a, 'e>:
+    | Ok<'a>
+    | Error<'e>
 
   # @inheritdoc
   from = Ok

@@ -1,7 +1,7 @@
 # @docs-from ./Mappable.docs.md#Mappable
 module Mappable =
   # @docs-from ./Mappable.docs.md#`map`
-  map: M<A> -> (A -> B) -> M<B>
+  map: 'm<'a> -> ('a -> 'b) -> 'm<'b>
 
   # @docs-from ./Mappable.docs.md#`<$>`
   # @include map

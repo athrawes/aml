@@ -1,7 +1,7 @@
 # @docs-from ./Applyable.docs.md#Applyable
 module Applyable =
   # @docs-from ./Applyable.docs.md#`apply`
-  apply: M<A> -> M<A -> B> -> M<B>
+  apply: 'm<'a> -> 'm<'a -> 'b> -> 'm<'b>
 
   # @docs-from ./Applyable.docs.md#`<*>`
   # @include apply

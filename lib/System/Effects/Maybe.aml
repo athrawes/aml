@@ -1,11 +1,11 @@
 Effect = use "System/Control/Effect"
 
 module Maybe :> Effect =
-  type Some<A> = value -> { value }
+  type Some<'a> = value -> { value }
   type None = _
 
-  type Maybe<A> =
-    | Some<A>
+  type Maybe<'a> =
+    | Some<'a>
     | None
 
   # @inheritdoc
