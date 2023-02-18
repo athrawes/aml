@@ -35,35 +35,34 @@ When binding variables, a type declaration may be provided
 a: Integer = 5
 ```
 
-If the symbol provided cannot be resolved to a known type, AML interprets the
-parameter as a generic type parameter:
+To mark a type parameter, simply prepend with a `'` character:
 
 ```aml
-my-function: A -> String
+my-function: 'a -> String
 ```
 
 #### References & Lifetime annotations
 
 ```aml
 # a function whose argument's type is inferred but is a reference with a
-# lifetime of 'a
-my-function: &'a -> String
+# lifetime of ^a
+my-function: &^a -> String
 
-# a function whose argument's type is A and is a reference with a lifetime of 'a
-other-callback: &A'a -> String
+# a function whose argument's type is 'a and is a reference with lifetime ^a
+other-callback: &'a^a -> String
 
-# a function whose argument's type is A and is a reference with an inferred
+# a function whose argument's type is 'a and is a reference with an inferred
 # lifetime
-another-callback: &A -> String
+another-callback: &'a -> String
 ```
 
 #### Type Bounds
 
 ```aml
 my-function
-  : A -> B -> C
-    where A :> D, E
-    where B :> Map
+  : 'a -> 'b -> 'c
+    where 'a :> D, E
+    where 'b :> Map
   = a -> b -> c
 ```
 
@@ -93,13 +92,13 @@ The result of the decorator will then be bound to the original name, so for this
 example, the type of `MyModule.map` would be
 
 ```aml
-map: MyModule<A> -> (A -> B) -> MyModule<B>
+map: MyModule<'a> -> ('a -> 'b) -> MyModule<'b>
 ```
 
 and not
 
 ```aml
-map: MyModule<_> -> MyModule.id -> MyModule<A> -> (A -> B) -> MyModule<B>
+map: MyModule<_> -> MyModule.id -> MyModule<'a> -> ('a -> 'b) -> MyModule<'b>
 ```
 
 A simpler example might be as follows:
@@ -222,7 +221,7 @@ a = { b = 1, c = 2 }
 Punning is allowed:
 
 ```aml
-value -> { value } # A -> Map<String, A>
+value -> { value } # 'a -> Map<String, 'a>
 ```
 
 #### Tuples `[]`
@@ -258,7 +257,7 @@ documentation comments.
 
 ```aml
 sql-query
-  : T -> SqlQuery
+  : 't -> SqlQuery
   = sql`SELECT * FROM \`users\` WHERE 'name' = ${name}`
 
 sql-prepared-statement = sql-query "John"
@@ -329,7 +328,7 @@ module MyModule =
 
 Borrowing some concepts from Haskell, AML has fully managed effects. Most
 noticeably, this means that most functions in the `IO` namespace don't
-immediately perform an operation, and instead return an `IO<A>` computation
+immediately perform an operation, and instead return an `IO<'a>` computation
 which must be passed to the `IO.run` function in order to be executed.
 
 For example, to write "Hello, World!" to stdout, you'd write:
@@ -339,8 +338,8 @@ IO.stdout "Hello, World!"
 |> IO.run
 ```
 
-`IO<A>` has all of the usual FP goodies one would expect here, allowing users
-to bind, map, apply, and compose IO operations. To be more specific, `IO<A>` is
+`IO<'a>` has all of the usual FP goodies one would expect here, allowing users
+to bind, map, apply, and compose IO operations. To be more specific, `IO<'a>` is
 an Effect, AKA Monad. This makes creating IO pipelines a breeze:
 
 ```aml
@@ -366,10 +365,10 @@ IO.run prompt # IO happens here
 #### Casing
 
 Type parameters should either be a single capital letter or a short descriptor
-in PascalCase. For example, `A` or `MyParameter`
+in PascalCase. For example, `'a` or `'MyParameter`
 
 Lifetime parameters should be either a single lower case letter or a short
-descriptor in kebab-case. For example, `'a` or `'program-lifetime`.
+descriptor in kebab-case. For example, `^a` or `^program-lifetime`.
 
 Type names should be in PascalCase.
 
