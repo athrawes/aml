@@ -1,0 +1,33 @@
+<aml-program> ::= <declaration>*
+<declaration> ::= <identifier> <optional-type> "=" <expression>
+<lambda-definition> ::= <variable> "->" <expression> | <variable> '->' <lambda-definition>
+<variable> ::= <identifier>
+<optional-type> ::= ":" <type> | ""
+<type> ::= <identifier>
+         | <type-parameter>
+         | <infer>
+         | <generic-type>
+         | <type> "->" <type>
+<type-parameter> ::= "'" <identifier>
+<generic-type> ::= <type> "<" <type> ">"
+<infer> ::= '_'
+<expression> ::= <identifier>
+               | <string-literal>
+               | <lambda-call>
+               | <variable-binding>
+               | <scoped-expression>
+               | <lambda-definition>
+               | <variable-declaration>
+
+<string-literal> ::= <single-quoted-string> | <double-quoted-string>
+<single-quoted-string> ::= "'" <string-char>* "'"
+<double-quoted-string> ::= '"' <string-char>* '"'
+<string-char> ::= <escaped-char> | <unescaped-char>
+<escaped-char> ::= "\\" <any-utf8-character>
+<unescaped-char> ::= <any-utf8-character> - ['\\']
+<lambda-call> ::= <identifier> <whitespace> <identifier>
+                | <scoped-expression> <whitespace> <scoped-expression>
+                | <identifier> <whitespace> <scoped-expression>
+                | <scoped-expression> <whitespace> <identifier>
+<scoped-expression> ::= "(" <expression> ")"
+<identifier> ::= <any-utf8-character-except-whitespace>
