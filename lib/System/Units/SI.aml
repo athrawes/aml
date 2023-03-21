@@ -43,8 +43,8 @@ SI =
   unit kelvin
   unit K = kelvin
 
-  unit celcius = kelvin + 273.15
-  unit C = celcius
+  unit celsius = kelvin + 273.15
+  unit C = celsius
 
   unit mole = 6.02214076e23
   unit mol = mole

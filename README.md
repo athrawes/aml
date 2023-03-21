@@ -45,11 +45,11 @@ my-function: 'a -> String
 
 ```aml
 # a function whose argument's type is inferred but is a reference with a
-# lifetime of ^a
-my-function: &^a -> String
+# lifetime of &a
+my-function: &a -> String
 
-# a function whose argument's type is 'a and is a reference with lifetime ^a
-other-callback: &'a^a -> String
+# a function whose argument's type is 'a and is a reference with lifetime &a
+other-callback: &a'a -> String
 
 # a function whose argument's type is 'a and is a reference with an inferred
 # lifetime
