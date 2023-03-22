@@ -1,17 +1,16 @@
 Effect = use "System/Control/Effect"
 
 module Result :> Effect =
-  type Ok<'a> = value -> { value }
-  type Error<'e> = value -> { value }
-  type Result<'a, 'e>:
-    | Ok<'a>
-    | Error<'e>
+  type Ok 'a
+  type Error 'e
+  type Result 'a 'e =
+    | Ok 'a
+    | Error 'e
 
   # @inheritdoc
   from = Ok
 
   # @inheritdoc
-  then = self -> callback ->
-    match self
-    | Ok { value } -> callback value
-    | Err -> self
+  then = self callback -> match self
+    | Ok value -> callback value
+    | Err _ -> self

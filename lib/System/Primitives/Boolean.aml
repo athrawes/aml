@@ -1,7 +1,7 @@
 module Boolean =
-  True =  a -> _ -> a
-  False = _ -> b -> b
+  True =  a _ -> a
+  False = _ b -> b
 
-  type Boolean:
+  type Boolean =
     | True of True
     | False of False

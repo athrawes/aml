@@ -1,21 +1,20 @@
 Effect = use "System/Control/Effect"
 
 module IO :> Effect =
-  type Pending = _
-  type Running = _
-  type Complete<'a> = value -> { value }
+  type Pending
+  type Running
+  type Complete 'a
 
-  type IO<'a>:
+  type IO 'a =
     | Pending
     | Running
-    | Complete<'a>
+    | Complete 'a
 
   # @inheritdoc
   from = Complete
 
   # @inheritdoc
-  then = self -> callback ->
-    match self
-    | Complete { value } -> callback value
+  then = self callback -> match self
+    | Complete value -> callback value
     | Running -> todo!
     | Pending -> todo!

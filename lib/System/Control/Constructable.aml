@@ -1,4 +1,4 @@
 # @docs-from ./Constructable.docs.md#Constructable
 module Constructable =
   # @docs-from ./Constructable.docs.md#`from`
-  from: 'a -> 'm<'a>
+  from: 'a -> 'm 'a

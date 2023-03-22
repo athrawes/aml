@@ -45,11 +45,11 @@ my-function: 'a -> String
 
 ```aml
 # a function whose argument's type is inferred but is a reference with a
-# lifetime of ^a
-my-function: &^a -> String
+# lifetime of &a
+my-function: &a -> String
 
-# a function whose argument's type is 'a and is a reference with lifetime ^a
-other-callback: &'a^a -> String
+# a function whose argument's type is 'a and is a reference with lifetime &a
+other-callback: &a'a -> String
 
 # a function whose argument's type is 'a and is a reference with an inferred
 # lifetime
@@ -63,7 +63,7 @@ my-function
   : 'a -> 'b -> 'c
     where 'a :> D, E
     where 'b :> Map
-  = a -> b -> c
+  = a b -> c
 ```
 
 #### Cases `|`
@@ -78,7 +78,7 @@ optimized, you can use the `@tail-recursive` decorator as in this pseudo-code:
 ```aml
 module MyModule :> Mappable =
   @tail-recursive MyModule.Empty MyModule.id
-  map = accumulator -> identity -> module -> callback ->
+  map = accumulator identity my-module callback ->
     # ... some code which is tail-recursive and behaves as `map` should ...
     # ... no hand-waving here, I swear 🤪 ...
 ```
@@ -92,13 +92,13 @@ The result of the decorator will then be bound to the original name, so for this
 example, the type of `MyModule.map` would be
 
 ```aml
-map: MyModule<'a> -> ('a -> 'b) -> MyModule<'b>
+map: MyModule 'a -> ('a -> 'b) -> MyModule 'b
 ```
 
 and not
 
 ```aml
-map: MyModule<_> -> MyModule.id -> MyModule<'a> -> ('a -> 'b) -> MyModule<'b>
+map: MyModule _ -> MyModule.id -> MyModule 'a -> ('a -> 'b) -> MyModule 'b
 ```
 
 A simpler example might be as follows:
@@ -106,7 +106,7 @@ A simpler example might be as follows:
 ```aml
 add-one
   : _ -> Number -> Number
-  = _bindName -> bindValue -> bindValue + 1
+  = _bindName bindValue -> bindValue + 1
 
 # The @add-one decorator intercepts the binding, so the number 6 is what is
 # actually bound to `result`.
@@ -144,8 +144,8 @@ forty-two = compose return-42 to-string
 forty-two _ # forty-two is "42"
 
 operationThatCanFail
-  : Integer -> Integer -> Maybe<Float>
-  = a -> b -> a / b
+  : Integer -> Integer -> Maybe Float
+  = a b -> a / b
 ```
 
 #### Infix functions
@@ -154,9 +154,8 @@ To define an infix function, (ie, a function whose argument may be placed in
 front of the function call), place the name of the function in parenthesis:
 
 ```aml
-(%): Integer -> Integer -> Maybe<Integer>
-  = a -> b ->
-    (a / b)
+(%): Integer -> Integer -> Maybe Integer
+  = a b -> (a / b)
     >>= to-integer
     >>= (multiply b)
     >>= (subtract a)
@@ -221,7 +220,7 @@ a = { b = 1, c = 2 }
 Punning is allowed:
 
 ```aml
-value -> { value } # 'a -> Map<String, 'a>
+value -> { value } # 'a -> Map String 'a
 ```
 
 #### Tuples `[]`
@@ -272,10 +271,10 @@ keyword.
 module File =
   type File
 
-  fopen: String -> String -> Maybe<File>
-    = filename -> mode ->
-      let f = String.toCharList filename
-      let m = String.toCharList mode
+  fopen: String -> String -> Maybe File
+    = filename mode ->
+      f = String.toCharList filename
+      m = String.toCharList mode
       extern fopen [f, m]
 ```
 
@@ -328,7 +327,7 @@ module MyModule =
 
 Borrowing some concepts from Haskell, AML has fully managed effects. Most
 noticeably, this means that most functions in the `IO` namespace don't
-immediately perform an operation, and instead return an `IO<'a>` computation
+immediately perform an operation, and instead return an `IO 'a` computation
 which must be passed to the `IO.run` function in order to be executed.
 
 For example, to write "Hello, World!" to stdout, you'd write:
@@ -338,8 +337,8 @@ IO.stdout "Hello, World!"
 |> IO.run
 ```
 
-`IO<'a>` has all of the usual FP goodies one would expect here, allowing users
-to bind, map, apply, and compose IO operations. To be more specific, `IO<'a>` is
+`IO 'a` has all of the usual FP goodies one would expect here, allowing users
+to bind, map, apply, and compose IO operations. To be more specific, `IO 'a` is
 an Effect, AKA Monad. This makes creating IO pipelines a breeze:
 
 ```aml
@@ -368,7 +367,7 @@ Type parameters should either be a single capital letter or a short descriptor
 in PascalCase. For example, `'a` or `'MyParameter`
 
 Lifetime parameters should be either a single lower case letter or a short
-descriptor in kebab-case. For example, `^a` or `^program-lifetime`.
+descriptor in kebab-case. For example, `&a` or `&program-lifetime`.
 
 Type names should be in PascalCase.
 

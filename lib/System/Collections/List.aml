@@ -2,25 +2,24 @@ Effect = use "System/Control/Effect"
 Pair = use "System/Collections/Pair"
 
 module List :> Effect =
-  type List<'t> =
-    | Empty of _
-    | NonEmpty of Pair<'t,List<'t>>
+  type List 't =
+    | Empty
+    | NonEmpty of Pair 't (List 't)
 
   # @inheritdoc
-  from: 't -> List.NonEmpty<'t>
+  from: 't -> List.NonEmpty 't
     = self -> Pair.from self List.Empty
 
   # @inheritdoc
   # @override
-  map = list -> callback ->
-    match list
+  map = list callback -> match list
     | Empty -> list
     | NonEmpty pair -> Pair.from
         (callback (Pair.fst pair))
         (map (Pair.snd pair) callback)
 
   # @inheritdoc
-  then = list -> callback ->
+  then = list callback ->
     flatten (map list callback)
 
   # An alias for `List.then`, which may be more intuitive in many contexts.
@@ -34,9 +33,8 @@ module List :> Effect =
 
   # Flattens one level of a multi-dimensional list.
   flatten
-    : List<List<'t>> -> List<'t>
-    = lists ->
-      match lists
+    : List (List 't) -> List 't
+    = lists -> match lists
       | Empty -> List.Empty
       | NonEmpty pair -> concat (Pair.fst pair) (flatten (Pair.snd pair))
 
@@ -45,9 +43,8 @@ module List :> Effect =
   # provided come first in the list, and the elements from the second list
   # provided come later.
   concat
-    : List<'t> -> List<'t> -> List<'t>
-    = first -> second ->
-      match first
+    : List 't -> List 't -> List 't
+    = first second -> match first
       | Empty -> second
       | NonEmpty pair -> Pair.from
           (Pair.fst pair)
@@ -59,7 +56,7 @@ module List :> Effect =
 
   # Returns a new list with a given item prepended to it.
   prepend
-    : 't -> List<'t> -> List<'t>
+    : 't -> List 't -> List 't
     = Pair.from
 
   # An infix alias for `prepend`.
@@ -67,9 +64,8 @@ module List :> Effect =
   (::) = prepend
 
   # Returns a new list which is in the reverse order of the input list.
-  reverse: List<'t> -> List<'t>
-    = list ->
-      match list
+  reverse: List 't -> List 't
+    = list -> match list
       | Empty -> list
       | NonEmpty pair -> concat
           (reverse(Pair.snd pair))
