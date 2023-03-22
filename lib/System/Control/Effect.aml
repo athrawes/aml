@@ -1,9 +1,6 @@
-# @docs-from ./Effect.docs.md#Effect
 module Effect :> Constructable Mappable Applyable Thenable =
-  # @inheritdoc
   apply = self callback ->
     callback >>= (map self)
 
-  # @inheritdoc
   map = self callback ->
     self >>= (callback >> from)

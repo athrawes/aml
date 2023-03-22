@@ -1,29 +1,77 @@
-# @docs-from ./Thenable.docs.md#Thenable
 module Thenable =
-  # @docs-from ./Thenable.docs.md#`then`
+  # A method which allows chaining functions which return instances of the
+  # current type.
+  #
+  # ```aml
+  # (Maybe.from 42)
+  # |> then (value -> value / 2) # Maybe Float (21.0)
+  # |> then (value -> value / 5) # Maybe Float (4.2)
+  # ```
   then: 'm 'a -> ('a -> 'm 'b) -> 'm 'b
 
-  # @docs-from ./Thenable.docs.md#`>>=`
+  # An infix alias for `then`
+  #
   # @include then
+  #
+  # ```aml
+  # (Maybe.from 42)
+  # >>= (value -> value / 2) # Maybe Float (21.0)
+  # >>= (value -> value / 5) # Maybe Float (4.2)
+  # ```
   (>>=) = then
 
-  # @docs-from ./Thenable.docs.md#`=<<`
+  # An infix alias for `then`, but with the arguments reversed
+  #
   # @include then
+  #
+  # ```aml
+  # (value -> value / 2) =<< (Maybe.from 42) # Maybe Float (21)
+  # ```
   (=<<) = flip (>>=)
 
-  # @docs-from ./Thenable.docs.md#`chain`
+  # Composes two functions by chaining.
+  #
+  # ```aml
+  # { decodeAsync } = use "System/Text/JSON"
+  # { GET } = use "System/Web/Http"
+  #
+  # fetch-json
+  #   : URL -> Async (Result JsonValue _)
+  #   = chain GET (response -> decodeAsync response.Body)
+  # ```
   chain
     : ('a -> 'm 'b) -> ('b -> 'm 'c) -> ('a -> 'm 'c)
     = callback-a-mb callback-b-mc ->
       callback-a-mb >> ((flip then) callback-b-mc)
 
-  # @docs-from ./Thenable.docs.md#`>=>`
+  # An infix alias for `chain`
+  #
   # @include chain
+  #
+  # ```aml
+  # { decodeAsync } = use "System/Text/JSON"
+  # { GET } = use "System/Web/Http"
+  #
+  # fetch-json = GET >=> (response -> decodeAsync response.Body)
+  # ```
   (>=>) = chain
 
-  # @docs-from ./Thenable.docs.md#`<=<`
+  # An infix alias for `chain`, but with the arguments reversed
+  #
   # @include chain
+  #
+  # ```aml
+  # { decodeAsync } = use "System/Text/JSON"
+  # { GET } = use "System/Web/Http"
+  #
+  # fetch-json = (response -> decodeAsync response.Body) <=< GET
+  # ```
   (<=<) = flip (>=>)
 
-  # @docs-from ./Thenable.docs.md#`flatten`
+  # Flattens two levels of wrapping into a single level
+  # 
+  # ```aml
+  # nested-value = Some (Some 5) // Maybe (Maybe Integer)
+  # optional-value = flatten nested-value // Maybe Integer
+  # ```
   flatten: 'm ('m 'a) -> 'm 'a = self -> then self id

@@ -1,12 +1,20 @@
-# @docs-from ./Applyable.docs.md#Applyable
 module Applyable =
-  # @docs-from ./Applyable.docs.md#`apply`
+  # Applies functions within an effect to values within the same effect.
+  #
+  # ```aml
+  # function-list = List.from [(add 2), (add 10)]
+  # values-list = List.from [1, 2, 3]
+  #
+  # apply values-list function-list # List Integer (3, 4, 5, 11, 12, 13)
+  # ```
   apply: 'm 'a -> 'm ('a -> 'b) -> 'm 'b
 
-  # @docs-from ./Applyable.docs.md#`<*>`
+  # An infix alias of `apply`
+  #
   # @include apply
   (<*>) = apply
 
-  # @docs-from ./Applyable.docs.md#`<**>`
+  # An infix alias of `apply`, but with the arguments `flip`ped
+  #
   # @include apply
   (<**>) = flip (<*>)
