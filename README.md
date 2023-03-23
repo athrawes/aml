@@ -346,7 +346,7 @@ prompt =
   IO.stdin "please input an integer: "
   |> map String.to-integer
   |> then match
-    | Ok [ value ] ->
+    | Ok value ->
       if (value % 2 is 0)
         (IO.stdout "Number is even\n")
         (IO.stdout "Number is odd\n")

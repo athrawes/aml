@@ -1,7 +1,20 @@
-module Boolean =
-  True =  a _ -> a
-  False = _ b -> b
+True =  a _ -> a
+False = _ b -> b
 
-  type Boolean =
-    | True of True
-    | False of False
+type Boolean =
+  | True of True
+  | False of False
+
+(and): Boolean -> Boolean -> Boolean
+  = a b -> a b a
+
+(or): Boolean -> Boolean -> Boolean
+  = a b -> a a b
+
+(xor): Boolean -> Boolean -> Boolean
+  = is >> not
+
+not: Boolean -> Boolean
+  = condition -> flip condition
+
+(is): 'a -> 'a -> Boolean

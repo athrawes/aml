@@ -1,17 +1,16 @@
 Effect = use "System/Control/Effect"
 
-module Maybe :> Effect =
-  type Some 'a
-  type None
+module Maybe :> Effect
 
-  type Maybe 'a =
-    | Some 'a
-    | None
+type Some 'a
+type None
 
-  # @inheritdoc
-  from = Some
+type Maybe 'a =
+  | Some 'a
+  | None
 
-  # @inheritdoc
-  then = self callback -> match self
-    | Some value -> callback value
-    | None -> None
+from = Some
+
+then = self callback -> match self
+  | Some value -> callback value
+  | None -> None

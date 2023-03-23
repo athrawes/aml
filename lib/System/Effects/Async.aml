@@ -1,19 +1,18 @@
 Effect = use "System/Control/Effect"
 
-module Async :> Effect =
-  type Resolved 'a
-  type Pending 'a of (_ -> Resolved 'a)
+module Async :> Effect
 
-  type Async 'a =
-    | Resolved 'a
-    | Pending 'a
+type Resolved 'a
+type Pending 'a of (_ -> Resolved 'a)
 
-  # @inheritdoc
-  from = Resolved
+type Async 'a =
+  | Resolved 'a
+  | Pending 'a
 
-  # @inheritdoc
-  then
-    : Async 'a -> ('a -> Async 'b) -> Async 'b
-    = self callback -> match self
-      | Resolved _ -> callback self
-      | Pending suspended -> Pending (_ -> then (suspended _) callback)
+from = Resolved
+
+then
+  : Async 'a -> ('a -> Async 'b) -> Async 'b
+  = self callback -> match self
+    | Resolved _ -> callback self
+    | Pending suspended -> Pending (_ -> then (suspended _) callback)

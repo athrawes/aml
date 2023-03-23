@@ -1,0 +1,17 @@
+pipe: 'a -> ('a -> 'b) -> 'b
+  = argument callback -> callback argument
+
+(|>) = pipe
+(<|) = flip (|>)
+
+compose: ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
+  = callback-a-b callback-b-c a ->
+    a |> callback-a-b |> callback-b-c
+
+(>>) = compose
+(<<) = flip (>>)
+
+flip: ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
+  = callback b a -> callback a b
+
+id: 'a -> 'a = a -> a

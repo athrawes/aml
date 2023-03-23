@@ -1,6 +1,7 @@
-module Effect :> Constructable Mappable Applyable Thenable =
-  apply = self callback ->
-    callback >>= (map self)
+module Effect :> Constructable Mappable Applyable Thenable
 
-  map = self callback ->
-    self >>= (callback >> from)
+apply = self callback ->
+  callback >>= (map self)
+
+map = self callback ->
+  self >>= (callback >> from)

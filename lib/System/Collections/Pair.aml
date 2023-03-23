@@ -1,18 +1,17 @@
-module Pair =
-  type Pair 'a 'b =
-    | True  -> 'a
-    | False -> 'b
+type Pair 'a 'b =
+  | True  -> 'a
+  | False -> 'b
 
-  # Constructs a new pair from two arguments
-  from: 'a -> 'b -> Pair 'a 'b
-    = a b which -> which a b
+# Constructs a new pair from two arguments
+from: 'a -> 'b -> Pair 'a 'b
+  = a b which -> which a b
 
-  # Grabs the first item from a Pair
-  fst
-    : Pair 'a 'b -> 'a
-    = self -> self True
+# Grabs the first item from a Pair
+fst
+  : Pair 'a 'b -> 'a
+  = self -> self True
 
-  # Grabs the second item from a Pair
-  snd
-    : Pair 'a 'b -> 'b
-    = self -> self False
+# Grabs the second item from a Pair
+snd
+  : Pair 'a 'b -> 'b
+  = self -> self False

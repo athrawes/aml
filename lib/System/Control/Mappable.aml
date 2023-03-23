@@ -1,30 +1,29 @@
-module Mappable =
-  # A function to apply a given mapping function to the current effect.
-  #
-  # ```aml
-  # List.from [1, 2, 3]
-  # |> map (multiply 2) # List Integer (2, 4, 6)
-  # |> map (multiply 2) # List Integer (4, 6, 8)
-  # ```
-  map: 'm 'a -> ('a -> 'b) -> 'm 'b
+# A function to apply a given mapping function to the current effect.
+#
+# ```aml
+# List.from [1, 2, 3]
+# |> map (multiply 2) # List Integer (2, 4, 6)
+# |> map (multiply 2) # List Integer (4, 6, 8)
+# ```
+map: 'm 'a -> ('a -> 'b) -> 'm 'b
 
-  # An infix alias for `map`
-  #
-  # @include map
-  #
-  # ```aml
-  # List.from [1, 2, 3]
-  # <$> (multiply 2) # List Integer (2, 4, 6)
-  # <$> (multiply 2) # List Integer (4, 6, 8)
-  # ```
-  (<$>) = map
+# An infix alias for `map`
+#
+# @include map
+#
+# ```aml
+# List.from [1, 2, 3]
+# <$> (multiply 2) # List Integer (2, 4, 6)
+# <$> (multiply 2) # List Integer (4, 6, 8)
+# ```
+(<$>) = map
 
-  # An infix alias for `map`, but with the arguments for this function reversed.
-  #
-  # @include map
-  #
-  #
-  # ```aml
-  # (multiply 2) <&> (List.from [1, 2, 3])
-  # ```
-  (<&>) = flip (<$>)
+# An infix alias for `map`, but with the arguments for this function reversed.
+#
+# @include map
+#
+#
+# ```aml
+# (multiply 2) <&> (List.from [1, 2, 3])
+# ```
+(<&>) = flip (<$>)

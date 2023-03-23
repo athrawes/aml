@@ -1,34 +1,46 @@
-u8: INTRINSIC_UNSIGNED_8BIT
-u16: INTRINSIC_UNSIGNED_16BIT
-u32: INTRINSIC_UNSIGNED_32BIT
-u64: INTRINSIC_UNSIGNED_64BIT
-u128: INTRINSIC_UNSIGNED_128BIT
-UnsignedInteger:
+type u8 = INTRINSIC_UNSIGNED_8BIT
+type u16 = INTRINSIC_UNSIGNED_16BIT
+type u32 = INTRINSIC_UNSIGNED_32BIT
+type u64 = INTRINSIC_UNSIGNED_64BIT
+type u128 = INTRINSIC_UNSIGNED_128BIT
+type UnsignedInteger =
   | u8
   | u16
   | u32
   | u64
   | u128
 
-i8: INTRINSIC_SIGNED_8BIT
-i16: INTRINSIC_SIGNED_16BIT
-i32: INTRINSIC_SIGNED_32BIT
-i64: INTRINSIC_SIGNED_64BIT
-i128: INTRINSIC_SIGNED_128BIT
-SignedInteger:
+type i8 = INTRINSIC_SIGNED_8BIT
+type i16 = INTRINSIC_SIGNED_16BIT
+type i32 = INTRINSIC_SIGNED_32BIT
+type i64 = INTRINSIC_SIGNED_64BIT
+type i128 = INTRINSIC_SIGNED_128BIT
+type SignedInteger =
   | i8
   | i16
   | i32
   | i64
   | i128
 
-Integer:
+type Integer =
   | UnsignedInteger
   | SignedInteger
 
-f32: INTRINSIC_FLOAT_32BIT
-f64: INTRINSIC_FLOAT_64BIT
+type f32 = INTRINSIC_FLOAT_32BIT
+type f64 = INTRINSIC_FLOAT_64BIT
 
-Float: f32 | f64
+type Float = f32 | f64
 
-RealNumber: Integer | Float
+type RealNumber = Integer | Float
+
+add: Number -> Number -> Number
+(+) = add
+
+subtract: Number -> Number -> Number
+(-) = subtract
+
+multiply: Number -> Number -> Number
+(*) = multiply
+
+divide: Number -> Number -> Maybe Number
+(/) = divide

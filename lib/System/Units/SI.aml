@@ -1,53 +1,52 @@
-SI =
-  unit second
-  unit s = second
+unit second
+unit s = second
 
-  unit millisecond = second / 1,000
-  unit ms = millisecond
+unit millisecond = second / 1,000
+unit ms = millisecond
 
-  unit microsecond = second / 1,000,000
-  unit us = microsecond
+unit microsecond = second / 1,000,000
+unit μs = microsecond
 
-  unit minute = 60 * second
-  unit min = minute
+unit minute = 60 * second
+unit min = minute
 
-  unit hour = 60 * minute
-  unit h = hour
+unit hour = 60 * minute
+unit h = hour
 
-  unit day = 24 * hour
-  unit d = day
+unit day = 24 * hour
+unit d = day
 
-  unit week = 7 * day
+unit week = 7 * day
 
-  unit meter
-  unit m = meter
+unit meter
+unit m = meter
 
-  unit centimeter = meter / 100
-  unit cm = centimeter
+unit centimeter = meter / 100
+unit cm = centimeter
 
-  unit millimeter = meter / 1,000
-  unit mm = millimeter
+unit millimeter = meter / 1,000
+unit mm = millimeter
 
-  unit kilometer = meter * 1,000
-  unit km = kilometer
+unit kilometer = meter * 1,000
+unit km = kilometer
 
-  unit gram
-  unit g = gram
+unit gram
+unit g = gram
 
-  unit kilogram = 1,000 * gram
-  unit kg = kilogram
+unit kilogram = 1,000 * gram
+unit kg = kilogram
 
-  unit ampere
-  unit amp = ampere
+unit ampere
+unit amp = ampere
 
-  unit kelvin
-  unit K = kelvin
+unit kelvin
+unit K = kelvin
 
-  unit celcius = kelvin + 273.15
-  unit C = celcius
+unit celsius = kelvin + 273.15
+unit C = celsius
 
-  unit mole = 6.02214076e23
-  unit mol = mole
+unit mole = 6.02214076e23
+unit mol = mole
 
-  unit candela
-  unit cd = candela
+unit candela
+unit cd = candela

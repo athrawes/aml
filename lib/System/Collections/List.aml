@@ -1,72 +1,71 @@
 Effect = use "System/Control/Effect"
 Pair = use "System/Collections/Pair"
 
-module List :> Effect =
-  type List 't =
-    | Empty
-    | NonEmpty of Pair 't (List 't)
+module List :> Effect
 
-  # @inheritdoc
-  from: 't -> List.NonEmpty 't
-    = self -> Pair.from self List.Empty
+type List 't =
+  | Empty
+  | NonEmpty of Pair 't (List 't)
 
-  # @inheritdoc
-  # @override
-  map = list callback -> match list
-    | Empty -> list
+from: 't -> List.NonEmpty 't
+  = self -> Pair.from self List.Empty
+
+map = list callback -> match list
+  | Empty -> list
+  | NonEmpty pair -> Pair.from
+      (callback (Pair.fst pair))
+      (map (Pair.snd pair) callback)
+
+then = list callback ->
+  flatten (map list callback)
+
+# An alias for `List.then`, which may be more intuitive in many contexts. Since
+# the callback parameter maps each element in the origin list to an entire list
+# of its own, `list.flatMap` takes the origin list, applies the callback
+# parameter to each argument, and then flattens the resulting list of lists into
+# a single list.
+#
+# @include then
+flatMap = then
+
+# Flattens one level of a multi-dimensional list.
+flatten
+  : List (List 't) -> List 't
+  = lists -> match lists
+    | Empty -> List.Empty
+    | NonEmpty pair -> concat (Pair.fst pair) (flatten (Pair.snd pair))
+
+# Returns a new list which is the result of appending two lists together. The
+# lists are concatenated left to right, so the elements from the first list
+# provided come first in the list, and the elements from the second list
+# provided come later.
+concat
+  : List 't -> List 't -> List 't
+  = first second -> match first
+    | Empty -> second
     | NonEmpty pair -> Pair.from
-        (callback (Pair.fst pair))
-        (map (Pair.snd pair) callback)
+        (Pair.fst pair)
+        (concat (Pair.snd pair) second)
 
-  # @inheritdoc
-  then = list callback ->
-    flatten (map list callback)
+# An infix alias for `concat`.
+#
+# @include concat
+(++) = concat
 
-  # An alias for `List.then`, which may be more intuitive in many contexts.
-  # Since the callback parameter maps each element in the origin list to an
-  # entire list of its own, `list.flatMap` takes the origin list,
-  # applies the callback parameter to each argument, and then flattens the
-  # resulting list of lists into a single list.
-  #
-  # @include then
-  flatMap = then
+# Returns a new list with a given item prepended to it.
+prepend
+  : 't -> List 't -> List 't
+  = Pair.from
 
-  # Flattens one level of a multi-dimensional list.
-  flatten
-    : List (List 't) -> List 't
-    = lists -> match lists
-      | Empty -> List.Empty
-      | NonEmpty pair -> concat (Pair.fst pair) (flatten (Pair.snd pair))
+# An infix alias for `prepend`.
+#
+# @include prepend
+(::) = prepend
 
-  # Returns a new list which is the result of appending two lists together. The
-  # lists are concatenated left to right, so the elements from the first list
-  # provided come first in the list, and the elements from the second list
-  # provided come later.
-  concat
-    : List 't -> List 't -> List 't
-    = first second -> match first
-      | Empty -> second
-      | NonEmpty pair -> Pair.from
-          (Pair.fst pair)
-          (concat (Pair.snd pair) second)
-
-  # An infix alias for `concat`.
-  # @include concat
-  (++) = concat
-
-  # Returns a new list with a given item prepended to it.
-  prepend
-    : 't -> List 't -> List 't
-    = Pair.from
-
-  # An infix alias for `prepend`.
-  # @include prepend
-  (::) = prepend
-
-  # Returns a new list which is in the reverse order of the input list.
-  reverse: List 't -> List 't
-    = list -> match list
-      | Empty -> list
-      | NonEmpty pair -> concat
-          (reverse(Pair.snd pair))
-          (List.from(Pair.fst pair))
+# Returns a new list which is in the reverse order of the input list.
+reverse: List 't -> List 't
+  = list -> match list
+    | Empty -> list
+    | NonEmpty pair -> concat
+        (reverse(Pair.snd pair))
+        (List.from(Pair.fst pair))
