@@ -252,35 +252,9 @@ When used in a guard expression, represents the default case.
 Comments immediately above modules and functions are interpreted as
 documentation comments.
 
-### Macros `` expr`macro` ``, `${}`
-
-```aml
-sql-query
-  : 't -> SqlQuery
-  = sql`SELECT * FROM \`users\` WHERE 'name' = ${name}`
-
-sql-prepared-statement = sql-query "John"
-```
-
-### Interop `extern`
-
-Functions and values from other languages can be imported by using the `extern`
-keyword.
-
-```aml
-module File =
-  type File
-
-  fopen: String -> String -> Maybe File
-    = filename mode ->
-      f = String.toCharList filename
-      m = String.toCharList mode
-      extern fopen [f, m]
-```
-
 ### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `[]`
 
-### Pattern matching: `match`, `|`, `->`
+### Pattern matching: `match`, `|`, `=>`
 
 ### Modules
 
@@ -316,11 +290,35 @@ Aliasing imports
 
 #### Declaring a module
 
-Declaring a module is as simple as
+By default, every file declares a module with the same name as the file. So a
+a file in the root of the project `/Foo.aml` will define a module named `Foo`.
+Files in subfolders will declare namespaced modules; so a file `/Foo/Bar.aml`
+will create a module `Foo/Bar`, and so on.
+
+These module definitions are implicit, and do not need to be stated if the
+module definition does not require any modification.
+
+If a module definition needs to be modified, for example to extend the module
+from another, a `module` statement can be added as the first statement in the
+file:
 
 ```aml
-module MyModule =
-  # methods, constants, etc...
+module MyModule
+# methods, constants, etc...
+```
+
+To extend the current module with the methods from other modules, add the `:>`
+operator and a list of the modules to extend from:
+
+```aml
+module Foo :> Bar Baz
+```
+
+If the module is parametrized by some type, this is also where such parameters
+are added:
+
+```aml
+module MyEffect 'a :> (Effect 'a)
 ```
 
 ### I/O
@@ -371,3 +369,8 @@ descriptor in kebab-case. For example, `&a` or `&program-lifetime`.
 Type names should be in PascalCase.
 
 Variable and function names should be in kebab-case.
+
+#### Naming
+
+Functions which return a `Boolean` value should end in a question mark for
+readability, e.g. `is-int?`, `is-string?`, and so on.
