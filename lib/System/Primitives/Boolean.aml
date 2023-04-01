@@ -5,16 +5,12 @@ type Boolean =
   | True of True
   | False of False
 
-(and): Boolean -> Boolean -> Boolean
-  = a b -> a b a
+(and) = (a: Boolean) (b: Boolean) -> a b a
 
-(or): Boolean -> Boolean -> Boolean
-  = a b -> a a b
+(or) = (a: Boolean) (b: Boolean): Boolean -> a a b
 
-(xor): Boolean -> Boolean -> Boolean
-  = is >> not
+(xor) = is >> not
 
-not: Boolean -> Boolean
-  = condition -> flip condition
+not = (condition: Boolean): Boolean -> flip condition
 
-(is): 'a -> 'a -> Boolean
+(is) : 'a -> 'a -> Boolean

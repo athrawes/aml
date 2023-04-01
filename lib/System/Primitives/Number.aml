@@ -33,14 +33,14 @@ type Float = f32 | f64
 
 type RealNumber = Integer | Float
 
-add: Number -> Number -> Number
+interface add : Number -> Number -> Number
 (+) = add
 
-subtract: Number -> Number -> Number
+interface subtract : Number -> Number -> Number
 (-) = subtract
 
-multiply: Number -> Number -> Number
+interface multiply : Number -> Number -> Number
 (*) = multiply
 
-divide: Number -> Number -> Maybe Number
+interface divide : Number -> Number -> Maybe Number
 (/) = divide

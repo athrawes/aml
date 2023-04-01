@@ -6,7 +6,7 @@
 #
 # apply values-list function-list # List Integer (3, 4, 5, 11, 12, 13)
 # ```
-apply: 'm 'a -> 'm ('a -> 'b) -> 'm 'b
+interface apply : 'm 'a -> 'm ('a -> 'b) -> 'm 'b
 
 # An infix alias of `apply`
 #

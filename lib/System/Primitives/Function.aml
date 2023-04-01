@@ -1,17 +1,15 @@
-pipe: 'a -> ('a -> 'b) -> 'b
-  = argument callback -> callback argument
+pipe = (argument: 'a) (callback: ('a -> 'b)): 'b -> callback argument
 
 (|>) = pipe
 (<|) = flip (|>)
 
-compose: ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
-  = callback-a-b callback-b-c a ->
-    a |> callback-a-b |> callback-b-c
+compose = (a_b: 'a -> 'b) (b_c: 'b -> 'c): ('a -> 'c) ->
+  a -> a |> a_b |> b_c
 
 (>>) = compose
 (<<) = flip (>>)
 
-flip: ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
-  = callback b a -> callback a b
+flip = (callback: ('a -> 'b -> 'c)): ('b -> 'a -> 'c) ->
+  b a -> callback a b
 
-id: 'a -> 'a = a -> a
+id : 'a -> 'a = a -> a

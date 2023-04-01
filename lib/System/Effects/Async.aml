@@ -11,8 +11,7 @@ type Async 'a =
 
 from = Resolved
 
-then
-  : Async 'a -> ('a -> Async 'b) -> Async 'b
-  = self callback -> match self
-    | Resolved _ => callback self
-    | Pending suspended => Pending (_ -> then (suspended _) callback)
+then = (self: Async 'a) (callback: 'a -> Async 'b): Async 'b ->
+  match self
+  | Resolved _ => callback self
+  | Pending suspended => Pending (_ -> then (suspended _) callback)

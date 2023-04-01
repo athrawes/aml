@@ -5,7 +5,7 @@
 # |> map (multiply 2) # List Integer (2, 4, 6)
 # |> map (multiply 2) # List Integer (4, 6, 8)
 # ```
-map: 'm 'a -> ('a -> 'b) -> 'm 'b
+interface map : 'm 'a -> ('a -> 'b) -> 'm 'b
 
 # An infix alias for `map`
 #

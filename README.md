@@ -32,13 +32,13 @@ a = 5
 When binding variables, a type declaration may be provided
 
 ```aml
-a: Integer = 5
+a : Integer = 5
 ```
 
 To mark a type parameter, simply prepend with a `'` character:
 
 ```aml
-my-function: 'a -> String
+my-function : 'a -> String
 ```
 
 #### References & Lifetime annotations
@@ -46,24 +46,23 @@ my-function: 'a -> String
 ```aml
 # a function whose argument's type is inferred but is a reference with a
 # lifetime of &a
-my-function: &a -> String
+my-function : &a -> String
 
 # a function whose argument's type is 'a and is a reference with lifetime &a
-other-callback: &a'a -> String
+other-callback : &a'a -> String
 
 # a function whose argument's type is 'a and is a reference with an inferred
 # lifetime
-another-callback: &'a -> String
+another-callback : &'a -> String
 ```
 
 #### Type Bounds
 
 ```aml
-my-function
-  : 'a -> 'b -> 'c
-    where 'a :> D, E
-    where 'b :> Map
-  = a b -> c
+my-function = (a: 'a) (b: 'b)
+  where 'a :> D, E
+  where 'b :> Map
+  -> c
 ```
 
 #### Cases `|`
@@ -72,53 +71,30 @@ my-function
 
 It's possible to add decorators to any assignment binding.
 
+##### Simple Decorators
+
+##### Macro Decorators
+
+It's also possible to
 For example, to add tail-recursion to a function which cannot be automatically
-optimized, you can use the `@tail-recursive` decorator as in this pseudo-code:
+optimized, you can use the `@>tail-recursive` decorator as so:
 
 ```aml
-module MyModule :> Mappable =
-  @tail-recursive MyModule.Empty MyModule.id
-  map = accumulator identity my-module callback ->
-    # ... some code which is tail-recursive and behaves as `map` should ...
-    # ... no hand-waving here, I swear 🤪 ...
+@>tail-recursive 0 1
+fibonacci = accumulator identity n ->
+  match n
+  | 0 => accumulator
+  | _ => fibonacci (n - 1) identity (accumulator + identity)
 ```
 
 This will cause AML to first send the name of the binding and the definition of
-the binding to the decorator function (in this case, `@tail-recursive`). Further
+the binding to the decorator function (in this case, `tail-recursive`). Further
 arguments to the decorator function are simply specified inline, as is the case
 here.
 
 The result of the decorator will then be bound to the original name, so for this
-example, the type of `MyModule.map` would be
-
-```aml
-map: MyModule 'a -> ('a -> 'b) -> MyModule 'b
-```
-
-and not
-
-```aml
-map: MyModule _ -> MyModule.id -> MyModule 'a -> ('a -> 'b) -> MyModule 'b
-```
-
-A simpler example might be as follows:
-
-```aml
-add-one
-  : _ -> Number -> Number
-  = _bindName bindValue -> bindValue + 1
-
-# The @add-one decorator intercepts the binding, so the number 6 is what is
-# actually bound to `result`.
-@add-one
-result = 5
-```
-
-Obviously, this can lead to easy to miss changes in bindings if misused, as
-above. If not reading carefully, one _might_ have intuited that `result` should
-have been bound to 5 instead of 6, so it is _highly_ advised that this technique
-is used only in cases where doing so leads to an overall improvement in
-readability.
+example, the type of `fibonacci` will be `Integer -> Integer`, and not
+`Integer -> Integer -> Integer -> Integer` as is written.
 
 ### Function definition `->`, `( )`
 
@@ -135,6 +111,35 @@ a -> b -> c
 # evaluates to: (a -> (b -> (c)))
 ```
 
+A bit of syntax sugar for chained functions:
+
+```aml
+a b -> c
+```
+
+is strictly equivalent to
+
+```aml
+a -> b -> c
+```
+
+Do note that the precedence for this syntax sugar is very low; if used in a
+larger expression, you may need parenthesis to disambiguate the order of
+operations.
+
+```aml
+a = 1
+b = 2
+add-then-do = a -> b -> callback -> (a + b) |> callback
+
+c = add-then-do a b d e -> d + e
+# error: d is not defined, as it's not being considered as part of the argument
+# list as intended
+
+c = add-then-do a b (d e -> d + e)
+# works!
+```
+
 Functions are 1st class citizens, and can be bound to variables and passed
 around like any other value
 
@@ -143,9 +148,7 @@ return-42 = _ -> 42
 forty-two = compose return-42 to-string
 forty-two _ # forty-two is "42"
 
-operationThatCanFail
-  : Integer -> Integer -> Maybe Float
-  = a b -> a / b
+operationThatCanFail = (a: Integer) (b: Integer): Maybe Float -> a / b
 ```
 
 #### Infix functions
@@ -154,8 +157,7 @@ To define an infix function, (ie, a function whose argument may be placed in
 front of the function call), place the name of the function in parenthesis:
 
 ```aml
-(%): Integer -> Integer -> Maybe Integer
-  = a b -> (a / b)
+(%) = (a: Integer) (b: Integer): Maybe Integer -> (a / b)
     >>= to-integer
     >>= (multiply b)
     >>= (subtract a)
@@ -167,6 +169,19 @@ As always, AML can automatically fill in the types
 
 ```aml
 (+) = add # Integer -> Integer
+```
+
+#### Interfaces
+
+When defining a library module, sometimes it makes sense to define some function
+signatures for functions that must be implemented by modules extending the
+current scope. For example, when defining an effect, you must currently define
+a `from` and a `then` function for the module extending `Effect`.
+
+This is handled by declaring an `interface`:
+
+```aml
+interface implement-me : 'a -> 'b -> 'c
 ```
 
 ### Scopes and expressions `( )`
@@ -195,13 +210,11 @@ To indicate that subsequent lines should be considered as part of the scope of
 the function definition, simply indent the subsequent lines:
 
 ```aml
-add-two
-  : Integer -> Integer
-  = arg ->
-    one = 1
-    two = add one one
+add-two = (arg: Integer): Integer ->
+  one = 1
+  two = add one one
 
-    two + arg
+  two + arg
 ```
 
 #### Grouping expressions `( )`
@@ -254,7 +267,33 @@ documentation comments.
 
 ### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `[]`
 
-### Pattern matching: `match`, `|`, `=>`
+### Pattern matching: `match`, `|`, `=>`, `let`, `,`
+
+If a given pattern has only one variant (e.g., the `Identity` monad which only
+has the value in the monad), then a `let` destructuring may be easier to use.
+
+```aml
+i = Identity 42
+
+let i, value => value`
+```
+
+To be clear, this is syntactic sugar for a `match` statement that only has a
+single arm:
+
+```aml
+i = Identity 42
+
+# These two code blocks are equivalent
+# ---
+
+match i
+| Identity value => value * 2
+
+# ---
+
+let i, value => value * 2
+```
 
 ### Modules
 
@@ -343,8 +382,10 @@ an Effect, AKA Monad. This makes creating IO pipelines a breeze:
 prompt =
   IO.stdin "please input an integer: "
   |> map String.to-integer
-  |> then match
-    | Ok value => match value
+  |> then
+    match
+    | Ok value =>
+      match value
       | n when (n % 2 is 0) => IO.stdout "Number is even\n"
       | n => (IO.stdout "Number is odd\n"
     | _ =>

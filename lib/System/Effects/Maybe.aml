@@ -11,6 +11,7 @@ type Maybe 'a =
 
 from = Some
 
-then = self callback -> match self
+then = self callback ->
+  match self
   | Some value => callback value
   | None => None

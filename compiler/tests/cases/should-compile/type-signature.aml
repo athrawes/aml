@@ -1,8 +1,6 @@
 IO = use "System/Effects/IO"
 
-typedFunction: Integer -> Integer = a -> a
-typedValue: String = "Hello, world!"
+typedFunction : Integer -> Integer = a -> a
+typedValue : String = "Hello, world!"
 
-main
-  : List String -> IO Integer
-  = argv -> IO.from 0
+main = (argv: List String): IO Integer -> IO.from 0
