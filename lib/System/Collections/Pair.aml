@@ -1,6 +1,6 @@
 type Pair 'a 'b =
-  | True  -> 'a
-  | False -> 'b
+  | True  => 'a
+  | False => 'b
 
 # Constructs a new pair from two arguments
 from: 'a -> 'b -> Pair 'a 'b

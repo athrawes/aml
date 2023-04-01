@@ -14,6 +14,6 @@ type IO 'a =
 from = Complete
 
 then = self callback -> match self
-  | Complete value -> callback value
-  | Running -> todo!
-  | Pending -> todo!
+  | Complete value => callback value
+  | Running => todo!
+  | Pending => todo!

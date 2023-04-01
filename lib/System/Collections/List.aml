@@ -11,8 +11,8 @@ from: 't -> List.NonEmpty 't
   = self -> Pair.from self List.Empty
 
 map = list callback -> match list
-  | Empty -> list
-  | NonEmpty pair -> Pair.from
+  | Empty => list
+  | NonEmpty pair => Pair.from
       (callback (Pair.fst pair))
       (map (Pair.snd pair) callback)
 
@@ -32,8 +32,8 @@ flatMap = then
 flatten
   : List (List 't) -> List 't
   = lists -> match lists
-    | Empty -> List.Empty
-    | NonEmpty pair -> concat (Pair.fst pair) (flatten (Pair.snd pair))
+    | Empty => List.Empty
+    | NonEmpty pair => concat (Pair.fst pair) (flatten (Pair.snd pair))
 
 # Returns a new list which is the result of appending two lists together. The
 # lists are concatenated left to right, so the elements from the first list
@@ -42,8 +42,8 @@ flatten
 concat
   : List 't -> List 't -> List 't
   = first second -> match first
-    | Empty -> second
-    | NonEmpty pair -> Pair.from
+    | Empty => second
+    | NonEmpty pair => Pair.from
         (Pair.fst pair)
         (concat (Pair.snd pair) second)
 
@@ -65,7 +65,7 @@ prepend
 # Returns a new list which is in the reverse order of the input list.
 reverse: List 't -> List 't
   = list -> match list
-    | Empty -> list
-    | NonEmpty pair -> concat
+    | Empty => list
+    | NonEmpty pair => concat
         (reverse(Pair.snd pair))
         (List.from(Pair.fst pair))

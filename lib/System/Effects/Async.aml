@@ -14,5 +14,5 @@ from = Resolved
 then
   : Async 'a -> ('a -> Async 'b) -> Async 'b
   = self callback -> match self
-    | Resolved _ -> callback self
-    | Pending suspended -> Pending (_ -> then (suspended _) callback)
+    | Resolved _ => callback self
+    | Pending suspended => Pending (_ -> then (suspended _) callback)

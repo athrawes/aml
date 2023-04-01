@@ -346,11 +346,10 @@ prompt =
   IO.stdin "please input an integer: "
   |> map String.to-integer
   |> then match
-    | Ok value ->
-      if (value % 2 is 0)
-        (IO.stdout "Number is even\n")
-        (IO.stdout "Number is odd\n")
-    | _ ->
+    | Ok value => match value
+      | n when (n % 2 is 0) => IO.stdout "Number is even\n"
+      | n => (IO.stdout "Number is odd\n"
+    | _ =>
       IO.stderr "Invalid input, please try again.\n"
 
 # IO has not actually occurred at this point, we've just created the

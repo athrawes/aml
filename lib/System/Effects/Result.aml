@@ -11,5 +11,5 @@ instance (Result 'ok) :> Effect =
   from = Ok
 
   then = self callback -> match self
-    | Ok value -> callback value
-    | Err _ -> self
+    | Ok value => callback value
+    | Err _ => self
