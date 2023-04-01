@@ -4,4 +4,4 @@
 # ```aml
 # value = Maybe.from 42 # Maybe Integer
 # ```
-from: 'a -> 'm 'a
+from: _ -> 'm 'a
