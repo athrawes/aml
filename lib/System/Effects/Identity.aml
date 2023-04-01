@@ -1,0 +1,5 @@
+module Identity :> Effect
+
+from = Identity
+then = self callback -> match self
+  | Identity value => callback value
