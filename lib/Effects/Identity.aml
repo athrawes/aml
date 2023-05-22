@@ -2,4 +2,4 @@ module Identity :> Effect
 
 from = Identity
 then = self callback ->
-  let self, value => callback value
+  with self [value] => callback value

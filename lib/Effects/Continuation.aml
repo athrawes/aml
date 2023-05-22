@@ -1,7 +1,7 @@
 type Continuation 'r 'a of ('a -> 'r) -> 'r
 
 run = (self: Continuation 'r 'a) (callback: 'a -> 'r): 'r ->
-  let self, k => k callback
+  with self [k] => k callback
 
 instance (Continuation 'r) :> Effect
   from = (value: 'r): Continuation 'r 'a -> Continuation ((callback: 'a) -> callback value)
@@ -9,6 +9,6 @@ instance (Continuation 'r) :> Effect
   then =
     (self: Continuation 'r 'a) ->
     (callback: ('a -> Continuation 'r 'b)): Continuation 'r 'b ->
-      let self, ma => Continuation (
+      with self [ma] => Continuation (
         continue -> run ma (value -> run (callback value) continue)
       )

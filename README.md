@@ -267,15 +267,15 @@ documentation comments.
 
 ### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `[]`
 
-### Pattern matching: `match`, `|`, `=>`, `let`, `,`
+### Pattern matching: `match`, `|`, `=>`, `with`, `,`
 
 If a given pattern has only one variant (e.g., the `Identity` monad which only
-has the value in the monad), then a `let` destructuring may be easier to use.
+has the value in the monad), then a `with` destructuring may be easier to use.
 
 ```aml
 i = Identity 42
 
-let i, value => value`
+with i [value] => value`
 ```
 
 To be clear, this is syntactic sugar for a `match` statement that only has a
@@ -292,7 +292,7 @@ match i
 
 # ---
 
-let i, value => value * 2
+with i [value] => value * 2
 ```
 
 ### Modules
