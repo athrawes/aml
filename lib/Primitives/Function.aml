@@ -12,4 +12,4 @@ compose = (a_b: 'a -> 'b) (b_c: 'b -> 'c): ('a -> 'c) ->
 flip = (callback: ('a -> 'b -> 'c)): ('b -> 'a -> 'c) ->
   b a -> callback a b
 
-id : 'a -> 'a = a -> a
+id = (a: 'a): 'a -> a
