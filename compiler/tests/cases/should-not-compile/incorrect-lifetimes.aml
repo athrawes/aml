@@ -1,4 +1,4 @@
-IO = use "System/Effects/IO"
+IO = use "Effects/IO"
 
 # This function should fail to compile as the returned closure will have
 # enclosed a reference to the variable `a` which is still scoped to `fn`

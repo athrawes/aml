@@ -1,12 +1,17 @@
-type Pair 'a 'b =
-  | True  => 'a
-  | False => 'b
+{:boolean, true, false} = use "Primitives/Boolean"
+
+type :pair<'a, 'b> = :boolean -> 'a | 'b
+  | :first  => 'a
+  | :second => 'b
 
 # Constructs a new pair from two arguments
-from = (a: 'a) (b: 'b) -> (which: Boolean) -> which a b
+from : 'a -> 'b -> :pair<'a, 'b>
+from = a b -> which -> which a b
 
 # Grabs the first item from a Pair
-fst = (self: Pair 'a 'b): 'a -> self True
+fst : :pair<'a, 'b> -> 'a
+fst = self -> self true
 
 # Grabs the second item from a Pair
-snd = (self: Pair 'a 'b): 'b -> self False
+snd : :pair<'a, 'b> -> 'b
+snd = self -> self false

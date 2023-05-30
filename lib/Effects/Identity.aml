@@ -1,5 +1,7 @@
 module Identity :> Effect
 
-from = Identity
+type :identity
+
+from = :identity
 then = self callback ->
   with self [value] => callback value

@@ -1,16 +1,13 @@
-Effect = use "System/Control/Effect"
+Effect = use "Control/Effect"
 
-type Ok 'ok
-type Error 'err
+type :result<'ok, 'error> =
+  | :ok 'ok
+  | :error 'error
 
-type Result 'ok 'err =
-  | Ok 'ok
-  | Error 'err
-
-instance (Result 'ok) :> Effect =
-  from = Ok
+instance (:result<'ok, _>) :> Effect =
+  from = :ok
 
   then = self callback ->
     match self
-    | Ok value => callback value
-    | Err _ => self
+    | :ok [value] => callback value
+    | :error [_] => self

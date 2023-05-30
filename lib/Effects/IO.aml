@@ -1,19 +1,19 @@
-Effect = use "System/Control/Effect"
+Effect = use "Control/Effect"
 
 module IO :> Effect
 
-type Pending
-type Running
-type Complete 'a
+type :pending
+type :running
+type :complete<'a>
 
-type IO 'a =
-  | Pending
-  | Running
-  | Complete 'a
+type :io<'a> =
+  | :pending
+  | :running
+  | :complete<'a>
 
-from = Complete
+from = :complete
 
 then = self callback -> match self
-  | Complete value => callback value
-  | Running => todo!
-  | Pending => todo!
+  | :complete [value] => callback value
+  | :running => todo!
+  | :pending => todo!

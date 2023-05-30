@@ -1,4 +1,4 @@
-IO = use "System/Effects/IO"
+IO = use "Effects/IO"
 main = _ ->
   a = 42
   IO.from a

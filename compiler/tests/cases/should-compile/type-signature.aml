@@ -1,6 +1,6 @@
-IO = use "System/Effects/IO"
+IO = use "Effects/IO"
 
-typedFunction : Integer -> Integer = a -> a
+typedFunction : :integer -> :integer = a -> a
 typedValue : String = "Hello, world!"
 
-main = (argv: List String): IO Integer -> IO.from 0
+main = (argv List String): IO :integer -> IO.from 0

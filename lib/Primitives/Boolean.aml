@@ -1,16 +1,19 @@
-True =  a _ -> a
-False = _ b -> b
+true =  a _ -> a
+false = _ b -> b
 
-type Boolean =
-  | True of True
-  | False of False
+type :boolean =
+  | :true of true
+  | :false of false
 
-(and) = (a: Boolean) (b: Boolean) -> a b a
+and : :boolean -> :boolean -> :boolean
+(and) = a b -> a b a
 
-(or) = (a: Boolean) (b: Boolean): Boolean -> a a b
+or : :boolean -> :boolean -> :boolean
+(or) = a b -> a a b
 
 (xor) = is >> not
 
-not = (condition: Boolean): Boolean -> flip condition
+not : :boolean -> :boolean
+not = condition -> flip condition
 
-(is) : 'a -> 'a -> Boolean
+(is) : 'a -> 'a -> :boolean

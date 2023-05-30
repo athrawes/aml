@@ -1,5 +1,7 @@
-bitshift-left: 'a -> Integer -> 'a
+{:integer} = use "Primitives/Number"
+
+bitshift-left: 'a -> :integer -> 'a
 (<<<) = bitshift-left
 
-bitshift-right: 'a -> Integer -> 'a
+bitshift-right: 'a -> :integer -> 'a
 (>>>) = bitshift-right

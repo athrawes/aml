@@ -2,10 +2,10 @@
 #
 # ```aml
 # List.from [1, 2, 3]
-# |> map (multiply 2) # List Integer (2, 4, 6)
-# |> map (multiply 2) # List Integer (4, 6, 8)
+# |> map (multiply 2) # :list<:integer> (2, 4, 6)
+# |> map (multiply 2) # :list<:integer> (4, 6, 8)
 # ```
-interface map : 'm 'a -> ('a -> 'b) -> 'm 'b
+map : 'm<'a> -> ('a -> 'b) -> 'm<'b>
 
 # An infix alias for `map`
 #
@@ -13,8 +13,8 @@ interface map : 'm 'a -> ('a -> 'b) -> 'm 'b
 #
 # ```aml
 # List.from [1, 2, 3]
-# <$> (multiply 2) # List Integer (2, 4, 6)
-# <$> (multiply 2) # List Integer (4, 6, 8)
+# <$> (multiply 2) # :list<:integer> (2, 4, 6)
+# <$> (multiply 2) # :list<:integer> (4, 6, 8)
 # ```
 (<$>) = map
 

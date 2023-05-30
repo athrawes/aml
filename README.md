@@ -6,11 +6,11 @@ measure.
 
 The main goals are:
 
-* To embrace a highly FP style
-* To have a minimum amount of syntax
-* To be highly readable
-* To have high type-safety
-* While still being highly powerful and versatile
+- To embrace a highly FP style
+- To have a minimum amount of syntax
+- To be highly readable
+- To have high type-safety
+- While still being highly powerful and versatile
 
 ## Syntax
 
@@ -32,7 +32,7 @@ a = 5
 When binding variables, a type declaration may be provided
 
 ```aml
-a : Integer = 5
+a : :integer = 5
 ```
 
 To mark a type parameter, simply prepend with a `'` character:
@@ -59,7 +59,7 @@ another-callback : &'a -> String
 #### Type Bounds
 
 ```aml
-my-function = (a: 'a) (b: 'b)
+my-function = (a 'a) (b 'b)
   where 'a :> D, E
   where 'b :> Map
   -> c
@@ -69,13 +69,25 @@ my-function = (a: 'a) (b: 'b)
 
 #### Decorators `@`
 
-It's possible to add decorators to any assignment binding.
+It's possible to add decorators to any expression.
 
 ##### Simple Decorators
 
+Simple runtime decorators can be added before an expression. Typically, this
+would be used to compose functions with a simple syntax.
+
+```aml
+add5 = add 5
+
+@add5
+add15 = add 10
+
+add15 5 # => 20
+```
+
 ##### Macro Decorators
 
-It's also possible to
+It's also possible to add a compile-time macro decorator to an expression.
 For example, to add tail-recursion to a function which cannot be automatically
 optimized, you can use the `@>tail-recursive` decorator as so:
 
@@ -93,8 +105,8 @@ arguments to the decorator function are simply specified inline, as is the case
 here.
 
 The result of the decorator will then be bound to the original name, so for this
-example, the type of `fibonacci` will be `Integer -> Integer`, and not
-`Integer -> Integer -> Integer -> Integer` as is written.
+example, the type of `fibonacci` will be `:integer -> :integer`, and not
+`:integer -> :integer -> :integer -> :integer` as is written.
 
 ### Function definition `->`, `( )`
 
@@ -148,7 +160,7 @@ return-42 = _ -> 42
 forty-two = compose return-42 to-string
 forty-two _ # forty-two is "42"
 
-operationThatCanFail = (a: Integer) (b: Integer): Maybe Float -> a / b
+operationThatCanFail = (a :integer) (b :integer): Maybe Float -> a / b
 ```
 
 #### Infix functions
@@ -157,7 +169,7 @@ To define an infix function, (ie, a function whose argument may be placed in
 front of the function call), place the name of the function in parenthesis:
 
 ```aml
-(%) = (a: Integer) (b: Integer): Maybe Integer -> (a / b)
+(%) = (a :integer) (b :integer): Maybe :integer -> (a / b)
     >>= to-integer
     >>= (multiply b)
     >>= (subtract a)
@@ -168,7 +180,7 @@ front of the function call), place the name of the function in parenthesis:
 As always, AML can automatically fill in the types
 
 ```aml
-(+) = add # Integer -> Integer
+(+) = add # :integer -> :integer
 ```
 
 #### Interfaces
@@ -210,7 +222,7 @@ To indicate that subsequent lines should be considered as part of the scope of
 the function definition, simply indent the subsequent lines:
 
 ```aml
-add-two = (arg: Integer): Integer ->
+add-two = (arg :integer): :integer ->
   one = 1
   two = add one one
 
@@ -288,7 +300,7 @@ i = Identity 42
 # ---
 
 match i
-| Identity value => value * 2
+| Identity [value] => value * 2
 
 # ---
 
@@ -302,7 +314,7 @@ with i [value] => value * 2
 Importing everything from a module
 
 ```aml
-{ ... } = use "System/Collections"
+{ ... } = use "Collections"
 
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
@@ -314,7 +326,7 @@ Importing multiple items from a module
 Note: multi-item imports may span multiple lines
 
 ```aml
-{ to-upper, to-lower } = use "System/String"
+{ to-upper, to-lower } = use "String"
 
 "Hello, World!" |> to-upper # "HELLO, WORLD!"
 "Hello, World!" |> to-lower # "hello, world!"
@@ -323,8 +335,8 @@ Note: multi-item imports may span multiple lines
 Aliasing imports
 
 ```aml
-{ map as list-map } = use "System/Collections/List"
-{ map as seq-map } = use "System/Collections/Sequence"
+{ map as list-map } = use "Collections/List"
+{ map as seq-map } = use "Collections/Sequence"
 ```
 
 #### Declaring a module
@@ -384,7 +396,7 @@ prompt =
   |> map String.to-integer
   |> then
     match
-    | Ok value =>
+    | Ok [value] =>
       match value
       | n when (n % 2 is 0) => IO.stdout "Number is even\n"
       | n => (IO.stdout "Number is odd\n"

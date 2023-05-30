@@ -1,0 +1,11 @@
+Setoid = use "ADS/Setoid"
+
+module Ord :> Setoid
+
+lte : 'a -> 'a -> :boolean
+  where 'a :> Ord
+
+(<=) = lte
+
+gt = not lte
+(>) = gt

@@ -3,10 +3,10 @@
 #
 # ```aml
 # (Maybe.from 42)
-# |> then (value -> value / 2) # Maybe Float (21.0)
-# |> then (value -> value / 5) # Maybe Float (4.2)
+# |> then (value -> value / 2) # :maybe<:float> (21.0)
+# |> then (value -> value / 5) # :maybe<:float> (4.2)
 # ```
-interface then : 'm 'a -> ('a -> 'm 'b) -> 'm 'b
+then : 'm<'a> -> ('a -> 'm<'b>) -> 'm<'b>
 
 # An infix alias for `then`
 #
@@ -14,8 +14,8 @@ interface then : 'm 'a -> ('a -> 'm 'b) -> 'm 'b
 #
 # ```aml
 # (Maybe.from 42)
-# >>= (value -> value / 2) # Maybe Float (21.0)
-# >>= (value -> value / 5) # Maybe Float (4.2)
+# >>= (value -> value / 2) # :maybe<:float> (21.0)
+# >>= (value -> value / 5) # :maybe<:float> (4.2)
 # ```
 (>>=) = then
 
@@ -24,21 +24,20 @@ interface then : 'm 'a -> ('a -> 'm 'b) -> 'm 'b
 # @include then
 #
 # ```aml
-# (value -> value / 2) =<< (Maybe.from 42) # Maybe Float (21)
+# (value -> value / 2) =<< (Maybe.from 42) # :maybe<:float> (21)
 # ```
 (=<<) = flip (>>=)
 
 # Composes two functions by chaining.
 #
 # ```aml
-# { decodeAsync } = use "System/Text/JSON"
-# { GET } = use "System/Web/Http"
+# { decode-async } = use "Text/JSON"
+# { GET } = use "Web/Http"
 #
-# fetch-json
-#   : URL -> Async (Result JsonValue _)
-#   = chain GET (response -> decodeAsync response.Body)
+# fetch-json = chain GET (response -> decode-async response.Body)
 # ```
-chain = (a-mb: 'a -> 'm 'b) (b-mc: 'b -> 'm 'b): ('a -> 'm 'c) ->
+chain : ('a -> 'm<'b>) -> ('b -> 'm<'c>) -> ('a -> 'm<'c>)
+chain = a-mb b-mc ->
     a-mb >> ((flip then) b-mc)
 
 # An infix alias for `chain`
@@ -46,10 +45,10 @@ chain = (a-mb: 'a -> 'm 'b) (b-mc: 'b -> 'm 'b): ('a -> 'm 'c) ->
 # @include chain
 #
 # ```aml
-# { decodeAsync } = use "System/Text/JSON"
-# { GET } = use "System/Web/Http"
+# { decode-async } = use "Text/JSON"
+# { GET } = use "Web/Http"
 #
-# fetch-json = GET >=> (response -> decodeAsync response.Body)
+# fetch-json = GET >=> (response -> decode-async response.Body)
 # ```
 (>=>) = chain
 
@@ -58,17 +57,18 @@ chain = (a-mb: 'a -> 'm 'b) (b-mc: 'b -> 'm 'b): ('a -> 'm 'c) ->
 # @include chain
 #
 # ```aml
-# { decodeAsync } = use "System/Text/JSON"
-# { GET } = use "System/Web/Http"
+# { decode-async } = use "Text/JSON"
+# { GET } = use "Web/Http"
 #
-# fetch-json = (response -> decodeAsync response.Body) <=< GET
+# fetch-json = (response -> decode-async response.Body) <=< GET
 # ```
 (<=<) = flip (>=>)
 
 # Flattens two levels of wrapping into a single level
 #
 # ```aml
-# nested-value = Some (Some 5) # Maybe (Maybe Integer)
-# optional-value = flatten nested-value # Maybe Integer
+# nested-value = Some (Some 5) # Maybe (Maybe :integer)
+# optional-value = flatten nested-value # Maybe :integer
 # ```
-flatten = (self: 'm ('m 'a)): 'm 'a -> then self id
+flatten : 'm<'m<'a>> -> 'm<'a>
+flatten = self -> self >>= id

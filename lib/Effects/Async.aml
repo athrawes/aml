@@ -1,17 +1,18 @@
-Effect = use "System/Control/Effect"
+Effect = use "Control/Effect"
 
 module Async :> Effect
 
-type Resolved 'a
-type Pending 'a of (_ -> Resolved 'a)
+type :resolved<'a>
+type :pending<'a> of (_ -> :resolved<'a>)
 
-type Async 'a =
-  | Resolved 'a
-  | Pending 'a
+type :async<'a> =
+  | :resolved<'a>
+  | :pending<'a>
 
-from = Resolved
+from = :resolved
 
-then = (self: Async 'a) (callback: 'a -> Async 'b): Async 'b ->
+then : :async<'a> -> ('a -> :async<'b>) -> :async<'b>
+then = self callback ->
   match self
-  | Resolved _ => callback self
-  | Pending suspended => Pending (_ -> then (suspended _) callback)
+  | :resolved [_] => callback self
+  | :pending [suspended] => :pending (_ -> then (suspended _) callback)

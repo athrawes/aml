@@ -1,14 +1,15 @@
-type Continuation 'r 'a of ('a -> 'r) -> 'r
+type :continuation<'r, 'a> of ('a -> 'r) -> 'r
 
-run = (self: Continuation 'r 'a) (callback: 'a -> 'r): 'r ->
+run : :continuation<'r, 'a> -> ('a -> 'r) -> 'r
+run = self callback ->
   with self [k] => k callback
 
-instance (Continuation 'r) :> Effect
-  from = (value: 'r): Continuation 'r 'a -> Continuation ((callback: 'a) -> callback value)
+instance (:continuation<'r, _>) :> Effect
+  from : 'r -> :continuation<'r, 'a>
+  from = value -> :continuation ((callback 'a) -> callback value)
 
-  then =
-    (self: Continuation 'r 'a) ->
-    (callback: ('a -> Continuation 'r 'b)): Continuation 'r 'b ->
-      with self [ma] => Continuation (
-        continue -> run ma (value -> run (callback value) continue)
-      )
+  then : :continuation<'r, 'a> -> ('a -> :continuation<'r, 'b>) -> :continuation<'r, 'b>
+  then = self callback ->
+    with self [ma] => :continuation (
+      continue -> run ma (value -> run (callback value) continue)
+    )
