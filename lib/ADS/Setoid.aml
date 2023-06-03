@@ -1,2 +1,0 @@
-equals : 'a -> 'a -> bool
-(==) = equals
