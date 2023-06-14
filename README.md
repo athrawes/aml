@@ -14,7 +14,7 @@ The main goals are:
 
 ## Syntax
 
-### Variable binding `=`, `:`, `'`, `@`
+### Variable binding `=`, `:`, `'`, `@`, `:>`
 
 ```aml
 a = 5
@@ -32,7 +32,7 @@ a = 5
 When binding variables, a type declaration may be provided
 
 ```aml
-a : :integer = 5
+a : Integer = 5
 ```
 
 To mark a type parameter, simply prepend with a `'` character:
@@ -41,28 +41,13 @@ To mark a type parameter, simply prepend with a `'` character:
 my-function : 'a -> String
 ```
 
-#### References & Lifetime annotations
-
-```aml
-# a function whose argument's type is inferred but is a reference with a
-# lifetime of &a
-my-function : &a -> String
-
-# a function whose argument's type is 'a and is a reference with lifetime &a
-other-callback : &a'a -> String
-
-# a function whose argument's type is 'a and is a reference with an inferred
-# lifetime
-another-callback : &'a -> String
-```
-
 #### Type Bounds
 
 ```aml
-my-function = (a 'a) (b 'b)
-  where 'a :> D, E
-  where 'b :> Map
-  -> c
+my-function : 'a -> 'b -> 'c
+  where | 'a :> D, E
+        | 'b :> Map
+my-function = a b -> c
 ```
 
 #### Cases `|`
@@ -89,10 +74,10 @@ add15 5 # => 20
 
 It's also possible to add a compile-time macro decorator to an expression.
 For example, to add tail-recursion to a function which cannot be automatically
-optimized, you can use the `@>tail-recursive` decorator as so:
+optimized, you can use the `@@tail-recursive` decorator as so:
 
 ```aml
-@>tail-recursive 0 1
+@@tail-recursive 0 1
 fibonacci = accumulator identity n ->
   match n
   | 0 => accumulator
@@ -105,8 +90,8 @@ arguments to the decorator function are simply specified inline, as is the case
 here.
 
 The result of the decorator will then be bound to the original name, so for this
-example, the type of `fibonacci` will be `:integer -> :integer`, and not
-`:integer -> :integer -> :integer -> :integer` as is written.
+example, the type of `fibonacci` will be `Integer -> Integer`, and not
+`Integer -> Integer -> Integer -> Integer` as is written.
 
 ### Function definition `->`, `( )`
 
@@ -160,7 +145,8 @@ return-42 = _ -> 42
 forty-two = compose return-42 to-string
 forty-two _ # forty-two is "42"
 
-operationThatCanFail = (a :integer) (b :integer): Maybe Float -> a / b
+operationThatCanFail : Integer -> Integer -> Maybe<Float>
+operationThatCanFail = a b -> a / b
 ```
 
 #### Infix functions
@@ -169,10 +155,11 @@ To define an infix function, (ie, a function whose argument may be placed in
 front of the function call), place the name of the function in parenthesis:
 
 ```aml
-(%) = (a :integer) (b :integer): Maybe :integer -> (a / b)
-    >>= to-integer
-    >>= (multiply b)
-    >>= (subtract a)
+(%) : Integer -> Integer -> Maybe<Integer>
+(%) = a b -> (a / b)
+  >>= to-integer
+  >>= (multiply b)
+  >>= (subtract a)
 
 6 % 3 # returns (Some 0)
 ```
@@ -180,20 +167,7 @@ front of the function call), place the name of the function in parenthesis:
 As always, AML can automatically fill in the types
 
 ```aml
-(+) = add # :integer -> :integer
-```
-
-#### Interfaces
-
-When defining a library module, sometimes it makes sense to define some function
-signatures for functions that must be implemented by modules extending the
-current scope. For example, when defining an effect, you must currently define
-a `from` and a `then` function for the module extending `Effect`.
-
-This is handled by declaring an `interface`:
-
-```aml
-interface implement-me : 'a -> 'b -> 'c
+(+) = add # Integer -> Integer
 ```
 
 ### Scopes and expressions `( )`
@@ -222,7 +196,8 @@ To indicate that subsequent lines should be considered as part of the scope of
 the function definition, simply indent the subsequent lines:
 
 ```aml
-add-two = (arg :integer): :integer ->
+add-two : Integer -> Integer
+add-two = arg ->
   one = 1
   two = add one one
 
@@ -233,26 +208,27 @@ add-two = (arg :integer): :integer ->
 
 Parenthesis may be used to group expressions
 
-### Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `:>` `module`, `_`
+### Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `:>`, `module`, `_`
 
 ```aml
 a = { b = 1, c = 2 }
 { b, c } = a   # b is 1, c is 2
 { b as d } = a # partial destructuring is allowed, and aliasing is available
-{ _ as Name } = use "Some/Module" # collect all from structure/module as alias
+Name = use "Some/Module" # collect all from structure/module as alias
+Name, { a } = use "Some/Module" # collect all from struct/module as alias, and also extract specific items
 ```
 
 Punning is allowed:
 
 ```aml
-value -> { value } # 'a -> Map String 'a
+value -> { value } # 'a -> Map<String, 'a>
 ```
 
-#### Tuples `[]`
+#### Tuples `()`
 
 ```aml
-a = [1, 2, 3]
-[b, c] = a
+a = (1, 2, 3)
+(b, c) = a
 ```
 
 #### Struct member accessor `.`
@@ -277,7 +253,7 @@ When used in a guard expression, represents the default case.
 Comments immediately above modules and functions are interpreted as
 documentation comments.
 
-### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `[]`
+### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `()`
 
 ### Pattern matching: `match`, `|`, `=>`, `with`, `,`
 
@@ -287,7 +263,7 @@ has the value in the monad), then a `with` destructuring may be easier to use.
 ```aml
 i = Identity 42
 
-with i [value] => value`
+with i (value) => value`
 ```
 
 To be clear, this is syntactic sugar for a `match` statement that only has a
@@ -300,11 +276,11 @@ i = Identity 42
 # ---
 
 match i
-| Identity [value] => value * 2
+| Identity (value) => value * 2
 
 # ---
 
-with i [value] => value * 2
+with i (value) => value * 2
 ```
 
 ### Modules
@@ -319,7 +295,7 @@ Importing everything from a module
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
 
-List.from [1, 2, 3] |> List.to-sequence |> map (el -> el * 2)
+List.from (1, 2, 3) |> List.to-sequence |> map (el -> el * 2)
 ```
 
 Importing multiple items from a module
@@ -365,18 +341,11 @@ operator and a list of the modules to extend from:
 module Foo :> Bar Baz
 ```
 
-If the module is parametrized by some type, this is also where such parameters
-are added:
-
-```aml
-module MyEffect 'a :> (Effect 'a)
-```
-
 ### I/O
 
 Borrowing some concepts from Haskell, AML has fully managed effects. Most
 noticeably, this means that most functions in the `IO` namespace don't
-immediately perform an operation, and instead return an `IO 'a` computation
+immediately perform an operation, and instead return an `IO<'a>` computation
 which must be passed to the `IO.run` function in order to be executed.
 
 For example, to write "Hello, World!" to stdout, you'd write:
@@ -386,8 +355,8 @@ IO.stdout "Hello, World!"
 |> IO.run
 ```
 
-`IO 'a` has all of the usual FP goodies one would expect here, allowing users
-to bind, map, apply, and compose IO operations. To be more specific, `IO 'a` is
+`IO<'a>` has all of the usual FP goodies one would expect here, allowing users
+to bind, map, apply, and compose IO operations. To be more specific, `IO<'a>` is
 an Effect, AKA Monad. This makes creating IO pipelines a breeze:
 
 ```aml
@@ -396,10 +365,10 @@ prompt =
   |> map String.to-integer
   |> then
     match
-    | Ok [value] =>
+    | Ok (value) =>
       match value
       | n when (n % 2 is 0) => IO.stdout "Number is even\n"
-      | n => (IO.stdout "Number is odd\n"
+      | n => IO.stdout "Number is odd\n"
     | _ =>
       IO.stderr "Invalid input, please try again.\n"
 
@@ -413,11 +382,8 @@ IO.run prompt # IO happens here
 
 #### Casing
 
-Type parameters should either be a single capital letter or a short descriptor
-in PascalCase. For example, `'a` or `'MyParameter`
-
-Lifetime parameters should be either a single lower case letter or a short
-descriptor in kebab-case. For example, `&a` or `&program-lifetime`.
+Type parameters should either be a single lowercase letter or a short
+descriptor in camelCase. For example, `'a` or `'myParameter`
 
 Type names should be in PascalCase.
 
