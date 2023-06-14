@@ -2,13 +2,13 @@ Effect = use "Control/Effect"
 
 module Maybe :> Effect
 
-type :maybe<'a> =
-  | :some<'a>
-  | :none
+type Maybe<'a> =
+  | Some<'a>
+  | None
 
-from = :some
+from = Some
 
 then = self callback ->
   match self
-  | :some [value] => callback value
-  | :none => :none
+  | Some (value) => callback value
+  | None => None

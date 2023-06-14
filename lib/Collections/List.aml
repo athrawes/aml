@@ -1,21 +1,21 @@
 Effect = use "Control/Effect"
-{ Pair, :pair } = use "Collections/Pair"
+{ Pair } = use "Collections/Pair"
 
 module List :> Effect
 
-type :list<'t> =
-  | :non-empty of :pair<'t, :list<'t>>
-  | :empty
+type List<'t> =
+  | NonEmpty of Pair<'t, List<'t>>
+  | Empty
 
-from : 't -> :list<'t>
-from = value -> Pair.from value :list[:empty]
+from : 't -> List<'t>
+from = value -> Pair.from value Empty
 
 map = list callback ->
   match list
-  | :empty => list
-  | :non-empty [pair] => Pair.from
-      (callback (Pair.fst pair))
-      (map (Pair.snd pair) callback)
+  | Empty => list
+  | NonEmpty (pair) => Pair.from
+    (callback (Pair.fst pair))
+    (map (Pair.snd pair) callback)
 
 then = list callback ->
   flatten (map list callback)
@@ -30,23 +30,23 @@ then = list callback ->
 flatMap = then
 
 # Flattens one level of a multi-dimensional list.
-flatten : :list<:list<'t>> -> :list<'t>
+flatten : List<List<'t>> -> List<'t>
 flatten = lists ->
   match lists
-  | :empty => :list[:empty]
-  | :non-empty [pair] => concat (Pair.fst pair) (flatten (Pair.snd pair))
+  | Empty => Empty
+  | NonEmpty (pair) => concat (Pair.fst pair) (flatten (Pair.snd pair))
 
 # Returns a new list which is the result of appending two lists together. The
 # lists are concatenated left to right, so the elements from the first list
 # provided come first in the list, and the elements from the second list
 # provided come later.
-concat : :list<'t> -> :list<'t> -> :list<'t>
+concat : List<'t> -> List<'t> -> List<'t>
 concat = first second ->
   match first
-  | :empty => second
-  | :non-empty [pair] => Pair.from
-      (Pair.fst pair)
-      (concat (Pair.snd pair) second)
+  | Empty => second
+  | NonEmpty (pair) => Pair.from
+    (Pair.fst pair)
+    (concat (Pair.snd pair) second)
 
 # An infix alias for `concat`.
 #
@@ -54,7 +54,7 @@ concat = first second ->
 (++) = concat
 
 # Returns a new list with a given item prepended to it.
-prepend : 't -> :list<'t> -> :list<'t>
+prepend : 't -> List<'t> -> List<'t>
 prepend = item list -> Pair.from item list
 
 # An infix alias for `prepend`.
@@ -64,10 +64,10 @@ prepend = item list -> Pair.from item list
 
 # Returns a new list which is in the reverse order of the input list.
 
-reverse : :list<'t> -> :list<'t>
+reverse : List<'t> -> List<'t>
 reverse = list ->
   match list
-  | :empty => list
-  | :non-empty [pair] => concat
-      (reverse(Pair.snd pair))
-      (List.from(Pair.fst pair))
+  | Empty => list
+  | NonEmpty (pair) => concat
+    (reverse (Pair.snd pair))
+    (List.from (Pair.fst pair))

@@ -1,6 +1,7 @@
 IO = use "Effects/IO"
 
-typedFunction : :integer -> :integer = a -> a
+typedFunction : Integer -> Integer = a -> a
 typedValue : String = "Hello, world!"
 
-main = (argv List String): IO :integer -> IO.from 0
+main : List<String> -> IO<Integer>
+main = argv -> IO.from 0

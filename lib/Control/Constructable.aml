@@ -2,6 +2,6 @@
 # value given.
 #
 # ```aml
-# value = Maybe.from 42 # :maybe<:integer>
+# value = Maybe.from 42 # Maybe<Integer>
 # ```
 from : _ -> 'm<'a>

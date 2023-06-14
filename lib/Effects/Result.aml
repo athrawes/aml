@@ -1,13 +1,14 @@
 Effect = use "Control/Effect"
 
-type :result<'ok, 'error> =
-  | :ok 'ok
-  | :error 'error
+module Result :> Effect
 
-instance (:result<'ok, _>) :> Effect =
-  from = :ok
+type Result<'ok, 'error> =
+  | Ok 'ok
+  | Error 'error
 
-  then = self callback ->
-    match self
-    | :ok [value] => callback value
-    | :error [_] => self
+from = Ok
+
+then = self callback ->
+  match self
+  | Ok (value) => callback value
+  | Error (_) => self

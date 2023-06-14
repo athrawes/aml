@@ -1,37 +1,37 @@
-type :unsigned-integer =
-  | :u8 of INTRINSIC_UNSIGNED_8BIT
-  | :u16 of INTRINSIC_UNSIGNED_16BIT
-  | :u32 of INTRINSIC_UNSIGNED_32BIT
-  | :u64 of INTRINSIC_UNSIGNED_64BIT
-  | :u128 of INTRINSIC_UNSIGNED_128BIT
+type UnsignedInteger =
+  | u8 of INTRINSIC_UNSIGNED_8BIT
+  | u16 of INTRINSIC_UNSIGNED_16BIT
+  | u32 of INTRINSIC_UNSIGNED_32BIT
+  | u64 of INTRINSIC_UNSIGNED_64BIT
+  | u128 of INTRINSIC_UNSIGNED_128BIT
 
-type :signed-integer =
-  | :i8 of INTRINSIC_SIGNED_8BIT
-  | :i16 of INTRINSIC_SIGNED_16BIT
-  | :i32 of INTRINSIC_SIGNED_32BIT
-  | :i64 of INTRINSIC_SIGNED_64BIT
-  | :i128 of INTRINSIC_SIGNED_128BIT
+type SignedInteger =
+  | i8 of INTRINSIC_SIGNED_8BIT
+  | i16 of INTRINSIC_SIGNED_16BIT
+  | i32 of INTRINSIC_SIGNED_32BIT
+  | i64 of INTRINSIC_SIGNED_64BIT
+  | i128 of INTRINSIC_SIGNED_128BIT
 
-type :integer =
-  | :unsigned-integer
-  | :signed-integer
+type Integer =
+  | UnsignedInteger
+  | SignedInteger
 
-type :float =
-  | :f32 of INTRINSIC_FLOAT_32BIT
-  | :f64 of INTRINSIC_FLOAT_64BIT
+type Float =
+  | f32 of INTRINSIC_FLOAT_32BIT
+  | f64 of INTRINSIC_FLOAT_64BIT
 
-type :real-number =
-  | :integer
-  | :float
+type RealNumber =
+  | Integer
+  | Float
 
-add : :number -> :number -> :number
+add : Number -> Number -> Number
 (+) = add
 
-subtract : :number -> :number -> :number
+subtract : Number -> Number -> Number
 (-) = subtract
 
-multiply : :number -> :number -> :number
+multiply : Number -> Number -> Number
 (*) = multiply
 
-divide : :number -> :number -> :maybe<:number>
+divide : Number -> Number -> Maybe<Number>
 (/) = divide

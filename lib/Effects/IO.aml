@@ -2,18 +2,14 @@ Effect = use "Control/Effect"
 
 module IO :> Effect
 
-type :pending
-type :running
-type :complete<'a>
+type IO<'a> =
+  | Pending
+  | Running
+  | Complete<'a>
 
-type :io<'a> =
-  | :pending
-  | :running
-  | :complete<'a>
-
-from = :complete
+from = Complete
 
 then = self callback -> match self
-  | :complete [value] => callback value
-  | :running => todo!
-  | :pending => todo!
+  | Complete (value) => callback value
+  | Running => todo!
+  | Pending => todo!

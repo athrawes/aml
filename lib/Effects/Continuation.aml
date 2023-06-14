@@ -1,15 +1,18 @@
-type :continuation<'r, 'a> of ('a -> 'r) -> 'r
+Effect = use "Control/Effect"
 
-run : :continuation<'r, 'a> -> ('a -> 'r) -> 'r
+module Continuation :> Effect
+
+type Continuation<'r, 'a> :> Effect<'r> of ('a -> 'r) -> 'r
+
+run : Continuation<'r, 'a> -> ('a -> 'r) -> 'r
 run = self callback ->
-  with self [k] => k callback
+  with self (k) => k callback
 
-instance (:continuation<'r, _>) :> Effect
-  from : 'r -> :continuation<'r, 'a>
-  from = value -> :continuation ((callback 'a) -> callback value)
+from : 'r -> Continuation<'r, 'a>
+from = value -> Continuation ((callback 'a) -> callback value)
 
-  then : :continuation<'r, 'a> -> ('a -> :continuation<'r, 'b>) -> :continuation<'r, 'b>
-  then = self callback ->
-    with self [ma] => :continuation (
-      continue -> run ma (value -> run (callback value) continue)
-    )
+then : Continuation<'r, 'a> -> ('a -> Continuation<'r, 'b>) -> Continuation<'r, 'b>
+then = self callback ->
+  with self (ma) => Continuation (
+    continue -> run ma (value -> run (callback value) continue)
+  )
