@@ -27,6 +27,7 @@ type ValueSeparator = FilePosition & { value: string, kind: 'valueSeparator' };
 type CaseArm = FilePosition & { value: string, kind: 'caseArm' };
 type Guard = FilePosition & { value: string, kind: 'guard' };
 type Decorator = FilePosition & { value: string, kind: 'decorator' };
+type ExpressionSeparator = FilePosition & { value: string, kind: 'expressionSeparator' };
 
 export type Token =
     | VariableBinding
@@ -51,3 +52,4 @@ export type Token =
     | CaseArm
     | Guard
     | Decorator
+    | ExpressionSeparator

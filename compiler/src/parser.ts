@@ -1,4 +1,4 @@
-import { Token } from "./tokens";
+import { Token } from "./tokens.ts";
 import * as R from 'ramda';
 import RG from 'ramda-generators';
 

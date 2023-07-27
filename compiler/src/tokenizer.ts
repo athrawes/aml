@@ -1,4 +1,4 @@
-import type { Token } from './tokens'
+import type { Token } from './tokens.ts'
 
 const tokenizeCharacter =
     (type: Token['kind'], value: string) =>
@@ -44,12 +44,13 @@ let tokenizers = [
     tokenizeCharacter('tupleClose', ']'),
     tokenizeCharacter('genericOpen', '<'),
     tokenizeCharacter('genericClose', '>'),
-    tokenizeCharacter('string', '"'),
     tokenizeCharacter('valueSeparator', ','),
     tokenizeCharacter('caseArm', '|'),
-    tokenizePattern('decorator', /@\w+/),
+    tokenizePattern('decorator', /@\w+/g),
     tokenizePattern('comment', /#[^\n]*/g),
+    tokenizePattern('string', /"(?:[^"\\]|\\.)*"/g),
     tokenizePattern('infer', /(?<=\s)_(?=\s)/g),
+    tokenizePattern('expressionSeparator', /\r?\n\s*\r?\n/g),
     tokenizePattern('type', /:(?=\s)/g),
     tokenizePattern('newline', /\r?\n/g),
     tokenizePattern('whitespace', /\s/g),
