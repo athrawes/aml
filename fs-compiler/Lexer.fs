@@ -1,8 +1,8 @@
-module Lexar
+module Lexer
 
 type Position = { line: int; column: int; index: int }
 
-type Lexar = { source: string; position: Position }
+type Lexer = { source: string; position: Position }
 
 type TokenPosition = { start: Position; finish: Position }
 
@@ -26,7 +26,7 @@ type Token =
     | Splat // ...
     | StructMemberAccessor // .
     | TypeBinding // :
-    | TypeExtension // :>
+    | TypeExtension // extends
     | Unit // _
     | EOL of int
     // Paired operators
@@ -42,36 +42,36 @@ type Token =
     | String of string // "..."
     | TypeParameter of string // '...
 
-let rec readToken lexar : Lexar * Token * TokenPosition =
-    let emit = emitSimple lexar
+let rec readToken lexer : Lexer * Token * TokenPosition =
+    let emit = emitSimple lexer
 
-    match peek lexar 0 with
+    match peek lexer 0 with
     | None -> failwith "Unexpected end of input"
     | Some c ->
         match c with
         | ' '
         | '\t' ->
-            let newLexar = advance lexar 1
-            readToken newLexar
-        | '\n' when peek lexar 1 = Some '\n' ->
-            let next = advance lexar 2
+            let newLexer = advance lexer 1
+            readToken newLexer
+        | '\n' when peek lexer 1 = Some '\n' ->
+            let next = advance lexer 2
             let indent = countIndent next
 
             (next,
              ExpressionSeparator indent,
-             { start = lexar.position
+             { start = lexer.position
                finish =
-                 { line = lexar.position.line + 1
+                 { line = lexer.position.line + 1
                    index = next.position.index - 1
                    column = 1 } })
         | '\n' ->
-            let next = advance lexar 1
+            let next = advance lexer 1
             let indent = countIndent next
 
             (next,
              EOL indent,
-             { start = lexar.position
-               finish = lexar.position })
+             { start = lexer.position
+               finish = lexer.position })
         | '|' -> emit Pipe 1
         | ',' -> emit FieldSeparator 1
         | '_' -> emit Unit 1
@@ -81,35 +81,35 @@ let rec readToken lexar : Lexar * Token * TokenPosition =
         | '}' -> emit StructClose 1
         | '<' -> emit GenericOpen 1
         | '>' -> emit GenericClose 1
-        | '=' when peek lexar 1 = Some '>' -> emit Arm 2
+        | '=' when peek lexer 1 = Some '>' -> emit Arm 2
         | '=' -> emit Binding 1
-        | '-' when peek lexar 1 = Some '>' -> emit Function 2
-        | ':' when peek lexar 1 = Some '>' -> emit TypeExtension 2
+        | '-' when peek lexer 1 = Some '>' -> emit Function 2
+        | ':' when peek lexer 1 = Some '>' -> emit TypeExtension 2
         | ':' -> emit TypeBinding 1
         | '"' ->
-            let (str, position) = readString lexar
-            let next = advance lexar (position.finish.column - lexar.position.column + 1)
+            let (str, position) = readString lexer
+            let next = advance lexer (position.finish.column - lexer.position.column + 1)
 
             (next, String str, position)
         | '#' ->
-            let (comment, position) = readComment lexar
-            let next = advance lexar (position.finish.column - lexar.position.column + 1)
+            let (comment, position) = readComment lexer
+            let next = advance lexer (position.finish.column - lexer.position.column + 1)
 
             (next, Comment comment, position)
         | '\'' ->
-            let (identifier, position) = readIdentifier (advance lexar 1)
+            let (identifier, position) = readIdentifier (advance lexer 1)
 
             // fix starting position to sort off-by-one error
             let position =
                 { start = { position.start with column = position.start.column - 1 }
                   finish = position.finish }
 
-            let next = advance lexar (position.finish.column - lexar.position.column + 1)
+            let next = advance lexer (position.finish.column - lexer.position.column + 1)
 
             (next, TypeParameter identifier, position)
         | _ ->
-            let (identifier, position) = readIdentifier lexar
-            let next = advance lexar (position.finish.column - lexar.position.column + 1)
+            let (identifier, position) = readIdentifier lexer
+            let next = advance lexer (position.finish.column - lexer.position.column + 1)
 
             let token =
                 match identifier with
@@ -123,8 +123,8 @@ let rec readToken lexar : Lexar * Token * TokenPosition =
 
             (next, token, position)
 
-and emitSimple lexar token consumed =
-    let next = advance lexar consumed
+and emitSimple lexer token consumed =
+    let next = advance lexer consumed
 
     let finish =
         { line = next.position.line
@@ -132,13 +132,13 @@ and emitSimple lexar token consumed =
           column = next.position.column - 1 }
 
     let tokenPosition =
-        { start = lexar.position
+        { start = lexer.position
           finish = finish }
 
     (next, token, tokenPosition)
 
-and countIndent lexar =
-    let mutable next = lexar
+and countIndent lexer =
+    let mutable next = lexer
     let mutable indent = 0
 
     while peek next 0 = Some '\t' || peek next 0 = Some ' ' do
@@ -147,12 +147,12 @@ and countIndent lexar =
 
     indent
 
-and readString lexar =
+and readString lexer =
     let str =
         Seq.unfold
             (function
-            | idx when (peek lexar idx) <> Some '"' ->
-                let c = peek lexar idx
+            | idx when (peek lexer idx) <> Some '"' ->
+                let c = peek lexer idx
                 Some(c, idx + 1)
             | _ -> None)
             1
@@ -161,11 +161,11 @@ and readString lexar =
         |> String.concat ""
 
     (str,
-     { start = lexar.position
-       finish = (advance lexar (str.Length + 1)).position })
+     { start = lexer.position
+       finish = (advance lexer (str.Length + 1)).position })
 
-and readIdentifier lexar =
-    let mutable next = lexar
+and readIdentifier lexer =
+    let mutable next = lexer
 
     let identifier =
         seq {
@@ -186,17 +186,17 @@ and readIdentifier lexar =
           column = next.position.column - 1 }
 
     (identifier,
-     { start = lexar.position
+     { start = lexer.position
        finish = nextPosition })
 
-and readComment lexar =
-    let lexar = advance lexar 1 // Skip the '#'
+and readComment lexer =
+    let lexer = advance lexer 1 // Skip the '#'
 
     let chunk =
         Seq.unfold
             (function
-            | idx when (peek lexar idx) <> Some '\n' ->
-                let c = peek lexar idx
+            | idx when (peek lexer idx) <> Some '\n' ->
+                let c = peek lexer idx
                 Some(c, idx + 1)
             | _ -> None)
             0
@@ -205,67 +205,49 @@ and readComment lexar =
         |> String.concat ""
 
     (chunk,
-     { start = lexar.position
+     { start = lexer.position
        finish =
-         { line = lexar.position.line
-           index = lexar.position.index + chunk.Length
-           column = lexar.position.column + chunk.Length } })
+         { line = lexer.position.line
+           index = lexer.position.index + chunk.Length
+           column = lexer.position.column + chunk.Length } })
 
-and advance lexar n : Lexar =
-    let stringPosition = lexar.position.index - 1
-    let chunk = lexar.source.[stringPosition .. stringPosition + n - 1]
+and advance lexer n : Lexer =
+    let stringPosition = lexer.position.index - 1
+    let chunk = lexer.source.[stringPosition .. stringPosition + n - 1]
     let newlines = Seq.filter (fun c -> c = '\n') chunk |> Seq.length
 
     let newPosition =
-        { line = lexar.position.line + newlines
-          index = lexar.position.index + n
+        { line = lexer.position.line + newlines
+          index = lexer.position.index + n
           column =
             if newlines > 0 then
                 chunk.Length - chunk.LastIndexOf('\n')
             else
-                lexar.position.column + n }
+                lexer.position.column + n }
 
-    { source = lexar.source
+    { source = lexer.source
       position = newPosition }
 
-and peek lexar n =
-    let stringPosition = lexar.position.index - 1
+and peek lexer n =
+    let stringPosition = lexer.position.index - 1
 
-    if stringPosition + n < lexar.source.Length then
-        Some lexar.source.[stringPosition + n]
+    if stringPosition + n < lexer.source.Length then
+        Some lexer.source.[stringPosition + n]
     else
         None
-
-and isOperatorCharacter =
-    function
-    | '='
-    | '>'
-    | '<'
-    | ')'
-    | '('
-    | '{'
-    | '}'
-    | '['
-    | ']'
-    | ','
-    | ':'
-    | '|'
-    | '\'' -> true
-    | _ -> false
 
 and isIdentifierCharacter =
     function
     | c when System.Char.IsWhiteSpace c -> false
-    | c when isOperatorCharacter c -> false
     | _ -> true
 
 let tokenize (input: string) : (Token * TokenPosition) seq =
     Seq.unfold
-        (fun (lexar) ->
-            if lexar.position.index > lexar.source.Length then
+        (fun (lexer) ->
+            if lexer.position.index > lexer.source.Length then
                 None
             else
-                let (newLexar, token, position) = readToken lexar
-                Some((token, position), newLexar))
+                let (newLexer, token, position) = readToken lexer
+                Some((token, position), newLexer))
         { source = input
           position = { line = 1; index = 1; column = 1 } }
