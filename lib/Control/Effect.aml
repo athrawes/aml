@@ -1,7 +1,7 @@
-module Effect :> Constructable Mappable Applyable Thenable
+module Effect extends Constructable Mappable Applyable Thenable
 
-apply = self callback ->
-  callback >>= (map self)
+apply = effect callback ->
+  callback >>= (map effect)
 
-map = self callback ->
-  self >>= (callback >> from)
+map = effect callback ->
+  effect >>= (callback >> from)

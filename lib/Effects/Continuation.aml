@@ -1,18 +1,18 @@
 Effect = use "Control/Effect"
 
-module Continuation :> Effect
+module Continuation extends Effect
 
-type Continuation<'r, 'a> :> Effect<'r> of ('a -> 'r) -> 'r
+type Continuation<'r, 'a> extends Effect<'r> of ('a -> 'r) -> 'r
 
 run : Continuation<'r, 'a> -> ('a -> 'r) -> 'r
-run = self callback ->
-  with self (k) => k callback
+run = continuation callback ->
+  with continuation (k) => k callback
 
 from : 'r -> Continuation<'r, 'a>
 from = value -> Continuation ((callback 'a) -> callback value)
 
 then : Continuation<'r, 'a> -> ('a -> Continuation<'r, 'b>) -> Continuation<'r, 'b>
-then = self callback ->
-  with self (ma) => Continuation (
+then = continuation callback ->
+  with continuation (ma) => Continuation (
     continue -> run ma (value -> run (callback value) continue)
   )

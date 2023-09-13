@@ -1,6 +1,6 @@
 Effect = use "Control/Effect"
 
-module Maybe :> Effect
+module Maybe extends Effect
 
 type Maybe<'a> =
   | Some<'a>
@@ -8,7 +8,7 @@ type Maybe<'a> =
 
 from = Some
 
-then = self callback ->
-  match self
+then = maybe callback ->
+  match maybe
   | Some (value) => callback value
   | None => None

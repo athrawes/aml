@@ -1,6 +1,6 @@
 Constructable = use "Control/Constructable"
 
-module Applyable :> Constructable
+module Applyable extends Constructable
 
 # Applies functions within an effect to values within the same effect.
 #
@@ -11,9 +11,6 @@ module Applyable :> Constructable
 # apply function-list values-list # List<Integer> (3, 4, 5, 11, 12, 13)
 # ```
 apply : 'm<'a -> 'b> -> 'm<'a> -> 'm<'b>
-
-#[if(defined('liftA2'))]
-apply = liftA2 id
 
 # An infix alias of `apply`
 #
@@ -26,19 +23,14 @@ apply = liftA2 id
 (<**>) : 'm<'a> -> 'm<'a -> 'b> -> 'm<'b>
 (<**>) = flip (<*>)
 
-liftA : ('a -> 'b) -> 'm<'a> -> 'm<'b>
-  where | 'm :> Applyable
-liftA = callback ma ->
-  (from callback) <*> ma
+lift-a : ('a -> 'b) -> 'm<'a> -> 'm<'b>
+  where 'm extends Applyable
+lift-a = callback ma -> (from callback) <*> ma
 
-liftA2 : ('a -> 'b -> 'c) -> 'm<'a> -> 'm<'b> -> 'm<'c>
-  where | 'm :> Applyable
+lift-a2 : ('a -> 'b -> 'c) -> 'm<'a> -> 'm<'b> -> 'm<'c>
+  where 'm extends Applyable
+lift-a2 = callback ma mb -> (from callback) <*> ma <*> mb
 
-#[if(defined('apply'))]
-liftA2 = callback ma mb ->
-  (from callback) <*> ma <*> mb
-
-liftA3 : ('a -> 'b -> 'c -> 'd) -> 'm<'a> -> 'm<'b> -> 'm<'c> -> 'm<'d>
-  where | 'm :> Applyable
-liftA3 = callback ma mb mc ->
-  (from callback) <*> ma <*> mb <*> mc
+lift-a3 : ('a -> 'b -> 'c -> 'd) -> 'm<'a> -> 'm<'b> -> 'm<'c> -> 'm<'d>
+  where 'm extends Applyable
+lift-a3 = callback ma mb mc -> (from callback) <*> ma <*> mb <*> mc

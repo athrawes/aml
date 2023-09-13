@@ -37,8 +37,8 @@ then : 'm<'a> -> ('a -> 'm<'b>) -> 'm<'b>
 # fetch-json = chain GET (response -> decode-async response.Body)
 # ```
 chain : ('a -> 'm<'b>) -> ('b -> 'm<'c>) -> ('a -> 'm<'c>)
-chain = a-mb b-mc ->
-    a-mb >> ((flip then) b-mc)
+chain = a-to-mb b-to-mc ->
+    a-to-mb >> ((flip then) b-to-mc)
 
 # An infix alias for `chain`
 #
@@ -71,4 +71,4 @@ chain = a-mb b-mc ->
 # optional-value = flatten nested-value # Maybe<Integer>
 # ```
 flatten : 'm<'m<'a>> -> 'm<'a>
-flatten = self -> self >>= id
+flatten = thenable -> thenable >>= id

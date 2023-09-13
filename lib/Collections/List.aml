@@ -1,11 +1,13 @@
 Effect = use "Control/Effect"
-{ Pair } = use "Collections/Pair"
+{ Pair, fst, snd } = use "Collections/Pair"
 
-module List :> Effect
+module List extends Effect
 
 type List<'t> =
   | NonEmpty of Pair<'t, List<'t>>
   | Empty
+
+[] = List<_>.Empty
 
 from : 't -> List<'t>
 from = value -> Pair.from value Empty
@@ -14,27 +16,27 @@ map = list callback ->
   match list
   | Empty => list
   | NonEmpty (pair) => Pair.from
-    (callback (Pair.fst pair))
-    (map (Pair.snd pair) callback)
+    (callback (fst pair))
+    (map (snd pair) callback)
 
 then = list callback ->
   flatten (map list callback)
 
 # An alias for `List.then`, which may be more intuitive in many contexts. Since
 # the callback parameter maps each element in the origin list to an entire list
-# of its own, `list.flatMap` takes the origin list, applies the callback
+# of its own, `list.flat-map` takes the origin list, applies the callback
 # parameter to each argument, and then flattens the resulting list of lists into
 # a single list.
 #
 # @include then
-flatMap = then
+flat-map = then
 
 # Flattens one level of a multi-dimensional list.
 flatten : List<List<'t>> -> List<'t>
 flatten = lists ->
   match lists
   | Empty => Empty
-  | NonEmpty (pair) => concat (Pair.fst pair) (flatten (Pair.snd pair))
+  | NonEmpty (pair) => concat (fst pair) (flatten (snd pair))
 
 # Returns a new list which is the result of appending two lists together. The
 # lists are concatenated left to right, so the elements from the first list
@@ -45,8 +47,8 @@ concat = first second ->
   match first
   | Empty => second
   | NonEmpty (pair) => Pair.from
-    (Pair.fst pair)
-    (concat (Pair.snd pair) second)
+    (fst pair)
+    (concat (snd pair) second)
 
 # An infix alias for `concat`.
 #
@@ -63,11 +65,10 @@ prepend = item list -> Pair.from item list
 (::) = prepend
 
 # Returns a new list which is in the reverse order of the input list.
-
 reverse : List<'t> -> List<'t>
 reverse = list ->
   match list
   | Empty => list
   | NonEmpty (pair) => concat
-    (reverse (Pair.snd pair))
-    (List.from (Pair.fst pair))
+    (reverse (snd pair))
+    (from (fst pair))

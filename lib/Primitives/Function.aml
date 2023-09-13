@@ -5,8 +5,8 @@ pipe = argument callback -> callback argument
 (<|) = flip (|>)
 
 compose : ('a -> 'b) -> ('b -> 'c) -> ('a -> 'c)
-compose = a_b b_c ->
-  a -> a |> a_b |> b_c
+compose = a_to_b b_to_c ->
+  a -> a |> a_to_b |> b_to_c
 
 (>>) = compose
 (<<) = flip (>>)

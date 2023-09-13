@@ -1,8 +1,8 @@
-{True, False, true, false} = use "Primitives/Boolean"
+{true, false} = use "Primitives/Boolean"
 
 type Pair<'a, 'b> =
-  | First of True -> 'a
-  | Second of False -> 'b
+  | First of true -> 'a
+  | Second of false -> 'b
 
 # Constructs a new pair from two arguments
 from : 'a -> 'b -> Pair<'a, 'b>
@@ -10,8 +10,8 @@ from = a b -> which -> which a b
 
 # Grabs the first item from a Pair
 fst : Pair<'a, 'b> -> 'a
-fst = self -> self true
+fst = pair -> pair true
 
 # Grabs the second item from a Pair
 snd : Pair<'a, 'b> -> 'b
-snd = self -> self false
+snd = pair -> pair false

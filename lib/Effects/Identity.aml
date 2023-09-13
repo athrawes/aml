@@ -1,7 +1,7 @@
-module Identity :> Effect
+module Identity extends Effect
 
 type Identity
 
 from = Identity
-then = self callback ->
-  with self (value) => callback value
+then = identity callback ->
+  with identity (value) => callback value

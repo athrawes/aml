@@ -1,6 +1,6 @@
 Effect = use "Control/Effect"
 
-module IO :> Effect
+module IO extends Effect
 
 type IO<'a> =
   | Pending
@@ -9,7 +9,7 @@ type IO<'a> =
 
 from = Complete
 
-then = self callback -> match self
+then = io callback -> match io
   | Complete (value) => callback value
   | Running => todo!
   | Pending => todo!

@@ -1,6 +1,6 @@
 Effect = use "Control/Effect"
 
-module Result :> Effect
+module Result extends Effect
 
 type Result<'ok, 'error> =
   | Ok 'ok
@@ -8,7 +8,7 @@ type Result<'ok, 'error> =
 
 from = Ok
 
-then = self callback ->
-  match self
+then = result callback ->
+  match result
   | Ok (value) => callback value
-  | Error (_) => self
+  | Error (_) => result

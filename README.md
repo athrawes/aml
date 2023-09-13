@@ -14,7 +14,7 @@ The main goals are:
 
 ## Syntax
 
-### Variable binding `=`, `:`, `'`, `@`, `:>`
+### Variable binding `=`, `:`, `'`, `@`, `extends`
 
 ```aml
 a = 5
@@ -45,8 +45,8 @@ my-function : 'a -> String
 
 ```aml
 my-function : 'a -> 'b -> 'c
-  where | 'a :> D, E
-        | 'b :> Map
+  where 'a extends D, E
+        | 'b extends Map
 my-function = a b -> c
 ```
 
@@ -208,7 +208,7 @@ add-two = arg ->
 
 Parenthesis may be used to group expressions
 
-### Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `:>`, `module`, `_`
+### Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `extends`, `module`, `_`
 
 ```aml
 a = { b = 1, c = 2 }
@@ -334,11 +334,11 @@ module MyModule
 # methods, constants, etc...
 ```
 
-To extend the current module with the methods from other modules, add the `:>`
+To extend the current module with the methods from other modules, add the `extends`
 operator and a list of the modules to extend from:
 
 ```aml
-module Foo :> Bar Baz
+module Foo extends Bar Baz
 ```
 
 ### I/O
@@ -378,9 +378,59 @@ prompt =
 IO.run prompt # IO happens here
 ```
 
-### AML code conventions
+## AML code conventions
 
-#### Casing
+### Operator precedence
+
+Precedence in AML is as follows:
+
+1. Grouped expressions are evaluated first
+2. Expressions are evaluated strictly right to left
+3. Functions are greedy and will attempt to take as many arguments as possible
+
+Some examples:
+
+1. Grouped expressions
+
+    ```aml
+    => (1 + 2) * (3 + 4)
+    // ------- | -------
+    //       3 *       7
+    //       -----------
+    //                21
+    ```
+
+2. Left to right evaluation
+
+    ```aml
+    => 2 + 4 * 3
+    //  ---- | |
+    //     6 * 3
+    //     -----
+    //        18
+    ```
+
+    ```aml
+    => 2.0 |> divide  4.0
+    // --------------   |
+    // <fn>divide 2.0   |
+    // ------------------
+    // <fn>divide 2.0 4.0
+    // ------------------
+    //                0.5
+    ```
+
+3. Greedy evaluation
+
+    ```aml
+    let do-things = f a b c -> (f (f (f a) b) c)
+    let add2 = a + 2
+
+    => do-things add2 1 2 3
+    // ((((do-things add2) 1) 2) 3)
+    ```
+
+### Casing
 
 Type parameters should either be a single lowercase letter or a short
 descriptor in camelCase. For example, `'a` or `'myParameter`
@@ -389,7 +439,7 @@ Type names should be in PascalCase.
 
 Variable and function names should be in kebab-case.
 
-#### Naming
+### Naming
 
 Functions which return a `Boolean` value should end in a question mark for
 readability, e.g. `is-int?`, `is-string?`, and so on.

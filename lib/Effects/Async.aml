@@ -1,6 +1,6 @@
 Effect = use "Control/Effect"
 
-module Async :> Effect
+module Async extends Effect
 
 type Resolved<'a>
 type Pending<'a> of (_ -> Resolved<'a>)
@@ -12,7 +12,7 @@ type Async<'a> =
 from = Resolved
 
 then : Async<'a> -> ('a -> Async<'b>) -> Async<'b>
-then = self callback ->
-  match self
-  | Resolved (_) => callback self
+then = async callback ->
+  match async
+  | Resolved (_) => callback async
   | Pending (suspended) => Pending (_ -> then (suspended _) callback)
