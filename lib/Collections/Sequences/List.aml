@@ -1,38 +1,24 @@
-Effect = use "Control/Effect"
 { Pair, fst, snd } = use "Collections/Pair"
+Seq = use "Collections/Sequences/Seq"
 
-module List extends Effect
+module List extends Monad Seq
 
-type List<'t> =
+type List<'t> extends Seq<'t> =
   | NonEmpty of Pair<'t, List<'t>>
   | Empty
 
 [] = List<_>.Empty
 
-from : 't -> List<'t>
 from = value -> Pair.from value Empty
 
-map = list callback ->
+map = list -> callback ->
   match list
   | Empty => list
   | NonEmpty (pair) => Pair.from
     (callback (fst pair))
     (map (snd pair) callback)
 
-then = list callback ->
-  flatten (map list callback)
-
-# An alias for `List.then`, which may be more intuitive in many contexts. Since
-# the callback parameter maps each element in the origin list to an entire list
-# of its own, `list.flat-map` takes the origin list, applies the callback
-# parameter to each argument, and then flattens the resulting list of lists into
-# a single list.
-#
-# @include then
-flat-map = then
-
 # Flattens one level of a multi-dimensional list.
-flatten : List<List<'t>> -> List<'t>
 flatten = lists ->
   match lists
   | Empty => Empty
@@ -42,27 +28,15 @@ flatten = lists ->
 # lists are concatenated left to right, so the elements from the first list
 # provided come first in the list, and the elements from the second list
 # provided come later.
-concat : List<'t> -> List<'t> -> List<'t>
-concat = first second ->
+concat = first -> second ->
   match first
   | Empty => second
   | NonEmpty (pair) => Pair.from
     (fst pair)
     (concat (snd pair) second)
 
-# An infix alias for `concat`.
-#
-# @include concat
-(++) = concat
-
 # Returns a new list with a given item prepended to it.
-prepend : 't -> List<'t> -> List<'t>
-prepend = item list -> Pair.from item list
-
-# An infix alias for `prepend`.
-#
-# @include prepend
-(::) = prepend
+prepend = item -> list -> Pair.from item list
 
 # Returns a new list which is in the reverse order of the input list.
 reverse : List<'t> -> List<'t>

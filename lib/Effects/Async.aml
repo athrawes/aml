@@ -1,6 +1,4 @@
-Effect = use "Control/Effect"
-
-module Async extends Effect
+module Async extends Monad
 
 type Resolved<'a>
 type Pending<'a> of (_ -> Resolved<'a>)
@@ -11,8 +9,8 @@ type Async<'a> =
 
 from = Resolved
 
-then : Async<'a> -> ('a -> Async<'b>) -> Async<'b>
-then = async callback ->
+chain : Async<'a> -> ('a -> Async<'b>) -> Async<'b>
+chain = async -> callback ->
   match async
   | Resolved (_) => callback async
-  | Pending (suspended) => Pending (_ -> then (suspended _) callback)
+  | Pending (suspended) => Pending (_ -> chain (suspended _) callback)

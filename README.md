@@ -14,7 +14,7 @@ The main goals are:
 
 ## Syntax
 
-### Variable binding `=`, `:`, `'`, `@`, `extends`
+### Variable binding `=`, `:`, `'`, `extends`
 
 ```aml
 a = 5
@@ -47,51 +47,10 @@ my-function : 'a -> String
 my-function : 'a -> 'b -> 'c
   where 'a extends D, E
         | 'b extends Map
-my-function = a b -> c
+my-function = a -> b -> c
 ```
 
 #### Cases `|`
-
-#### Decorators `@`
-
-It's possible to add decorators to any expression.
-
-##### Simple Decorators
-
-Simple runtime decorators can be added before an expression. Typically, this
-would be used to compose functions with a simple syntax.
-
-```aml
-add5 = add 5
-
-@add5
-add15 = add 10
-
-add15 5 # => 20
-```
-
-##### Macro Decorators
-
-It's also possible to add a compile-time macro decorator to an expression.
-For example, to add tail-recursion to a function which cannot be automatically
-optimized, you can use the `@@tail-recursive` decorator as so:
-
-```aml
-@@tail-recursive 0 1
-fibonacci = accumulator identity n ->
-  match n
-  | 0 => accumulator
-  | _ => fibonacci (n - 1) identity (accumulator + identity)
-```
-
-This will cause AML to first send the name of the binding and the definition of
-the binding to the decorator function (in this case, `tail-recursive`). Further
-arguments to the decorator function are simply specified inline, as is the case
-here.
-
-The result of the decorator will then be bound to the original name, so for this
-example, the type of `fibonacci` will be `Integer -> Integer`, and not
-`Integer -> Integer -> Integer -> Integer` as is written.
 
 ### Function definition `->`, `( )`
 
@@ -108,35 +67,6 @@ a -> b -> c
 # evaluates to: (a -> (b -> (c)))
 ```
 
-A bit of syntax sugar for chained functions:
-
-```aml
-a b -> c
-```
-
-is strictly equivalent to
-
-```aml
-a -> b -> c
-```
-
-Do note that the precedence for this syntax sugar is very low; if used in a
-larger expression, you may need parenthesis to disambiguate the order of
-operations.
-
-```aml
-a = 1
-b = 2
-add-then-do = a -> b -> callback -> (a + b) |> callback
-
-c = add-then-do a b d e -> d + e
-# error: d is not defined, as it's not being considered as part of the argument
-# list as intended
-
-c = add-then-do a b (d e -> d + e)
-# works!
-```
-
 Functions are 1st class citizens, and can be bound to variables and passed
 around like any other value
 
@@ -146,7 +76,7 @@ forty-two = compose return-42 to-string
 forty-two _ # forty-two is "42"
 
 operationThatCanFail : Integer -> Integer -> Maybe<Float>
-operationThatCanFail = a b -> a / b
+operationThatCanFail = a -> b -> a / b
 ```
 
 #### Infix functions
@@ -156,7 +86,7 @@ front of the function call), place the name of the function in parenthesis:
 
 ```aml
 (%) : Integer -> Integer -> Maybe<Integer>
-(%) = a b -> (a / b)
+(%) = a -> b -> (a / b)
   >>= to-integer
   >>= (multiply b)
   >>= (subtract a)
@@ -215,7 +145,6 @@ a = { b = 1, c = 2 }
 { b, c } = a   # b is 1, c is 2
 { b as d } = a # partial destructuring is allowed, and aliasing is available
 Name = use "Some/Module" # collect all from structure/module as alias
-Name, { a } = use "Some/Module" # collect all from struct/module as alias, and also extract specific items
 ```
 
 Punning is allowed:
@@ -412,6 +341,8 @@ Some examples:
 
     ```aml
     => 2.0 |> divide  4.0
+    // ------      |    |
+    // <fn>$ 2.0   |    |
     // --------------   |
     // <fn>divide 2.0   |
     // ------------------
@@ -423,11 +354,11 @@ Some examples:
 3. Greedy evaluation
 
     ```aml
-    let do-things = f a b c -> (f (f (f a) b) c)
+    let do-things = f -> a -> b -> c -> (((f a) b) c)
     let add2 = a + 2
 
     => do-things add2 1 2 3
-    // ((((do-things add2) 1) 2) 3)
+    // (((add2 1) 2) 3)
     ```
 
 ### Casing

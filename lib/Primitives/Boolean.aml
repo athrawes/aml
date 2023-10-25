@@ -1,15 +1,15 @@
-true =  a _ -> a
-false = _ b -> b
+true =  a -> _ -> a
+false = _ -> b -> b
 
 type Boolean =
   | True of true
   | False of false
 
 and : Boolean -> Boolean -> Boolean
-(and) = a b -> a b a
+(and) = a -> b -> a b a
 
 or : Boolean -> Boolean -> Boolean
-(or) = a b -> a a b
+(or) = a -> b -> a a b
 
 (xor) = is >> not
 

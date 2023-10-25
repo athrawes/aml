@@ -1,0 +1,329 @@
+module Alt extends Functor
+  type Alt<'a> extends Functor<'a>
+
+  alt : 'm<'a> -> 'm<'a> -> 'm<'a>
+    where 'm extends Alt
+
+module Alternative extends Applicative Plus
+  type Alternative<'a> extends Applicative<'a>, Plus<'a>
+
+module Applicative extends Apply
+  type Applicative<'a> extends Apply<'a>
+
+  from : 'a -> 'm<'a>
+    where 'm extends Applicative
+
+  lift-a0 : 'a -> 'm<'a>
+    where 'm extends Applicative
+  lift-a0 = from
+
+  lift-a1 : ('a -> 'b) -> 'm<'a> -> 'm<'b>
+    where 'm extends Applicative
+  lift-a1 = callback -> ma -> (from callback) <*> ma
+
+  lift-a2 : ('a -> 'b -> 'c) -> 'm<'a> -> 'm<'b> -> 'm<'c>
+    where 'm extends Applicative
+  lift-a2 = callback -> ma -> mb -> (from callback) <*> ma <*> mb
+
+module Apply extends Functor
+  type Apply<'a> extends Functor<'a>
+
+  ap : 'm<'a> -> 'm<('a -> 'b)> -> 'm<'b>
+    where 'm extends Apply
+
+  # An alias for `ap`.
+  # @include ap
+  (<*>) = ap
+
+  (<**>) = flip (<*>)
+
+module Bifunctor extends Functor
+  type Bifunctor<'a, 'b> extends Functor<'b>
+
+  bimap : 'm<'a, 'c> -> ('a -> 'b) -> ('c -> 'd) -> 'm<'b, 'd>
+    where 'm extends Bifunctor
+
+module Category extends Semigroupoid
+  type Category<'a> extends Semigroupoid<'a, 'a>
+
+  # The identity object for a given category.
+  #
+  # This object should behave as one would expect for an identity object.
+  # As an example, given a category of multiplication, the identity object would
+  # be `1`, since `1 * x` is always `x`.
+  #
+  # This identity should behave the same whether it's on the left or right side
+  # of a composition.
+  #
+  # Given an object `a` which is a member of a category `'m`, the following should
+  # hold:
+  #
+  # - `identity >> a` should be the same as `a`
+  # - `a >> identity` should be the same as `a`
+  identity : 'm<_>
+    where 'm extends Category
+
+module Chain extends Apply
+  type Chain<'a> extends Apply<'a>
+
+  # Allows chaining functions which return instances of the current type.
+  #
+  # ```aml
+  # (Maybe.from 42)
+  # |> chain (value -> value / 2) # Maybe<Float> (21.0)
+  # |> chain (value -> value / 5) # Maybe<Float> (4.2)
+  # ```
+  chain : 'm<'a> -> ('a -> 'm<'b>) -> 'm<'b>
+    where 'm extends Chain
+
+  # An alias for `chain`. Allows chaining functions which return instances of the
+  # current type.
+  #
+  # ```aml
+  # (Maybe.from 42)
+  # |> then (value -> value / 2) # Maybe<Float> (21.0)
+  # |> then (value -> value / 5) # Maybe<Float> (4.2)
+  # ```
+  then = chain
+
+  # An infix alias for `chain`.
+  #
+  # @include chain
+  #
+  # ```aml
+  # (Maybe.from 42)
+  # >>= (value -> value / 2) # Maybe<Float> (21.0)
+  # >>= (value -> value / 5) # Maybe<Float> (4.2)
+  # ```
+  (>>=) = chain
+
+  # An infix alias for `chain`, but with the arguments reversed.
+  #
+  # @include chain
+  #
+  # ```aml
+  # (value -> value / 2) =<< (Maybe.from 42) # Maybe<Float> (21)
+  # ```
+  (=<<) = flip (>>=)
+
+  # Composes two functions by Kleisli composition.
+  k-compose : ('a -> 'm<'b>) -> ('b -> 'm<'c>) -> ('a -> 'm<'c>)
+  k-compose = a-to-mb b-to-mc ->
+      a-to-mb >> ((flip chain) b-to-mc)
+
+  # An infix alias for `k-compose`.
+  # @include k-compose
+  (>=>) = k-compose
+
+  # An infix alias for `k-compose`, but with the arguments reversed.
+  # @include k-compose
+  (<=<) = flip (>=>)
+
+  flatten : 'm<'m<'a>> -> 'm<'a>
+    where 'm extends Chain
+  flatten = mma ->
+      mma >>= id
+
+module ChainRec extends Chain
+  type ChainRec<'a> extends Chain<'a>
+
+  # Chains together a sequence of functions, each of which returns a value of the
+  # same type as the next function in the sequence. The first function in the
+  # sequence is passed the `next` and `done` callbacks, which it can use to
+  # continue the chain or terminate it, respectively. The `next` callback takes
+  # the next function in the sequence as its first argument, and the `done`
+  # callback takes the final value of the chain as its first argument.
+  #
+  # The `chain-rec` function is useful for chaining together a sequence of
+  # functions that each return a value of the same type as the next function in
+  # the sequence. The `chain-rec` function is similar to the `chain` function,
+  # except that it allows the chain to be terminated early by calling the `done`
+  # callback.
+  #
+  # For example, the following code uses `chain-rec` to implement a function that
+  # returns the first even number in a sequence, or `None` if no even number is
+  # found:
+  #
+  # ```aml
+  # let first-even = chain-rec -> callback ->
+  #   let rec loop = callback -> next -> done ->
+  #     match next () with
+  #     | Some -> x -> if x % 2 == 0 then done (Some x) else loop next done
+  #     | None -> done None
+  #   loop callback
+  #
+  # first-even (_ -> Some 1) (x -> Some (x + 1)) == Some 2
+  # first-even (_ -> Some 1) (x -> Some (x + 2)) == Some 2
+  # first-even (_ -> Some 1) (x -> Some (x + 3)) == Some 4
+  # first-even (_ -> Some 1) (x -> Some (x + 4)) == Some 4
+  # first-even (_ -> Some 1) (x -> Some (x + 5)) == Some 6
+  # first-even (_ -> Some 1) (x -> Some (x + 6)) == Some 6
+  # ```
+  chain-rec : ((('a -> 'c) -> ('b -> 'c) -> 'a) -> 'm<'c> -> 'a) -> 'm<'b>
+    where 'm extends ChainRec
+
+module Contramap
+  type Contramap<'a>
+
+  contramap : 'm<'a> -> ('b -> 'a) -> 'm<'b>
+    where 'm extends Contravariant
+
+module Comonad extends Extend
+  type Comonad<'a> extends Extend<'a>
+
+  extract : 'm<'a> -> _ -> 'a
+    where 'm extends Comonad
+
+module Extend extends Functor
+  type Extend<'a> extends Functor<'a>
+
+  extend 'm<'a> -> ('m<'a> -> 'b) -> 'm<'b>
+    where 'm extends Extend
+
+module Filterable
+  type Filterable<'a>
+
+  filter : 'm<'a> -> ('a -> Bool) -> 'm<'a>
+    where 'm extends Filterable
+
+module Foldable
+  type Foldable<'a>
+
+  reduce : 'm<'a> -> ('b -> 'a -> 'b) -> 'b -> 'b
+    where 'm extends Foldable
+
+module Functor
+  type Functor<'a>
+
+  map : 'm<'a> -> ('a -> 'b) -> 'm<'b>
+    where 'm extends Functor
+
+module Group extends Monoid
+  type Group<'a> extends Monoid<'a>
+
+  invert : 'm<'a> -> 'm<'a>
+    where 'm extends Group
+
+module Monad extends Applicative Chain
+  type Monad<'a> extends Applicative<'a>, Chain<'a>
+
+module Monoid extends Semigroup
+  type Monoid<'a> extends Semigroup<'a>
+
+  # The empty value for a monoid.
+  empty : 'm<'a>
+    where 'm extends Monoid
+
+  # @include empty
+  ∅ = empty
+
+module Ord extends Setoid
+  type Ord<'a> extends Setoid<'a>
+
+  # Less than or equal to. Returns true if the first argument is less than or
+  # equal to the second argument.
+  lte : 'm<'a> -> 'm<'a> -> bool
+    where 'm extends Ord
+
+  # An infix operator for `lte`.
+  # @include lte
+  (<=) = lte
+
+  # Strict less than. Returns true if the first argument is strictly less than
+  # the second argument.
+  lt : 'm<'a> -> 'm<'a> -> bool
+    where 'm extends Ord
+  lt = a -> b -> (not (equals a b)) and (lte a b)
+
+  # An infix operator for `lt`.
+  # @include lt
+  (<) = lt
+
+  # Greater than or equal to. Returns true if the first argument is greater than
+  # or equal to the second argument.
+  gte : 'm<'a> -> 'm<'a> -> bool
+    where 'm extends Ord
+  gte = a -> b -> (equals a b) or (not (lte a b))
+
+  # An infix operator for `gte`.
+  # @include gte
+  (>=) = gte
+
+  # Strict greater than. Returns true if the first argument is strictly greater
+  # than the second argument.
+  gt : 'm<'a> -> 'm<'a> -> bool
+    where 'm extends Ord
+  gt = a -> b -> not (lte a b)
+
+  # An infix operator for `gt`.
+  # @include gt
+  (>) = gt
+
+module Plus extends Alt
+  type Plus<'a> extends Alt<'a>
+
+  zero : 'm<_>
+    where 'm extends Plus
+
+module Profunctor extends Functor
+  type Profunctor<'a, 'b> extends Functor<'b>
+
+  promap : 'm<'b, 'c> -> ('a -> 'b) -> ('c -> 'd) -> 'm<'a, 'd>
+    where 'm extends Profunctor
+
+module Semigroup
+  type Semigroup<'a>
+
+  # Combines two values by appending them together.
+  concat : 'm<'a> -> 'm<'a> -> 'm<'a>
+    where 'm extends Semigroup
+
+  # An infix alias for `concat`.
+  # @include concat
+  (++) = concat
+
+module Semigroupoid
+  type Semigroupoid<'a, 'b>
+
+  # A composition function which takes two objects of the same type and returns
+  # a new object which represents 'gluing' the two objects together.
+  #
+  # Objects implementing `Semigroupoid` should have a reasonable implementation of
+  # `compose` which behaves nicely with respect to associativity. So, given values
+  # `a`, `b`, and `c` of the same type:
+  #
+  # - `compose a (compose b c)` should be the same as `compose (compose a b) c`
+  compose : 'm<'a, 'b> -> 'm<'b, 'c> -> 'm<'a, 'c>
+    where 'm extends Semigroupoid
+
+  # An infix alias for `compose`.
+  # @include compose
+  (>>) = compose
+
+  # An infix alias for `compose`, but with the arguments reversed.
+  # @include compose
+  (<<) = flip (>>)
+
+module Setoid
+  type Setoid<'a>
+
+  # An equality function for comparing two values of the same type. Equality
+  # should behave nicely here, so that `equals` is reflexive, symmetric, and
+  # transitive. So, given values `a`, `b`, and `c` of the same type:
+  #
+  # - `equals a a` should be `true`
+  # - `equals a b` should be the same as `equals b a`
+  # - `equals a b` and `equals b c` should be `equals a c`
+  equals : 'm<'a> -> 'm<'a> -> Bool
+    where 'm extends Setoid
+
+  # An infix alias for `equals`.
+  # @include equals
+  (==) = equals
+
+module Traversable extends Foldable Functor
+  type Traversable<'a> extends Foldable<'a>, Functor<'a>
+
+  traverse : 't<'a> -> 'f<_> -> ('a -> 'f<'b>) -> 'f<'t<'b>>
+    where 't extends Traversable
+    where 'f extends Applicative

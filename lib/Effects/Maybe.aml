@@ -1,6 +1,4 @@
-Effect = use "Control/Effect"
-
-module Maybe extends Effect
+module Maybe extends Monad
 
 type Maybe<'a> =
   | Some<'a>
@@ -8,7 +6,7 @@ type Maybe<'a> =
 
 from = Some
 
-then = maybe callback ->
+chain = maybe -> callback ->
   match maybe
   | Some (value) => callback value
   | None => None

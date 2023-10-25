@@ -1,11 +1,11 @@
 pipe : 'a -> ('a -> 'b) -> 'b
-pipe = argument callback -> callback argument
+pipe = argument -> callback -> callback argument
 
 (|>) = pipe
 (<|) = flip (|>)
 
 compose : ('a -> 'b) -> ('b -> 'c) -> ('a -> 'c)
-compose = a_to_b b_to_c ->
+compose = a_to_b -> b_to_c ->
   a -> a |> a_to_b |> b_to_c
 
 (>>) = compose
@@ -13,7 +13,7 @@ compose = a_to_b b_to_c ->
 
 flip : ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
 flip = callback ->
-  b a -> callback a b
+  b -> a -> callback a b
 
 id : 'a -> 'a
 id = a -> a

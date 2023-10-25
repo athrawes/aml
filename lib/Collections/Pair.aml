@@ -6,7 +6,7 @@ type Pair<'a, 'b> =
 
 # Constructs a new pair from two arguments
 from : 'a -> 'b -> Pair<'a, 'b>
-from = a b -> which -> which a b
+from = a -> b -> which -> which a b
 
 # Grabs the first item from a Pair
 fst : Pair<'a, 'b> -> 'a

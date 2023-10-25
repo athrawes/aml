@@ -1,6 +1,4 @@
-Effect = use "Control/Effect"
-
-module IO extends Effect
+module IO extends Monad
 
 type IO<'a> =
   | Pending
@@ -9,7 +7,7 @@ type IO<'a> =
 
 from = Complete
 
-then = io callback -> match io
+chain = io -> callback -> match io
   | Complete (value) => callback value
   | Running => todo!
   | Pending => todo!

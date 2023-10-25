@@ -1,6 +1,4 @@
-Effect = use "Control/Effect"
-
-module Result extends Effect
+module Result extends Monad
 
 type Result<'ok, 'error> =
   | Ok 'ok
@@ -8,7 +6,7 @@ type Result<'ok, 'error> =
 
 from = Ok
 
-then = result callback ->
+chain = result -> callback ->
   match result
   | Ok (value) => callback value
   | Error (_) => result

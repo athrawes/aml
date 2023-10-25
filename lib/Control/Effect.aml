@@ -1,7 +1,0 @@
-module Effect extends Constructable Mappable Applyable Thenable
-
-apply = effect callback ->
-  callback >>= (map effect)
-
-map = effect callback ->
-  effect >>= (callback >> from)

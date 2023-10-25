@@ -3,5 +3,5 @@ module Identity extends Effect
 type Identity
 
 from = Identity
-then = identity callback ->
+chain = identity -> callback ->
   with identity (value) => callback value
