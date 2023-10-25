@@ -1,6 +1,6 @@
 module Parser
 
-open Lexar
+open Lexer
 
 type Expression =
     | Definition of Definition

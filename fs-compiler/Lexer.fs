@@ -14,11 +14,11 @@ type Token =
     | KeywordModule // module
     | KeywordOf // of
     | KeywordType // type
+    | KeywordWith // with
     // Operators
     | Arm // => (arm separator)
     | Binding // =
     | Decorator // @
-    | ExpressionSeparator of int // \n\n
     | FieldSeparator // ,
     | Function // ->
     | MacroDecorator // @@
@@ -28,7 +28,7 @@ type Token =
     | TypeBinding // :
     | TypeExtension // extends
     | Unit // _
-    | EOL of int
+    | EOL // \n, \r, \r\n
     // Paired operators
     | GroupOpen // (
     | GroupClose // )
@@ -36,11 +36,14 @@ type Token =
     | StructClose // }
     | GenericOpen // <
     | GenericClose // >
+    | TupleOpen // [
+    | TupleClose // ]
     // Literals
     | Comment of string // # ...
     | Identifier of string
     | String of string // "..."
     | TypeParameter of string // '...
+    | Indent of int // leading whitespace
 
 let rec readToken lexer : Lexer * Token * TokenPosition =
     let emit = emitSimple lexer
@@ -51,25 +54,15 @@ let rec readToken lexer : Lexer * Token * TokenPosition =
         match c with
         | ' '
         | '\t' ->
-            let newLexer = advance lexer 1
-            readToken newLexer
-        | '\n' when peek lexer 1 = Some '\n' ->
-            let next = advance lexer 2
-            let indent = countIndent next
-
-            (next,
-             ExpressionSeparator indent,
-             { start = lexer.position
-               finish =
-                 { line = lexer.position.line + 1
-                   index = next.position.index - 1
-                   column = 1 } })
+            if lexer.position.column = 1 then
+                let indent = countIndent lexer
+                emit (Indent indent) indent
+            else
+                let newLexer = advance lexer 1
+                readToken newLexer
         | '\n' ->
-            let next = advance lexer 1
-            let indent = countIndent next
-
-            (next,
-             EOL indent,
+            (advance lexer 1,
+             EOL,
              { start = lexer.position
                finish = lexer.position })
         | '|' -> emit Pipe 1
@@ -79,12 +72,13 @@ let rec readToken lexer : Lexer * Token * TokenPosition =
         | ')' -> emit GroupClose 1
         | '{' -> emit StructOpen 1
         | '}' -> emit StructClose 1
+        | '[' -> emit TupleOpen 1
+        | ']' -> emit TupleClose 1
         | '<' -> emit GenericOpen 1
         | '>' -> emit GenericClose 1
         | '=' when peek lexer 1 = Some '>' -> emit Arm 2
         | '=' -> emit Binding 1
         | '-' when peek lexer 1 = Some '>' -> emit Function 2
-        | ':' when peek lexer 1 = Some '>' -> emit TypeExtension 2
         | ':' -> emit TypeBinding 1
         | '"' ->
             let (str, position) = readString lexer
@@ -119,6 +113,8 @@ let rec readToken lexer : Lexer * Token * TokenPosition =
                 | "module" -> KeywordModule
                 | "of" -> KeywordOf
                 | "type" -> KeywordType
+                | "extends" -> TypeExtension
+                | "with" -> KeywordWith
                 | _ -> Identifier identifier
 
             (next, token, position)
@@ -239,6 +235,15 @@ and peek lexer n =
 and isIdentifierCharacter =
     function
     | c when System.Char.IsWhiteSpace c -> false
+    | c when c = '(' || c = ')' -> false // Grouping operators
+    | c when c = '{' || c = '}' -> false // Record operators
+    | c when c = '<' || c = '>' -> false // Generic operators
+    | c when c = '[' || c = ']' -> false // Tuple operators
+    | c when c = '"' -> false // String literal
+    | c when c = '#' -> false // Comment
+    | c when c = '=' -> false // Binding
+    | c when c = '|' -> false // Pipe
+    | c when c = ',' -> false // Field separator
     | _ -> true
 
 let tokenize (input: string) : (Token * TokenPosition) seq =

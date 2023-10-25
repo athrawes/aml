@@ -1,4 +1,4 @@
-﻿open Lexar
+﻿open Lexer
 open System
 
 [<EntryPoint>]
