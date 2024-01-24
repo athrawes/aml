@@ -1,17 +1,27 @@
-module Alt extends Functor
-  type Alt<'a> extends Functor<'a>
-
+type Alt<'a> extends Functor<'a>
+trait Alt extends Functor
   alt : 'm<'a> -> 'm<'a> -> 'm<'a>
     where 'm extends Alt
 
-module Alternative extends Applicative Plus
-  type Alternative<'a> extends Applicative<'a>, Plus<'a>
+type Alternative<'a> extends Applicative<'a>, Plus<'a>
+trait Alternative extends Applicative Plus
 
-module Applicative extends Apply
-  type Applicative<'a> extends Apply<'a>
-
+type Applicative<'a> extends Apply<'a>
+trait Applicative extends Apply
   from : 'a -> 'm<'a>
     where 'm extends Applicative
+
+  replace : 'm<'a> -> 'b -> 'm<'b>
+    where 'm extends Applicative
+  replace = ma -> b -> lift-a1 (const b) ma
+
+  (<$) = replace
+
+  inject : 'a -> 'm<'b> -> 'm<'a>
+    where 'm extends Applicative
+  inject = a -> mb -> lift-a1 (const a) mb
+
+  ($>) = inject
 
   lift-a0 : 'a -> 'm<'a>
     where 'm extends Applicative
@@ -25,10 +35,9 @@ module Applicative extends Apply
     where 'm extends Applicative
   lift-a2 = callback -> ma -> mb -> (from callback) <*> ma <*> mb
 
-module Apply extends Functor
-  type Apply<'a> extends Functor<'a>
-
-  ap : 'm<'a> -> 'm<('a -> 'b)> -> 'm<'b>
+type Apply<'a> extends Functor<'a>
+trait Apply extends Functor
+  ap : 'm<('a -> 'b)> -> 'm<'a> -> 'm<'b>
     where 'm extends Apply
 
   # An alias for `ap`.
@@ -37,15 +46,13 @@ module Apply extends Functor
 
   (<**>) = flip (<*>)
 
-module Bifunctor extends Functor
-  type Bifunctor<'a, 'b> extends Functor<'b>
-
+type Bifunctor<'a, 'b> extends Functor<'b>
+trait Bifunctor extends Functor
   bimap : 'm<'a, 'c> -> ('a -> 'b) -> ('c -> 'd) -> 'm<'b, 'd>
     where 'm extends Bifunctor
 
-module Category extends Semigroupoid
-  type Category<'a> extends Semigroupoid<'a, 'a>
-
+type Category<'a> extends Semigroupoid<'a, 'a>
+trait Category extends Semigroupoid
   # The identity object for a given category.
   #
   # This object should behave as one would expect for an identity object.
@@ -55,34 +62,33 @@ module Category extends Semigroupoid
   # This identity should behave the same whether it's on the left or right side
   # of a composition.
   #
-  # Given an object `a` which is a member of a category `'m`, the following should
-  # hold:
+  # Given an object `a` which is a member of a category `'m`, the following
+  # should hold:
   #
   # - `identity >> a` should be the same as `a`
   # - `a >> identity` should be the same as `a`
   identity : 'm<_>
     where 'm extends Category
 
-module Chain extends Apply
-  type Chain<'a> extends Apply<'a>
-
+type Chain<'a> extends Apply<'a>
+trait Chain extends Apply
   # Allows chaining functions which return instances of the current type.
   #
   # ```aml
   # (Maybe.from 42)
-  # |> chain (value -> value / 2) # Maybe<Float> (21.0)
-  # |> chain (value -> value / 5) # Maybe<Float> (4.2)
+  # ▷ chain (value -> value / 2) # Maybe<Float> (21.0)
+  # ▷ chain (value -> value / 5) # Maybe<Float> (4.2)
   # ```
   chain : 'm<'a> -> ('a -> 'm<'b>) -> 'm<'b>
     where 'm extends Chain
 
-  # An alias for `chain`. Allows chaining functions which return instances of the
-  # current type.
+  # An alias for `chain`. Allows chaining functions which return instances of
+  # the current type.
   #
   # ```aml
   # (Maybe.from 42)
-  # |> then (value -> value / 2) # Maybe<Float> (21.0)
-  # |> then (value -> value / 5) # Maybe<Float> (4.2)
+  # ▷ then (value -> value / 2) # Maybe<Float> (21.0)
+  # ▷ then (value -> value / 5) # Maybe<Float> (4.2)
   # ```
   then = chain
 
@@ -124,29 +130,29 @@ module Chain extends Apply
   flatten = mma ->
       mma >>= id
 
-module ChainRec extends Chain
-  type ChainRec<'a> extends Chain<'a>
-
-  # Chains together a sequence of functions, each of which returns a value of the
-  # same type as the next function in the sequence. The first function in the
-  # sequence is passed the `next` and `done` callbacks, which it can use to
+type ChainRec<'a> extends Chain<'a>
+trait ChainRec extends Chain
+  # the same type as the next function in the sequence. The first function in
+  # Chains together a sequence of functions, each of which returns a value of
+  # the sequence is passed the `next` and `done` callbacks, which it can use to
   # continue the chain or terminate it, respectively. The `next` callback takes
   # the next function in the sequence as its first argument, and the `done`
   # callback takes the final value of the chain as its first argument.
   #
-  # The `chain-rec` function is useful for chaining together a sequence of
   # functions that each return a value of the same type as the next function in
+  # The `chain-rec` function is useful for chaining together a sequence of
   # the sequence. The `chain-rec` function is similar to the `chain` function,
   # except that it allows the chain to be terminated early by calling the `done`
   # callback.
   #
-  # For example, the following code uses `chain-rec` to implement a function that
-  # returns the first even number in a sequence, or `None` if no even number is
-  # found:
+  # For example, the following code uses `chain-rec` to implement a function
+  # that returns the first even number in a sequence, or `None` if no even
+  # number is found:
   #
   # ```aml
-  # let first-even = chain-rec -> callback ->
-  #   let rec loop = callback -> next -> done ->
+  # first-even : ChainRec<'a> -> ('a -> 'a) -> Maybe<'a>
+  # first-even = chain-rec -> callback ->
+  #   loop = callback -> next -> done ->
   #     match next () with
   #     | Some -> x -> if x % 2 == 0 then done (Some x) else loop next done
   #     | None -> done None
@@ -162,54 +168,50 @@ module ChainRec extends Chain
   chain-rec : ((('a -> 'c) -> ('b -> 'c) -> 'a) -> 'm<'c> -> 'a) -> 'm<'b>
     where 'm extends ChainRec
 
-module Contramap
-  type Contramap<'a>
-
+type Contramap<'a>
+trait Contramap
   contramap : 'm<'a> -> ('b -> 'a) -> 'm<'b>
     where 'm extends Contravariant
 
-module Comonad extends Extend
-  type Comonad<'a> extends Extend<'a>
-
+type Comonad<'a> extends Extend<'a>
+trait Comonad extends Extend
   extract : 'm<'a> -> _ -> 'a
     where 'm extends Comonad
 
-module Extend extends Functor
-  type Extend<'a> extends Functor<'a>
-
+type Extend<'a> extends Functor<'a>
+trait Extend extends Functor
   extend 'm<'a> -> ('m<'a> -> 'b) -> 'm<'b>
     where 'm extends Extend
 
-module Filterable
-  type Filterable<'a>
-
+type Filterable<'a>
+trait Filterable
   filter : 'm<'a> -> ('a -> Bool) -> 'm<'a>
     where 'm extends Filterable
 
-module Foldable
-  type Foldable<'a>
-
+type Foldable<'a>
+trait Foldable
   reduce : 'm<'a> -> ('b -> 'a -> 'b) -> 'b -> 'b
     where 'm extends Foldable
 
-module Functor
-  type Functor<'a>
-
+type Functor<'a>
+trait Functor
   map : 'm<'a> -> ('a -> 'b) -> 'm<'b>
     where 'm extends Functor
 
-module Group extends Monoid
-  type Group<'a> extends Monoid<'a>
+  # An infix alias for `map`.
+  # @include map
+  (<$>) = map
 
+type Group<'a> extends Monoid<'a>
+trait Group extends Monoid
   invert : 'm<'a> -> 'm<'a>
     where 'm extends Group
 
-module Monad extends Applicative Chain
-  type Monad<'a> extends Applicative<'a>, Chain<'a>
+type Monad<'a> extends Applicative<'a>, Chain<'a>
+trait Monad extends Applicative Chain
 
-module Monoid extends Semigroup
-  type Monoid<'a> extends Semigroup<'a>
-
+type Monoid<'a> extends Semigroup<'a>
+trait Monoid extends Semigroup
   # The empty value for a monoid.
   empty : 'm<'a>
     where 'm extends Monoid
@@ -217,9 +219,8 @@ module Monoid extends Semigroup
   # @include empty
   ∅ = empty
 
-module Ord extends Setoid
-  type Ord<'a> extends Setoid<'a>
-
+type Ord<'a> extends Setoid<'a>
+trait Ord extends Setoid
   # Less than or equal to. Returns true if the first argument is less than or
   # equal to the second argument.
   lte : 'm<'a> -> 'm<'a> -> bool
@@ -228,12 +229,13 @@ module Ord extends Setoid
   # An infix operator for `lte`.
   # @include lte
   (<=) = lte
+  (≤) = lte
 
-  # Strict less than. Returns true if the first argument is strictly less than
+  # Strictly less than. Returns true if the first argument is strictly less than
   # the second argument.
   lt : 'm<'a> -> 'm<'a> -> bool
     where 'm extends Ord
-  lt = a -> b -> (not (equals a b)) and (lte a b)
+  lt = a -> b -> ¬ (a == b) ∧ (a <= b)
 
   # An infix operator for `lt`.
   # @include lt
@@ -243,37 +245,35 @@ module Ord extends Setoid
   # or equal to the second argument.
   gte : 'm<'a> -> 'm<'a> -> bool
     where 'm extends Ord
-  gte = a -> b -> (equals a b) or (not (lte a b))
+  gte = a -> b -> (a == b) ∨ (¬ (a <= b))
 
   # An infix operator for `gte`.
   # @include gte
   (>=) = gte
+  (≥) = gte
 
   # Strict greater than. Returns true if the first argument is strictly greater
   # than the second argument.
   gt : 'm<'a> -> 'm<'a> -> bool
     where 'm extends Ord
-  gt = a -> b -> not (lte a b)
+  gt = a -> b -> ¬ (a <= b)
 
   # An infix operator for `gt`.
   # @include gt
   (>) = gt
 
-module Plus extends Alt
-  type Plus<'a> extends Alt<'a>
-
+type Plus<'a> extends Alt<'a>
+trait Plus extends Alt
   zero : 'm<_>
     where 'm extends Plus
 
-module Profunctor extends Functor
-  type Profunctor<'a, 'b> extends Functor<'b>
-
+type Profunctor<'a, 'b> extends Functor<'b>
+trait Profunctor extends Functor
   promap : 'm<'b, 'c> -> ('a -> 'b) -> ('c -> 'd) -> 'm<'a, 'd>
     where 'm extends Profunctor
 
-module Semigroup
-  type Semigroup<'a>
-
+type Semigroup<'a>
+trait Semigroup
   # Combines two values by appending them together.
   concat : 'm<'a> -> 'm<'a> -> 'm<'a>
     where 'm extends Semigroup
@@ -282,15 +282,15 @@ module Semigroup
   # @include concat
   (++) = concat
 
-module Semigroupoid
-  type Semigroupoid<'a, 'b>
+type Semigroupoid<'a, 'b>
+trait Semigroupoid
+# A composition function which takes two objects of the same type and returns
 
-  # A composition function which takes two objects of the same type and returns
   # a new object which represents 'gluing' the two objects together.
   #
-  # Objects implementing `Semigroupoid` should have a reasonable implementation of
-  # `compose` which behaves nicely with respect to associativity. So, given values
-  # `a`, `b`, and `c` of the same type:
+  # Objects implementing `Semigroupoid` should have a reasonable implementation
+  # of `compose` which behaves nicely with respect to associativity. So, given
+  # values `a`, `b`, and `c` of the same type:
   #
   # - `compose a (compose b c)` should be the same as `compose (compose a b) c`
   compose : 'm<'a, 'b> -> 'm<'b, 'c> -> 'm<'a, 'c>
@@ -298,22 +298,21 @@ module Semigroupoid
 
   # An infix alias for `compose`.
   # @include compose
-  (>>) = compose
+  (∘) = compose
 
-  # An infix alias for `compose`, but with the arguments reversed.
-  # @include compose
-  (<<) = flip (>>)
-
-module Setoid
-  type Setoid<'a>
-
+type Setoid<'a>
+trait Setoid
   # An equality function for comparing two values of the same type. Equality
   # should behave nicely here, so that `equals` is reflexive, symmetric, and
   # transitive. So, given values `a`, `b`, and `c` of the same type:
   #
   # - `equals a a` should be `true`
   # - `equals a b` should be the same as `equals b a`
-  # - `equals a b` and `equals b c` should be `equals a c`
+  # - if `equals a b` and `equals b c` are both `true`, then `equals a c` should
+  #   also be `true`
+  # - if one of `equals a b` or `equals b c` are `false`, then `equals a c`
+  #   should also be `false`
+  # - if both are false, `equals a c` may be either `true` or `false`
   equals : 'm<'a> -> 'm<'a> -> Bool
     where 'm extends Setoid
 
@@ -321,9 +320,8 @@ module Setoid
   # @include equals
   (==) = equals
 
-module Traversable extends Foldable Functor
-  type Traversable<'a> extends Foldable<'a>, Functor<'a>
-
+type Traversable<'a> extends Foldable<'a>, Functor<'a>
+trait Traversable extends Foldable Functor
   traverse : 't<'a> -> 'f<_> -> ('a -> 'f<'b>) -> 'f<'t<'b>>
     where 't extends Traversable
     where 'f extends Applicative

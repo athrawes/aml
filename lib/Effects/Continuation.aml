@@ -6,10 +6,11 @@ run : Continuation<'r, 'a> -> ('a -> 'r) -> 'r
 run = continuation -> callback ->
   with continuation (k) => k callback
 
-from : 'r -> Continuation<'r, 'a>
-from = value -> Continuation ((callback 'a) -> callback value)
+from : 'a -> Continuation<'r, 'a>
+from = value -> Continuation (callback -> callback value)
 
-chain : Continuation<'r, 'a> -> ('a -> Continuation<'r, 'b>) -> Continuation<'r, 'b>
-chain = continuation -> callback ->
-  with continuation (ma) => Continuation
-    (continue -> run ma (value -> run (callback value) continue))
+chain : Continuation<'r, 'a>
+        -> ('a -> Continuation<'r, 'b>)
+        -> Continuation<'r, 'b>
+chain = continuation -> callback -> Continuation
+  (continue -> run continuation (value -> run (callback value) continue))

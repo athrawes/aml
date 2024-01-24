@@ -1,15 +1,18 @@
 pipe : 'a -> ('a -> 'b) -> 'b
 pipe = argument -> callback -> callback argument
 
-(|>) = pipe
-(<|) = flip (|>)
+(▷) = pipe
+(◁) = flip (▷)
 
 compose : ('a -> 'b) -> ('b -> 'c) -> ('a -> 'c)
 compose = a_to_b -> b_to_c ->
-  a -> a |> a_to_b |> b_to_c
+  a -> b_to_c (a_to_b a)
 
-(>>) = compose
-(<<) = flip (>>)
+(∘) = compose
+
+compose' : ('a -> 'b) -> ('c -> 'd -> 'a) -> ('c -> 'd -> 'b)
+compose' = compose ∘ compose
+(∘') = compose'
 
 flip : ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
 flip = callback ->
@@ -17,3 +20,6 @@ flip = callback ->
 
 id : 'a -> 'a
 id = a -> a
+
+const : 'a -> 'b -> 'a
+const = true

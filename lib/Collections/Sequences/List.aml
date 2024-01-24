@@ -1,33 +1,46 @@
 { Pair, fst, snd } = use "Collections/Pair"
-Seq = use "Collections/Sequences/Seq"
+Sequence = use "Collections/Sequences/Sequence"
+{ None } = use "Effects/Maybe"
 
-module List extends Monad Seq
+module List extends Sequence
 
-type List<'t> extends Seq<'t> =
+type List<'t> extends Sequence<'t> =
   | NonEmpty of Pair<'t, List<'t>>
-  | Empty
+  | Empty of None
 
-[] = List<_>.Empty
-
-from = value -> Pair.from value Empty
-
-map = list -> callback ->
+# Returns a new list which has the given item appended to the end of it.
+#
+# Time complexity: O(n)
+#   - n is the length of the list
+# Space complexity: O(n)
+#   - n is the length of the list
+#
+# ```aml
+# append [1, 2, 3] 4
+# # => [1, 2, 3, 4]
+# ```
+append = list -> item ->
   match list
-  | Empty => list
+  | Empty => from item
   | NonEmpty (pair) => Pair.from
-    (callback (fst pair))
-    (map (snd pair) callback)
-
-# Flattens one level of a multi-dimensional list.
-flatten = lists ->
-  match lists
-  | Empty => Empty
-  | NonEmpty (pair) => concat (fst pair) (flatten (snd pair))
+    (fst pair)
+    (append (snd pair) item)
 
 # Returns a new list which is the result of appending two lists together. The
 # lists are concatenated left to right, so the elements from the first list
 # provided come first in the list, and the elements from the second list
 # provided come later.
+#
+# Time complexity: O(n)
+#   - n is the length of the first list
+# Space complexity: O(mn)
+#   - m is the length of the first list
+#   - n is the length of the second list
+#
+# ```aml
+# concat [1, 2, 3] [4, 5, 6]
+# # => [1, 2, 3, 4, 5, 6]
+# ```
 concat = first -> second ->
   match first
   | Empty => second
@@ -35,10 +48,137 @@ concat = first -> second ->
     (fst pair)
     (concat (snd pair) second)
 
+# Determines whether two lists are equal. Two lists are equal if they have the
+# same elements in the same order.
+#
+# Time complexity: O(n)
+#   - n is the length of the first list
+# Space complexity: O(mn)
+#   - m is the length of the first list
+#   - n is the length of the second list
+#
+# ```aml
+# equals [1, 2, 3] [1, 2, 3]
+# # => true
+#
+# equals [1, 2, 3] [1, 2, 4]
+# # => false
+# ```
+equals : List<'t> -> List<'t> -> Bool
+equals = a -> b ->
+  match a
+  | Empty => match b
+    | Empty => true
+    | NonEmpty (_) => false
+  | NonEmpty (p1) => match b
+    | Empty => false
+    | NonEmpty (p2) => p1 == p2
+
+# Returns a new list with the given item as the first and only element.
+#
+# Time complexity: O(1)
+# Space complexity: O(1)
+#
+# ```aml
+# from 1
+# # => [1]
+# ```
+from = value -> Pair.from value Empty
+
+# Returns the first element of a list, if it exists.
+#
+# Time complexity: O(1)
+# Space complexity: O(1)
+#
+# ```aml
+# head [1, 2, 3]
+# # => Some 1
+#
+# head []
+# # => None
+# ```
+head : List<'t> -> Maybe<'t>
+head = list ->
+  match list
+  | Empty => None
+  | NonEmpty (pair) => Some (fst pair)
+
+# Creates a new list from a given list and a callback to transform each element
+# in the list.
+#
+# Time complexity: O(n)
+#   - n is the length of the list
+# Space complexity: O(n)
+#   - n is the length of the list
+#
+# ```aml
+# map [1, 2, 3] (x -> x + 1)
+# # => [2, 3, 4]
+# ```
+map = list -> callback ->
+  match list
+  | Empty => list
+  | NonEmpty (pair) => Pair.from
+    (callback (fst pair))
+    (map (snd pair) callback)
+
+# Returns a new list which has all elements of the input list except for the
+# first element. If the input list is empty or has only one element, an empty
+# list is returned.
+#
+# Time complexity: O(1)
+# Space complexity: O(1)
+#
+# ```aml
+# tail [1, 2, 3]
+# # => [2, 3]
+#
+# tail [1]
+# # => []
+#
+# tail []
+# # => []
+# ```
+tail : List<'t> -> List<'t>
+tail = list ->
+  match list
+  | Empty => list
+  | NonEmpty (pair) => snd pair
+
 # Returns a new list with a given item prepended to it.
-prepend = item -> list -> Pair.from item list
+#
+# Time complexity: O(1)
+# Space complexity: O(1)
+#
+# ```aml
+# prepend [2, 3] 1
+# # => [1, 2, 3]
+# ```
+prepend = list -> item -> Pair.from item list
+
+# An infix alias for `prepend`, but with the arguments flipped. This allows you
+# to use the `::` operator to prepend an item to a list.
+#
+# Time complexity: O(1)
+# Space complexity: O(1)
+#
+# ```aml
+# 1 :: [2, 3]
+# # => [1, 2, 3]
+# ```
+(::) = flip prepend
 
 # Returns a new list which is in the reverse order of the input list.
+#
+# Time complexity: O(n)
+#   - n is the length of the list
+# Space complexity: O(n)
+#   - n is the length of the list
+#
+# ```aml
+# reverse [1, 2, 3]
+# # => [3, 2, 1]
+# ```
 reverse : List<'t> -> List<'t>
 reverse = list ->
   match list

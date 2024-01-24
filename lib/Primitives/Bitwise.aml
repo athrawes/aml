@@ -1,7 +1,0 @@
-{Integer} = use "Primitives/Number"
-
-bitshift-left: 'a -> Integer -> 'a
-(<<<) = bitshift-left
-
-bitshift-right: 'a -> Integer -> 'a
-(>>>) = bitshift-right

@@ -1,0 +1,124 @@
+# Bluebird combinator
+B = a -> b -> c -> a (b c)
+
+# Blackbird combinator
+B1 = a -> b -> c -> d -> a (b c d)
+
+# Bunting combinator
+B2 = a -> b -> c -> d -> e -> a (b c d e)
+
+# Becard combinator
+B3 = a -> b -> c -> d -> a (b (c d))
+
+# Cardinal combinator
+C = a -> b -> c -> a c b
+
+# Dove combinator
+D = a -> b -> c -> d -> a b (c d)
+
+# Dickcissel combinator
+D1 = a -> b -> c -> d -> e -> a b c (d e)
+
+# Dovekies combinator
+D2 = a -> b -> c -> d -> e -> a (b c) (d e)
+
+# Eagle combinator
+E = a -> b -> c -> d -> e -> a b (c d e)
+
+# Bald Eagle combinator
+E1 = a -> b -> c -> d -> e -> f -> g -> a (b c d) (e f g)
+
+# Finch combinator
+F = a -> b -> c -> c b a
+
+# Goldfinch combinator
+G = a -> b -> c -> d -> a d (b c)
+
+# Identity/Ibis combinator
+I = x -> x
+
+# Jay combinator
+J = a -> b -> c -> d -> a b (a d c)
+
+# Kestrel/true combinator
+K = x -> y -> x
+
+# Kite combinator
+KI = a -> b -> b
+
+# Lark combinator
+L = a -> b -> a (b b)
+
+# Mockingbird combinator
+M = f -> f f
+
+# Double Mockingbird combinator
+M2 = a -> b -> a b (a b)
+
+# Owl combinator
+O = a -> b -> b (a b)
+
+# Queer Bird combinator
+Q = a -> b -> c -> b (a c)
+
+# Quixotic Bird combinator
+Q1 = a -> b -> c -> a (c b)
+
+# Quizzical Bird combinator
+Q2 = a -> b -> c -> b (c a)
+
+# Quirky Bird combinator
+Q3 = a -> b -> c -> c (a b)
+
+# Quacky Bird combinator
+Q4 = a -> b -> c -> c (b a)
+
+# Robin combinator
+R = a -> b -> c -> b c a
+
+# Starling combinator
+S = x -> y -> z -> x z (y z)
+
+# Thrush combinator
+T = a -> b -> b a
+
+# Turing combinator
+U = a -> b -> b (a a b)
+
+# Vireo/Pairing combinator
+V = a -> b -> c -> c a b
+
+# Warbler combinator
+W = a -> b -> a b b
+
+# Converse Warbler combinator
+W1 = a -> b -> b a a
+
+# Why Bird / Sage Bird / Y combinator
+Y = f -> (x -> f (x x)) (x -> f (x x))
+
+# Identity/Ibis combinator once removed
+I* = a -> b -> a b
+
+# Warbler combinator once removed
+W* = a -> b -> c -> a b c c
+
+# Cardinal combinator once removed
+C* = a -> b -> c -> d -> a b c d
+
+# Robin combinator once removed
+R* = a -> b -> c -> d -> a c d b
+
+# Finch combinator once removed
+F* = a -> b -> c -> d -> a d c b
+
+# Vireo/Pairing combinator once removed
+V* = a -> b -> c -> d -> a c b d
+
+# Omega combinator.
+#
+# Note: attempting to evaluate this combinator will result in an infinite loop.
+Ω = M M
+
+# Theta combinator
+Θ = Y O

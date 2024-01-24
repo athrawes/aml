@@ -1,0 +1,11 @@
+Array = use "Collections/Sequences/Array"
+List = use "Collections/Sequences/List"
+
+type UnicodeCharacter = Array<u8>
+type String = Array<UnicodeCharacter>
+
+char-at : String -> Int -> Maybe<UnicodeCharacter>
+char-at = Array.element-at
+
+length : String -> Int
+length = Array.length string

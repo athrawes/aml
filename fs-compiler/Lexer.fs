@@ -15,6 +15,9 @@ type Token =
     | KeywordOf // of
     | KeywordType // type
     | KeywordWith // with
+    | KeywordIf // if
+    | KeywordThen // then
+    | KeywordElse // else
     // Operators
     | Arm // => (arm separator)
     | Binding // =
@@ -29,6 +32,7 @@ type Token =
     | TypeExtension // extends
     | Unit // _
     | EOL // \n, \r, \r\n
+    | EOF // End of file
     // Paired operators
     | GroupOpen // (
     | GroupClose // )
@@ -44,6 +48,9 @@ type Token =
     | String of string // "..."
     | TypeParameter of string // '...
     | Indent of int // leading whitespace
+    | DeIndent of int // An indent that is less than the current indent
+
+let mutable currentIndent = 0
 
 let rec readToken lexer : Lexer * Token * TokenPosition =
     let emit = emitSimple lexer
@@ -56,15 +63,29 @@ let rec readToken lexer : Lexer * Token * TokenPosition =
         | '\t' ->
             if lexer.position.column = 1 then
                 let indent = countIndent lexer
-                emit (Indent indent) indent
+                currentIndent <- indent
+
+                if indent > currentIndent then
+                    emit (Indent indent) indent
+                elif indent < currentIndent then
+                    emit (DeIndent indent) indent
+                else
+                    emit (Indent indent) indent
             else
                 let newLexer = advance lexer 1
                 readToken newLexer
         | '\n' ->
-            (advance lexer 1,
-             EOL,
-             { start = lexer.position
-               finish = lexer.position })
+            if currentIndent > 0
+            then
+                let (_, nextToken, _) = readToken (advance lexer 1)
+                match nextToken with
+                | Indent _ ->
+                    emit EOL 1
+                | _ ->
+                    currentIndent <- 0
+                    emit (DeIndent 0) 1
+            else
+                emit EOL 1
         | '|' -> emit Pipe 1
         | ',' -> emit FieldSeparator 1
         | '_' -> emit Unit 1
@@ -115,6 +136,9 @@ let rec readToken lexer : Lexer * Token * TokenPosition =
                 | "type" -> KeywordType
                 | "extends" -> TypeExtension
                 | "with" -> KeywordWith
+                | "if" -> KeywordIf
+                | "then" -> KeywordThen
+                | "else" -> KeywordElse
                 | _ -> Identifier identifier
 
             (next, token, position)

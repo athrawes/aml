@@ -24,7 +24,7 @@ Let bindings are expressions that evaluate to the value they are assigned to
 
 ```aml
 a = 5
-|> to-string # "5"; also, `a` is bound to an integer 5
+▷ to-string # "5"; also, `a` is bound to an integer 5
 ```
 
 #### Type declaration `:`
@@ -52,7 +52,7 @@ my-function = a -> b -> c
 
 #### Cases `|`
 
-### Function definition `->`, `( )`
+### Functions `->`, `( )`
 
 Functions may only take in a single value and return a single value.
 
@@ -60,7 +60,7 @@ Functions may only take in a single value and return a single value.
 a -> b # takes an argument `a`, and returns the value contained in `b`
 ```
 
-Functions can be chained
+Function definitions can be chained
 
 ```aml
 a -> b -> c
@@ -100,6 +100,30 @@ As always, AML can automatically fill in the types
 (+) = add # Integer -> Integer
 ```
 
+#### Calling functions
+
+To call a function, simply specify an argument after the function name:
+
+```aml
+# add-1 will add 1 to any integer
+add-1 : Integer -> Integer
+
+add-1 1
+# => 2
+
+add-1 2
+# => 3
+```
+
+For infix functions, specify the arguments both before and after the function:
+
+```aml
+(%) : Integer -> Integer -> Maybe<Integer>
+
+6 % 3
+# => (Some 0)
+```
+
 ### Scopes and expressions `( )`
 
 AML is an expression-based language.
@@ -109,7 +133,7 @@ This applies to function definitions as well:
 call-and-add-two = callback -> 2 + (callback 1)
 
 add-one = add 1 # Number -> Number
-|> call-and-add-two # 4; add-one is passed to call-and-add-two
+▷ call-and-add-two # 4; add-one is passed to call-and-add-two
 ```
 
 Note the lack of indentation in this example; this indicates to AML that we
@@ -119,7 +143,7 @@ This is equivalent to:
 ```aml
 call-and-add-two = callback -> 2 + (callback 1)
 
-(add-one = add 1) |> call-and-add-two # 4
+(add-one = add 1) ▷ call-and-add-two # 4
 ```
 
 To indicate that subsequent lines should be considered as part of the scope of
@@ -184,6 +208,34 @@ documentation comments.
 
 ### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `()`
 
+### Branching `if`, `then`, `else`
+
+In AML, boolean values are first-class functions which are capable of directly
+choosing between values. This makes `if`/`then`/`else` constructions
+unnecessary. However, explicit `if`/`then`/`else` sets may be used for
+readability.
+
+If using this pattern, all elements of the construct are mandatory. The `if`
+keyword must be followed by an expression which evaluates to a boolean value,
+and both the `then` and `else` blocks must evaluate to expressions of the same
+type.
+
+```aml
+if true
+then 1 + 1
+else 2 + 2
+```
+
+The entire construct evaluates as an expression with the type of the branches.
+
+```aml
+myNumber =
+  if true
+  then 1 + 1
+  else 2 + 2
+# => myNumber is 2
+```
+
 ### Pattern matching: `match`, `|`, `=>`, `with`, `,`
 
 If a given pattern has only one variant (e.g., the `Identity` monad which only
@@ -224,7 +276,7 @@ Importing everything from a module
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
 
-List.from (1, 2, 3) |> List.to-sequence |> map (el -> el * 2)
+List.from (1, 2, 3) ▷ List.to-sequence ▷ map (el -> el * 2)
 ```
 
 Importing multiple items from a module
@@ -233,8 +285,8 @@ Note: multi-item imports may span multiple lines
 ```aml
 { to-upper, to-lower } = use "String"
 
-"Hello, World!" |> to-upper # "HELLO, WORLD!"
-"Hello, World!" |> to-lower # "hello, world!"
+"Hello, World!" ▷ to-upper # "HELLO, WORLD!"
+"Hello, World!" ▷ to-lower # "hello, world!"
 ```
 
 Aliasing imports
@@ -263,12 +315,16 @@ module MyModule
 # methods, constants, etc...
 ```
 
-To extend the current module with the methods from other modules, add the `extends`
-operator and a list of the modules to extend from:
+To extend the current module with the methods from other modules, add the
+`extends` operator and a list of the modules to extend from:
 
 ```aml
 module Foo extends Bar Baz
 ```
+
+### Traits
+
+TODO: fill this out. Basically, Rust traits.
 
 ### I/O
 
@@ -281,7 +337,7 @@ For example, to write "Hello, World!" to stdout, you'd write:
 
 ```aml
 IO.stdout "Hello, World!"
-|> IO.run
+▷ IO.run
 ```
 
 `IO<'a>` has all of the usual FP goodies one would expect here, allowing users
@@ -291,8 +347,8 @@ an Effect, AKA Monad. This makes creating IO pipelines a breeze:
 ```aml
 prompt =
   IO.stdin "please input an integer: "
-  |> map String.to-integer
-  |> then
+  ▷ map String.to-integer
+  ▷ then
     match
     | Ok (value) =>
       match value
@@ -314,8 +370,12 @@ IO.run prompt # IO happens here
 Precedence in AML is as follows:
 
 1. Grouped expressions are evaluated first
-2. Expressions are evaluated strictly right to left
-3. Functions are greedy and will attempt to take as many arguments as possible
+2. Lines implicitly group all expressions on that line
+3. Infix functions implicitly create a group expression with their immediately
+   left and right neighbor expressions
+4. Expressions are evaluated strictly right to left. Does _not_ respect
+   PEMDAS/BODMAS or other mathematical conventions.
+5. Functions are greedy and will attempt to take as many arguments as possible
 
 Some examples:
 
@@ -323,42 +383,76 @@ Some examples:
 
     ```aml
     => (1 + 2) * (3 + 4)
-    // ------- | -------
-    //       3 *       7
-    //       -----------
-    //                21
+    #  ------- | -------
+    #        3 *       7
+    #        -----------
+    #                 21
     ```
 
-2. Left to right evaluation
+2. Grouping by line
+
+    ```aml
+    => 1 +
+    => 3 / 4
+    #  -----
+    #  (1 +) (3 / 4)
+    #  ----- -------
+    #  fn +1    0.75
+    #  -------------
+    #           1.75
+    ```
+
+3. Infix functions
+
+   ```aml
+   => pair 1  5 * 6
+   #  --------------
+   #  pair 1 (5 * 6)
+   #     | | -------
+   #  pair 1 30
+   #  ---------
+   #  Pair(1, 30)
+   ```
+
+4. Left to right evaluation
 
     ```aml
     => 2 + 4 * 3
-    //  ---- | |
-    //     6 * 3
-    //     -----
-    //        18
+    #  ----- | |
+    #      6 * 3
+    #      -----
+    #         18
     ```
 
     ```aml
-    => 2.0 |> divide  4.0
-    // ------      |    |
-    // <fn>$ 2.0   |    |
-    // --------------   |
-    // <fn>divide 2.0   |
-    // ------------------
-    // <fn>divide 2.0 4.0
-    // ------------------
-    //                0.5
+    => 2.0 ▷ divide   4.0
+    #  ------------------
+    #  (2.0 ▷ divide) 4.0
+    #  ---------------  |
+    #  fn divide 2.0 $  |
+    #  ---------------  |
+    #  fn divide 2.0  4.0
+    #  ------------------
+    #                 0.5
     ```
 
-3. Greedy evaluation
+5. Greedy evaluation
 
     ```aml
-    let do-things = f -> a -> b -> c -> (((f a) b) c)
-    let add2 = a + 2
+    do-things = f -> a -> b -> c -> (f (f (f a 1) b) c)
 
-    => do-things add2 1 2 3
-    // (((add2 1) 2) 3)
+    => do-things multiply 1 2 3
+    #  ------------------------
+    #  f        -> a -> b -> c -> (f (f (f a 1) b) c)
+    #  multiply    1    2    3
+    #  ----------------------------------------------
+    #  (multiply (multiply (multiply 1 1) 2) 3)
+    #          |         | -------------- |  |
+    #          | (multiply              1 2) |
+    #          | --------------------------- |
+    #  (multiply                           2 3)
+    #  ----------------------------------------
+    #                                         6
     ```
 
 ### Casing

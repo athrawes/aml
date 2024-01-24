@@ -1,0 +1,35 @@
+module Boolean extends Setoid<_>
+
+type Boolean extends Setoid<_> =
+  | True of true
+  | False of false
+
+true =  a -> _ -> a
+false = _ -> b -> b
+
+equals : Boolean -> Boolean -> Boolean
+equals = a -> b ->
+  a b (¬ b)
+
+and : Boolean -> Boolean -> Boolean
+(and) = a -> b -> a b a
+(∧) = and
+
+or : Boolean -> Boolean -> Boolean
+(or) = a -> b -> a a b
+(∨) = or
+
+xor : Boolean -> Boolean -> Boolean
+(xor) = not ∘' equals
+⊻ = xor
+⊕ = xor
+
+not : Boolean -> Boolean
+not = condition -> flip condition
+¬ = not
+
+nand = not ∘' and
+(⊼) = nand
+
+nor = not ∘' or
+(⊽) = nor

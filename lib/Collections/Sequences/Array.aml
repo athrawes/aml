@@ -1,0 +1,66 @@
+module Array extends Sequence
+
+type Array<'a> extends Sequence<'a> = {
+  address: Pointer,
+  element-size: UnsignedInteger = sizeof<'a>,
+  length: UnsignedInteger,
+}
+
+element-at : Array<'a> -> ℤ -> Maybe<'a>
+element-at = array -> index ->
+  if ((index < array.length) ∧ (index ≥ 0))
+  then
+    read-address = array.address + (array.element-size * index)
+    read-length = array.element-size
+    Some ('a (INTRINSIC_MEMORY_READ read-address read-length))
+  else None
+
+empty = Array {
+  address = Pointer 0,
+  element-size = 0,
+  length = 0,
+}
+
+head = array ->
+  (array.length == 0)
+    None
+    Some ('a (INTRINSIC_MEMORY_READ array.address array.element-size))
+
+tail = array ->
+  (array.length ≤ 1)
+    empty
+    Array {
+      address = Pointer (array.address + array.element-size),
+      element-size = array.element-size,
+      length = array.length - 1,
+    }
+
+read : Array<'a> -> UnsignedInteger -> Maybe<'a>
+read = array -> index ->
+  if ((index < array.length) ∧ (index ≥ 0))
+  then
+    read-address = array.address + (array.element-size * index)
+    read-length = array.element-size
+    Some ('a (INTRINSIC_MEMORY_READ read-address read-length))
+  else None
+
+prepend : Array<'a> -> 'a -> Array<'a>
+prepend = array -> element ->
+  address = INTRINSIC_ALLOCATE_MEMORY (array.element-size * (array.length + 1))
+
+  INTRINSIC_MEMORY_COPY
+    (address)
+    (address + array.element-size)
+    (array.element-size * array.length)
+
+  INTRINSIC_MEMORY_COPY
+    (address-of element)
+    (address)
+    (size-of element)
+
+  Array {
+    address = address,
+    element-size = array.element-size,
+    length = array.length + 1,
+  }
+

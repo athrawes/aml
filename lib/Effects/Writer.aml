@@ -12,4 +12,5 @@ chain = writer -> callback ->
 
 # Write a log to the Writer, without modifying the value
 write : Writer<'a> -> String -> Writer<'a>
-write = writer -> log -> { value: writer.value, logs: writer.logs ++ (log :: []) }
+write = writer -> log ->
+  { value: writer.value, logs: writer.logs ++ (log :: []) }

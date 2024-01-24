@@ -1,0 +1,12 @@
+platform {
+  name = "POSIX",
+  requires = { main },
+  provides = { POSIX.prelude },
+}
+
+Console = use "POSIX.IO.Console"
+
+main : List<String> -> IO<Integer>
+main = _ ->
+  Console.stdout "Hello, world!\n"
+  <$ 0

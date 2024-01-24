@@ -1,0 +1,485 @@
+{ Boolean, true, false, or, ¬ } = use "Prelude/Boolean"
+
+module Sequence extends Monoid Monad Traversable
+  type Sequence<'a>
+
+# Returns true if all elements in the sequence satisfy the given predicate
+# function. Returns false otherwise.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# all [1, 2, 3] (x -> x < 4)
+# # => true
+#
+# all [1, 2, 3] (x -> x < 3)
+# # => false
+# ```
+all : 'm<'t> -> ('t -> Boolean) -> Boolean where 'm extends Sequence
+all = seq -> predicate -> ¬ (seq ∃ (¬ ∘ predicate)))
+
+# An infix alias for `all`.
+#
+# ```aml
+# [1, 2, 3] ∀ (x -> x < 4)
+# # => true
+#
+# [1, 2, 3] ∀ (x -> x < 3)
+# # => false
+# ```
+# @include all
+(∀) = all
+
+# Returns true if any element in the sequence satisfies the given predicate
+# function. Returns false otherwise.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# any [1, 2, 3] (x -> x == 2)
+# # => true
+#
+# any [1, 2, 3] (x -> x == 4)
+# # => false
+# ```
+any : 'm<'t> -> ('t -> Boolean) -> Boolean where 'm extends Sequence
+any = seq -> predicate ->
+  reduce seq (or ∘ predicate) false
+
+# An infix alias for `any`.
+#
+# ```aml
+# [1, 2, 3] ∃ (x -> x == 2)
+# # => true
+#
+# [1, 2, 3] ∃ (x -> x == 4)
+# # => false
+# ```
+# @include any
+(∃) = any
+
+# Returns true if none of the elements in the sequence satisfy the given
+# predicate function. Returns false otherwise.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# [1, 2, 3] ∄ (x -> x == 2)
+# # => false
+#
+# [1, 2, 3] ∄ (x -> x == 4)
+# # => true
+# ```
+(∄) = ¬ ∘' ∃
+
+chain = seq -> callback -> seq <$> callback | flatten
+
+# Determines if the given element is in the sequence. The elements of the
+# sequence must be comparable using the `==` operator.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# contains? [1, 2, 3] 2
+# # => true
+#
+# contains? [1, 2, 3] 4
+# # => false
+# ```
+contains? : 'm<'t> -> 't -> Boolean
+  where 'm extends Sequence
+  where 't extends Setoid
+contains? = seq -> element -> seq ∃ (x -> x == element)
+
+# An infix alias for `contains?`.
+#
+# ```aml
+# [1, 2, 3] ∋ 2
+# # => true
+#
+# [1, 2, 3] ∋ 4
+# # => false
+# ```
+# @include contains?
+(∋) = contains?
+
+# Determines if the given element is not in the sequence. The elements of the
+# sequence must be comparable using the `==` operator.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# 2 ∌ [1, 2, 3]
+# # => false
+#
+# 4 ∌ [1, 2, 3]
+# # => true
+# ```
+(∌) = not ∘' (∋)
+
+# Returns a new sequence which contains all the elements of the first sequence
+# which are not in the second sequence.
+#
+# Time complexity: O(mn)
+#   - where m is the number of elements in the first sequence
+#   - where n is the number of elements in the second sequence
+# Space complexity: O(m)
+#   - where m is the number of elements in the first sequence
+#
+# ```aml
+# difference [1, 2, 3] [2, 3, 4]
+# # => [1]
+# ```
+difference : 'm<'t> -> 'm<'t> -> 'm<'t> where 'm extends Sequence
+difference = a -> b -> filter a (x -> x ∉ b)
+
+# An infix alias for `difference`.
+#
+# ```aml
+# [1, 2, 3] ∖ [2, 3, 4]
+# # => [1]
+# ```
+# @include difference
+(∖) = difference
+
+# Drops the first `count` elements from the sequence and returns a new sequence
+# with the remaining elements. If `count` is greater than the number of elements
+# in the sequence, an empty sequence is returned.
+#
+# Time complexity: O(n)
+#   - where n is the max of `count` and the number of elements in the sequence
+# Space complexity: O(n)
+#   - where n is the max of `count` and the number of elements in the sequence
+#
+# ```aml
+# drop 2 [1, 2, 3]
+# # => [3]
+# ```
+drop : Int -> 'm<'t> -> 'm<'t> where 'm extends Sequence
+drop = count -> seq ->
+  if count < 1
+  then seq
+  else drop (count - 1) (tail seq)
+
+# Drops elements from the sequence until the predicate function returns false.
+# Returns a new sequence with the remaining elements. If the predicate function
+# always returns true, an empty sequence is returned.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(n)
+#   - where n is the number of elements in the sequence
+#
+# ```aml
+# drop-while [1, 2, 3, 1, 2, 3] (x -> x < 3)
+# # => [3, 1, 2, 3]
+# ```
+drop-while : 'm<'t> -> ('t -> Boolean) -> 'm<'t> where 'm extends Sequence
+drop-while = seq -> predicate ->
+  match head seq
+  | None -> seq
+  | Some x ->
+    if predicate x
+    then drop-while (tail seq) predicate
+    else seq
+
+# Attempts to return the element at the given index in the sequence. If the
+# index is out of bounds, `None` is returned.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# element-at [1, 2, 3] 0
+# # => Some 1
+#
+# element-at [1, 2, 3] 1
+# # => Some 2
+#
+# element-at [1, 2, 3] 2
+# # => Some 3
+#
+# element-at [1, 2, 3] 3
+# # => None
+# ```
+element-at : 'm<'t> -> ℤ -> Maybe<'t> where 'm extends Sequence
+element-at = seq -> index ->
+  if index < 0
+  then None
+  else match head seq
+    | None -> None
+    | Some x ->
+      if index == 0
+      then Some x
+      else element-at (tail seq) (index - 1)
+
+# Returns a new sequence which contains all the elements of the first sequence
+# which match the given predicate function.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(n)
+#   - where n is the number of elements in the sequence
+#
+# ```aml
+# filter [1, 2, 3] (x -> x < 3)
+# # => [1, 2]
+# ```
+filter : 'm<'t> -> ('t -> Boolean) -> 'm<'t> where 'm extends Sequence
+filter = seq -> predicate ->
+  match head seq
+  | None -> seq
+  | Some x ->
+    if predicate x
+    then x :: (filter (tail seq) predicate)
+    else filter (tail seq) predicate
+
+# Takes a sequence of sequences and returns a new sequence with all of the
+# elements in the sub-sequences concatenated together.
+#
+# Time complexity: O(n)
+#   - where n is the total number of elements in all of the sub-sequences
+# Space complexity: O(n)
+#   - where n is the total number of elements in all of the sub-sequences
+#
+# ```aml
+# flatten [[1, 2], [3, 4]]
+# # => [1, 2, 3, 4]
+# ```
+flatten : 'm<'m<'t>> -> 'm<'t> where 'm extends Sequence
+flatten = seq ->
+  match head seq with
+  | Some x -> concat x (flatten (tail seq))
+  | None -> seq
+
+# Returns the first element in the sequence, if it exists.
+#
+# Time complexity: O(1)
+# Space complexity: O(1)
+#
+# ```aml
+# head [1, 2, 3]
+# # => Some 1
+#
+# head []
+# # => None
+# ```
+head : 'm<'t> -> Maybe<'t> where 'm extends Sequence
+
+# Returns true if the given element is in the sequence. Returns false otherwise.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# is-element-of? 2 [1, 2, 3]
+# # => true
+#
+# is-element-of? 4 [1, 2, 3]
+# # => false
+# ```
+is-element-of? : 't -> 'm<'t> -> Boolean
+  where 'm extends Sequence
+  where 't extends Setoid
+is-element-of? = element -> seq ->
+  seq ∃ (x -> x == element)
+
+# An infix alias for `is-element-of?`.
+#
+# ```aml
+# 2 ∈ [1, 2, 3]
+# # => true
+#
+# 4 ∈ [1, 2, 3]
+# # => false
+# ```
+# @include is-element-of?
+(∈) = is-element-of?
+
+# Returns true if the given element is not in the sequence. Returns false
+# otherwise.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# 2 ∉ [1, 2, 3]
+# # => false
+#
+# 4 ∉ [1, 2, 3]
+# # => true
+# ```
+(∉) = not ∘' (∈)
+
+# Returns true if the first sequence is a subset of the second sequence; in
+# other words, if all elements in the first sequence are also in the second
+# sequence.
+#
+# Time complexity: O(mn)
+#   - where m is the number of elements in the first sequence
+#   - where n is the number of elements in the second sequence
+# Space complexity: O(1)
+#
+# ```aml
+# is-subset-of? [1, 2, 3] [1, 2, 3, 4]
+# # => true
+#
+# is-subset-of? [1, 2, 3] [1, 2, 3]
+# # => true
+#
+# is-subset-of? [1, 2, 3] [1, 2]
+# # => false
+# ```
+is-subset-of? : 'm<'t> -> 'm<'t> -> Boolean
+  where 'm extends Sequence
+  where 't extends Setoid
+is-subset-of? = a -> b ->
+  a ∀ (x -> x ∈ b)
+
+# An infix alias for `is-subset-of?`.
+#
+# ```aml
+# [1, 2, 3] ⊂ [1, 2, 3, 4]
+# # => true
+#
+# [1, 2, 3] ⊂ [1, 2, 3]
+# # => true
+#
+# [1, 2, 3] ⊂ [1, 2]
+# # => false
+# ```
+# @include is-subset-of?
+(⊂) = is-subset-of?
+
+# Checks to see if the first sequence is not a subset of the second sequence, or
+# in other words, if the first sequence contains at least one element that is
+# not in the second sequence.
+#
+# Time complexity: O(mn)
+#   - where m is the number of elements in the first sequence
+#   - where n is the number of elements in the second sequence
+# Space complexity: O(1)
+#
+# ```aml
+# [1, 2, 3] ⊄ [1, 2, 3, 4]
+# # => false
+#
+# [1, 2, 3] ⊄ [1, 2, 3]
+# # => false
+#
+# [1, 2, 3] ⊄ [1, 2]
+# # => true
+# ```
+(⊄) = not ∘' (⊂)
+
+# Returns the length of the sequence.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# length [1, 2, 3]
+# # => 3
+# ```
+length : 'm<'t> -> Int where 'm extends Sequence
+length = seq -> reduce seq ((add 1) ∘' const) 0
+
+# Returns a new sequence with the given element added on the front.
+#
+# ```aml
+# prepend 1 [2, 3]
+# # => [1, 2, 3]
+# ```
+prepend : 't -> 'm<'t> -> 'm<'t> where 'm extends Sequence
+
+# An infix alias for `prepend`.
+#
+# ```aml
+# 1 :: [2, 3]
+# # => [1, 2, 3]
+# ```
+# @include prepend
+(::) = prepend
+
+# Reduce a sequence to a single value by applying a function to each element and
+# passing an accumulator value between each application.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# reduce [1, 2, 3] (+) 0
+# # => 6
+# ```
+reduce : 'm<'t> -> ('a -> 't -> 'a) -> 'a -> 'a where 'm extends Sequence
+reduce = seq -> callback -> initial ->
+  match head seq
+  | Some x -> reduce (tail seq) callback (callback initial x)
+  | None -> initial
+
+# Sums the elements of the sequence.
+#
+# Time complexity: O(n)
+#   - where n is the number of elements in the sequence
+# Space complexity: O(1)
+#
+# ```aml
+# sum [1, 2, 3]
+# # => 6
+# ```
+sum : 'm<'t> -> 't
+  where 'm extends Sequence
+  where 't extends Addable # FIXME: Need exact type here
+  where 't extends Plus
+sum = seq -> reduce seq ('t.+) 't.zero
+
+# An alias for `sum`.
+#
+# ```aml
+# ∑ [1, 2, 3]
+# # => 6
+# ```
+∑ = sum
+
+# Returns a new sequence with all elements in the input sequence except the
+# first one. If the input sequence is empty, an empty sequence is returned.
+#
+# ```aml
+# tail [1, 2, 3]
+# # => [2, 3]
+# ```
+tail : 'm<'t> -> 'm<'t> where 'm extends Sequence
+
+# Returns a new sequence which contains all the unique elements of both input
+# sequences.
+#
+# ```aml
+# union [1, 2, 3] [2, 3, 4]
+# # => [1, 2, 3, 4]
+# ```
+union : 'm<'t> -> 'm<'t> -> 'm<'t> where 'm extends Sequence
+union = a -> b -> a ++ (b ∖ a)
+
+# An infix alias for `union`.
+#
+# ```aml
+# [1, 2, 3] ∪ [2, 3, 4]
+# # => [1, 2, 3, 4]
+# ```
+# @include union
+(∪) = union

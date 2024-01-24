@@ -1,8 +1,13 @@
-{true, false} = use "Primitives/Boolean"
+module Pair extends Bifunctor Setoid
 
-type Pair<'a, 'b> =
+type Pair<'a, 'b> extends Bifunctor<'a, 'b> =
   | First of true -> 'a
   | Second of false -> 'b
+
+equals : Pair<'a, 'b> -> Pair<'a, 'b> -> Bool
+  where 'a extends Setoid
+  where 'b extends Setoid
+equals = a -> b -> ((fst a) == (fst b)) ∧ ((snd a) == (snd b))
 
 # Constructs a new pair from two arguments
 from : 'a -> 'b -> Pair<'a, 'b>
