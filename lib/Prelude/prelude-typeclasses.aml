@@ -284,8 +284,7 @@ trait Semigroup
 
 type Semigroupoid<'a, 'b>
 trait Semigroupoid
-# A composition function which takes two objects of the same type and returns
-
+  # A composition function which takes two objects of the same type and returns
   # a new object which represents 'gluing' the two objects together.
   #
   # Objects implementing `Semigroupoid` should have a reasonable implementation
