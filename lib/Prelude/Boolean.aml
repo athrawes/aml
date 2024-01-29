@@ -1,6 +1,6 @@
 module Boolean extends Setoid
 
-type 𝔹 extends Setoid =
+type 𝔹 extends Setoid ≔
   | True of true
   | False of false
 

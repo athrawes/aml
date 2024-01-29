@@ -2,7 +2,7 @@ Either ≔ use "Effects/Either"
 
 module Either extends Monad
 
-type Either<'left, 'right> =
+type Either<'left, 'right> ≔
   | Left 'left
   | Right 'right
 

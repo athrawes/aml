@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>fs_compiler</RootNamespace>
+    <RootNamespace>compiler</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

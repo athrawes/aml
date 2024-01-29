@@ -3,7 +3,7 @@ module Async extends Monad
 type Resolved<'a>
 type Pending<'a> of (_ → Resolved<'a>)
 
-type Async<'a> =
+type Async<'a> ≔
   | Resolved<'a>
   | Pending<'a>
 

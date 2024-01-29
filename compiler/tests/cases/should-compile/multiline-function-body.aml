@@ -1,3 +1,0 @@
-IO = use "Effects/IO"
-main = _ ->
-  IO.from 0

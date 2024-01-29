@@ -1,6 +1,6 @@
 module Result extends Monad
 
-type Result<'ok, 'error> =
+type Result<'ok, 'error> ≔
   | Ok 'ok
   | Error 'error
 

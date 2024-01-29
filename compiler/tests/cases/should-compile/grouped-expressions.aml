@@ -1,6 +1,0 @@
-IO = use "Effects/IO"
-
-functionA = a -> a
-functionB = a -> a - 1
-
-main = _ -> IO.from (functionA (functionB 1))

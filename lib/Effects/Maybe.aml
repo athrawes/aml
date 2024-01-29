@@ -1,6 +1,6 @@
 module Maybe extends Monad
 
-type Maybe<'a> =
+type Maybe<'a> ≔
   | Some<'a>
   | None
 

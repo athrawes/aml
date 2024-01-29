@@ -4,7 +4,7 @@ Sequence ≔ use "Collections/Sequences/Sequence"
 
 module List extends Sequence
 
-type List<'t> extends Sequence<'t> =
+type List<'t> extends Sequence<'t> ≔
   | NonEmpty of Pair<'t, List<'t>>
   | Empty of None
 

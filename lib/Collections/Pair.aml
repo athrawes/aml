@@ -1,6 +1,6 @@
 module Pair extends Bifunctor Setoid
 
-type Pair<'a, 'b> extends Bifunctor<'a, 'b> =
+type Pair<'a, 'b> extends Bifunctor<'a, 'b> ≔
   | First of true → 'a
   | Second of false → 'b
 

@@ -1,3 +1,0 @@
-IO = use "Effects/IO"
-a = 42
-main = _ -> IO.from a

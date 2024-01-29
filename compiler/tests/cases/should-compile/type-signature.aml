@@ -1,7 +1,0 @@
-IO = use "Effects/IO"
-
-typedFunction : Integer -> Integer = a -> a
-typedValue : String = "Hello, world!"
-
-main : List<String> -> IO<Integer>
-main = argv -> IO.from 0

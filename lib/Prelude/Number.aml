@@ -1,4 +1,4 @@
-type UnsignedInteger =
+type UnsignedInteger ≔
   | u8 of INTRINSIC_UNSIGNED_8BIT
   | u16 of INTRINSIC_UNSIGNED_16BIT
   | u32 of INTRINSIC_UNSIGNED_32BIT
@@ -6,7 +6,7 @@ type UnsignedInteger =
   | u128 of INTRINSIC_UNSIGNED_128BIT
   | usize of INTRINSIC_UNSIGNED_POINTER
 
-type SignedInteger =
+type SignedInteger ≔
   | i8 of INTRINSIC_SIGNED_8BIT
   | i16 of INTRINSIC_SIGNED_16BIT
   | i32 of INTRINSIC_SIGNED_32BIT
@@ -18,12 +18,12 @@ type SignedInteger =
 type ℕ ≔ UnsignedInteger
 
 type ℤ ≔ Integer
-type Integer =
+type Integer ≔
   | UnsignedInteger
   | SignedInteger
 
 # IEEE 754 floating point numbers.
-type Float =
+type Float ≔
   | f32 of INTRINSIC_FLOAT_32BIT
   | f64 of INTRINSIC_FLOAT_64BIT
 
@@ -42,7 +42,7 @@ type ℚ ≔ Rational
 # floating point arithmetic. Approximations of these numbers can be represented
 # using the `Float` type.
 type ℝ ≔ Real
-type Real =
+type Real ≔
   | Integer
   | Rational
   | Float
