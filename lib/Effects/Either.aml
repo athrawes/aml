@@ -1,0 +1,14 @@
+Either ≔ use "Effects/Either"
+
+module Either extends Monad
+
+type Either<'left, 'right> =
+  | Left 'left
+  | Right 'right
+
+from ≔ Left
+
+chain ≔ either → callback →
+  match either
+  | Left (value) ⇒ callback value
+  | Right (_) ⇒ either

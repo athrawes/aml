@@ -1,16 +1,16 @@
-{ List, [], ++, :: } = use "Collections/Sequences/List"
+{ List, [], ++, :: } ≔ use "Collections/Sequences/List"
 
 module Writer extends Monad
 
-type Writer<'a> = { value: 'a, logs: List<String> }
+type Writer<'a> ≔ { value: 'a, logs: List<String> }
 
-from = value -> { value, logs: [] }
+from ≔ value → { value, logs: [] }
 
-chain = writer -> callback ->
-  next = callback writer.value
+chain ≔ writer → callback →
+  next ≔ callback writer.value
   { value: next.value, logs: writer.logs ++ next.logs }
 
 # Write a log to the Writer, without modifying the value
-write : Writer<'a> -> String -> Writer<'a>
-write = writer -> log ->
+write : Writer<'a> → String → Writer<'a>
+write ≔ writer → log →
   { value: writer.value, logs: writer.logs ++ (log :: []) }

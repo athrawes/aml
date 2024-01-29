@@ -1,12 +1,35 @@
-{ Pair, fst, snd } = use "Collections/Pair"
-Sequence = use "Collections/Sequences/Sequence"
-{ None } = use "Effects/Maybe"
+{ Pair, fst, snd } ≔ use "Collections/Pair"
+Sequence ≔ use "Collections/Sequences/Sequence"
+{ None } ≔ use "Effects/Maybe"
 
 module List extends Sequence
 
 type List<'t> extends Sequence<'t> =
   | NonEmpty of Pair<'t, List<'t>>
   | Empty of None
+
+# Determines whether two lists are equal. Two lists are equal if they have the
+# same elements in the same order.
+#
+# Time complexity: O(n)
+#   - n is the length of the first list
+# Space complexity: O(mn)
+#   - m is the length of the first list
+#   - n is the length of the second list
+#
+# ```aml
+# [1, 2, 3] = [1, 2, 3]
+# # => true
+#
+# [1, 2, 3] = [1, 2, 4]
+# # => false
+# ```
+(=) : Setoid 't ⇒ List<'t> → List<'t> → 𝔹
+(=) ≔ a → b →
+  match a, b
+  | Empty, Empty ⇒ true
+  | NonEmpty (p1), NonEmpty (p2) ⇒ p1 = p2
+  | _ ⇒ false
 
 # Returns a new list which has the given item appended to the end of it.
 #
@@ -17,12 +40,12 @@ type List<'t> extends Sequence<'t> =
 #
 # ```aml
 # append [1, 2, 3] 4
-# # => [1, 2, 3, 4]
+# # ⇒ [1, 2, 3, 4]
 # ```
-append = list -> item ->
+append ≔ list → item →
   match list
-  | Empty => from item
-  | NonEmpty (pair) => Pair.from
+  | Empty ⇒ from item
+  | NonEmpty (pair) ⇒ Pair.from
     (fst pair)
     (append (snd pair) item)
 
@@ -41,38 +64,12 @@ append = list -> item ->
 # concat [1, 2, 3] [4, 5, 6]
 # # => [1, 2, 3, 4, 5, 6]
 # ```
-concat = first -> second ->
+concat ≔ first → second →
   match first
-  | Empty => second
-  | NonEmpty (pair) => Pair.from
+  | Empty ⇒ second
+  | NonEmpty (pair) ⇒ Pair.from
     (fst pair)
     (concat (snd pair) second)
-
-# Determines whether two lists are equal. Two lists are equal if they have the
-# same elements in the same order.
-#
-# Time complexity: O(n)
-#   - n is the length of the first list
-# Space complexity: O(mn)
-#   - m is the length of the first list
-#   - n is the length of the second list
-#
-# ```aml
-# equals [1, 2, 3] [1, 2, 3]
-# # => true
-#
-# equals [1, 2, 3] [1, 2, 4]
-# # => false
-# ```
-equals : List<'t> -> List<'t> -> Bool
-equals = a -> b ->
-  match a
-  | Empty => match b
-    | Empty => true
-    | NonEmpty (_) => false
-  | NonEmpty (p1) => match b
-    | Empty => false
-    | NonEmpty (p2) => p1 == p2
 
 # Returns a new list with the given item as the first and only element.
 #
@@ -83,7 +80,7 @@ equals = a -> b ->
 # from 1
 # # => [1]
 # ```
-from = value -> Pair.from value Empty
+from ≔ value → Pair.from value Empty
 
 # Returns the first element of a list, if it exists.
 #
@@ -97,11 +94,11 @@ from = value -> Pair.from value Empty
 # head []
 # # => None
 # ```
-head : List<'t> -> Maybe<'t>
-head = list ->
+head : List<'t> → Maybe<'t>
+head ≔ list →
   match list
-  | Empty => None
-  | NonEmpty (pair) => Some (fst pair)
+  | Empty ⇒ None
+  | NonEmpty (pair) ⇒ Some (fst pair)
 
 # Creates a new list from a given list and a callback to transform each element
 # in the list.
@@ -112,13 +109,13 @@ head = list ->
 #   - n is the length of the list
 #
 # ```aml
-# map [1, 2, 3] (x -> x + 1)
+# map [1, 2, 3] (x → x + 1)
 # # => [2, 3, 4]
 # ```
-map = list -> callback ->
+map ≔ list → callback →
   match list
-  | Empty => list
-  | NonEmpty (pair) => Pair.from
+  | Empty ⇒ list
+  | NonEmpty (pair) ⇒ Pair.from
     (callback (fst pair))
     (map (snd pair) callback)
 
@@ -139,11 +136,11 @@ map = list -> callback ->
 # tail []
 # # => []
 # ```
-tail : List<'t> -> List<'t>
-tail = list ->
+tail : List<'t> → List<'t>
+tail ≔ list →
   match list
-  | Empty => list
-  | NonEmpty (pair) => snd pair
+  | Empty ⇒ list
+  | NonEmpty (pair) ⇒ snd pair
 
 # Returns a new list with a given item prepended to it.
 #
@@ -154,7 +151,7 @@ tail = list ->
 # prepend [2, 3] 1
 # # => [1, 2, 3]
 # ```
-prepend = list -> item -> Pair.from item list
+prepend ≔ list → item → Pair.from item list
 
 # An infix alias for `prepend`, but with the arguments flipped. This allows you
 # to use the `::` operator to prepend an item to a list.
@@ -166,7 +163,7 @@ prepend = list -> item -> Pair.from item list
 # 1 :: [2, 3]
 # # => [1, 2, 3]
 # ```
-(::) = flip prepend
+(::) ≔ flip prepend
 
 # Returns a new list which is in the reverse order of the input list.
 #
@@ -179,10 +176,10 @@ prepend = list -> item -> Pair.from item list
 # reverse [1, 2, 3]
 # # => [3, 2, 1]
 # ```
-reverse : List<'t> -> List<'t>
-reverse = list ->
+reverse : List<'t> → List<'t>
+reverse ≔ list →
   match list
-  | Empty => list
-  | NonEmpty (pair) => concat
+  | Empty ⇒ list
+  | NonEmpty (pair) ⇒ concat
     (reverse (snd pair))
     (from (fst pair))

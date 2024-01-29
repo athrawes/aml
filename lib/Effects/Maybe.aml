@@ -4,9 +4,9 @@ type Maybe<'a> =
   | Some<'a>
   | None
 
-from = Some
+from ≔ Some
 
-chain = maybe -> callback ->
+chain ≔ maybe → callback →
   match maybe
-  | Some (value) => callback value
-  | None => None
+  | Some (value) ⇒ callback value
+  | None ⇒ None

@@ -15,9 +15,9 @@ type SignedInteger =
   | isize of INTRINSIC_SIGNED_POINTER
 
 # A natural number is a non-negative integer.
-type ℕ = UnsignedInteger
+type ℕ ≔ UnsignedInteger
 
-type ℤ = Integer
+type ℤ ≔ Integer
 type Integer =
   | UnsignedInteger
   | SignedInteger
@@ -32,8 +32,8 @@ type Float =
 # In AML, this is represented by a pair of a real number and a natural number,
 # where the first number is the numerator and the second number is the
 # denominator.
-type Rational = Pair<ℤ, ℕ>
-type ℚ = Rational
+type Rational ≔ Pair<ℤ, ℕ>
+type ℚ ≔ Rational
 
 # A real number is a value that represents a quantity along a continuous line.
 # In AML, this is represented by a sum type of integers, rationals, and floats.
@@ -41,7 +41,7 @@ type ℚ = Rational
 # does not include irrational numbers such as π or √2 due to the limits of
 # floating point arithmetic. Approximations of these numbers can be represented
 # using the `Float` type.
-type ℝ = Real
+type ℝ ≔ Real
 type Real =
   | Integer
   | Rational
@@ -51,5 +51,5 @@ type Real =
 # is the real part and b is the imaginary part of the complex number. In AML,
 # this is represented by a pair of real numbers, where the first number is the
 # real part and the second number is the imaginary part.
-type Complex = Pair<ℝ, ℝ>
-type ℂ = Complex
+type Complex ≔ Pair<ℝ, ℝ>
+type ℂ ≔ Complex

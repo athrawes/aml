@@ -1,4 +1,4 @@
-{ Boolean, true, false, or, ¬ } = use "Prelude/Boolean"
+{ 𝔹, true, false, or, ¬ } ≔ use "Prelude/Boolean"
 
 module Sequence extends Monoid Monad Traversable
   type Sequence<'a>
@@ -11,26 +11,26 @@ module Sequence extends Monoid Monad Traversable
 # Space complexity: O(1)
 #
 # ```aml
-# all [1, 2, 3] (x -> x < 4)
+# all [1, 2, 3] (x → x < 4)
 # # => true
 #
-# all [1, 2, 3] (x -> x < 3)
+# all [1, 2, 3] (x → x < 3)
 # # => false
 # ```
-all : 'm<'t> -> ('t -> Boolean) -> Boolean where 'm extends Sequence
-all = seq -> predicate -> ¬ (seq ∃ (¬ ∘ predicate)))
+all : Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 𝔹
+all ≔ seq → predicate → ¬ (seq ∃ (¬ ∘ predicate)))
 
 # An infix alias for `all`.
 #
 # ```aml
-# [1, 2, 3] ∀ (x -> x < 4)
+# [1, 2, 3] ∀ (x → x < 4)
 # # => true
 #
-# [1, 2, 3] ∀ (x -> x < 3)
+# [1, 2, 3] ∀ (x → x < 3)
 # # => false
 # ```
 # @include all
-(∀) = all
+(∀) ≔ all
 
 # Returns true if any element in the sequence satisfies the given predicate
 # function. Returns false otherwise.
@@ -40,27 +40,27 @@ all = seq -> predicate -> ¬ (seq ∃ (¬ ∘ predicate)))
 # Space complexity: O(1)
 #
 # ```aml
-# any [1, 2, 3] (x -> x == 2)
+# any [1, 2, 3] (x → x = 2)
 # # => true
 #
-# any [1, 2, 3] (x -> x == 4)
+# any [1, 2, 3] (x → x = 4)
 # # => false
 # ```
-any : 'm<'t> -> ('t -> Boolean) -> Boolean where 'm extends Sequence
-any = seq -> predicate ->
+any : Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 𝔹
+any ≔ seq → predicate →
   reduce seq (or ∘ predicate) false
 
 # An infix alias for `any`.
 #
 # ```aml
-# [1, 2, 3] ∃ (x -> x == 2)
+# [1, 2, 3] ∃ (x → x = 2)
 # # => true
 #
-# [1, 2, 3] ∃ (x -> x == 4)
+# [1, 2, 3] ∃ (x → x = 4)
 # # => false
 # ```
 # @include any
-(∃) = any
+(∃) ≔ any
 
 # Returns true if none of the elements in the sequence satisfy the given
 # predicate function. Returns false otherwise.
@@ -70,15 +70,15 @@ any = seq -> predicate ->
 # Space complexity: O(1)
 #
 # ```aml
-# [1, 2, 3] ∄ (x -> x == 2)
+# [1, 2, 3] ∄ (x → x = 2)
 # # => false
 #
-# [1, 2, 3] ∄ (x -> x == 4)
+# [1, 2, 3] ∄ (x → x = 4)
 # # => true
 # ```
-(∄) = ¬ ∘' ∃
+(∄) ≔ ¬ ∘∘∘ ∃
 
-chain = seq -> callback -> seq <$> callback | flatten
+chain ≔ seq → callback → seq <$> callback | flatten
 
 # Determines if the given element is in the sequence. The elements of the
 # sequence must be comparable using the `==` operator.
@@ -94,10 +94,8 @@ chain = seq -> callback -> seq <$> callback | flatten
 # contains? [1, 2, 3] 4
 # # => false
 # ```
-contains? : 'm<'t> -> 't -> Boolean
-  where 'm extends Sequence
-  where 't extends Setoid
-contains? = seq -> element -> seq ∃ (x -> x == element)
+contains? : Sequence 'm, Setoid 't ⇒ 'm<'t> → 't → 𝔹
+contains? ≔ seq → element → seq ∃ (x → x = element)
 
 # An infix alias for `contains?`.
 #
@@ -109,7 +107,7 @@ contains? = seq -> element -> seq ∃ (x -> x == element)
 # # => false
 # ```
 # @include contains?
-(∋) = contains?
+(∋) ≔ contains?
 
 # Determines if the given element is not in the sequence. The elements of the
 # sequence must be comparable using the `==` operator.
@@ -125,7 +123,7 @@ contains? = seq -> element -> seq ∃ (x -> x == element)
 # 4 ∌ [1, 2, 3]
 # # => true
 # ```
-(∌) = not ∘' (∋)
+(∌) ≔ not ∘∘∘ (∋)
 
 # Returns a new sequence which contains all the elements of the first sequence
 # which are not in the second sequence.
@@ -140,8 +138,8 @@ contains? = seq -> element -> seq ∃ (x -> x == element)
 # difference [1, 2, 3] [2, 3, 4]
 # # => [1]
 # ```
-difference : 'm<'t> -> 'm<'t> -> 'm<'t> where 'm extends Sequence
-difference = a -> b -> filter a (x -> x ∉ b)
+difference : Sequence 'm ⇒ 'm<'t> → 'm<'t> → 'm<'t>
+difference ≔ a → b → filter a (x → x ∉ b)
 
 # An infix alias for `difference`.
 #
@@ -150,7 +148,7 @@ difference = a -> b -> filter a (x -> x ∉ b)
 # # => [1]
 # ```
 # @include difference
-(∖) = difference
+(∖) ≔ difference
 
 # Drops the first `count` elements from the sequence and returns a new sequence
 # with the remaining elements. If `count` is greater than the number of elements
@@ -165,8 +163,8 @@ difference = a -> b -> filter a (x -> x ∉ b)
 # drop 2 [1, 2, 3]
 # # => [3]
 # ```
-drop : Int -> 'm<'t> -> 'm<'t> where 'm extends Sequence
-drop = count -> seq ->
+drop : Sequence 'm ⇒ ℕ → 'm<'t> → 'm<'t>
+drop ≔ count → seq →
   if count < 1
   then seq
   else drop (count - 1) (tail seq)
@@ -181,14 +179,14 @@ drop = count -> seq ->
 #   - where n is the number of elements in the sequence
 #
 # ```aml
-# drop-while [1, 2, 3, 1, 2, 3] (x -> x < 3)
+# drop-while [1, 2, 3, 1, 2, 3] (x → x < 3)
 # # => [3, 1, 2, 3]
 # ```
-drop-while : 'm<'t> -> ('t -> Boolean) -> 'm<'t> where 'm extends Sequence
-drop-while = seq -> predicate ->
+drop-while : Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 'm<'t>
+drop-while ≔ seq → predicate →
   match head seq
-  | None -> seq
-  | Some x ->
+  | None ⇒ seq
+  | Some x =>
     if predicate x
     then drop-while (tail seq) predicate
     else seq
@@ -213,14 +211,14 @@ drop-while = seq -> predicate ->
 # element-at [1, 2, 3] 3
 # # => None
 # ```
-element-at : 'm<'t> -> ℤ -> Maybe<'t> where 'm extends Sequence
-element-at = seq -> index ->
+element-at : Sequence 'm ⇒ 'm<'t> → ℤ → Maybe<'t>
+element-at ≔ seq → index →
   if index < 0
   then None
   else match head seq
-    | None -> None
-    | Some x ->
-      if index == 0
+    | None ⇒ None
+    | Some x =>
+      if index = 0
       then Some x
       else element-at (tail seq) (index - 1)
 
@@ -233,14 +231,14 @@ element-at = seq -> index ->
 #   - where n is the number of elements in the sequence
 #
 # ```aml
-# filter [1, 2, 3] (x -> x < 3)
+# filter [1, 2, 3] (x → x < 3)
 # # => [1, 2]
 # ```
-filter : 'm<'t> -> ('t -> Boolean) -> 'm<'t> where 'm extends Sequence
-filter = seq -> predicate ->
+filter : Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 'm<'t>
+filter ≔ seq → predicate →
   match head seq
-  | None -> seq
-  | Some x ->
+  | None ⇒ seq
+  | Some x =>
     if predicate x
     then x :: (filter (tail seq) predicate)
     else filter (tail seq) predicate
@@ -257,11 +255,11 @@ filter = seq -> predicate ->
 # flatten [[1, 2], [3, 4]]
 # # => [1, 2, 3, 4]
 # ```
-flatten : 'm<'m<'t>> -> 'm<'t> where 'm extends Sequence
-flatten = seq ->
+flatten : Sequence 'm ⇒ 'm<'m<'t>> → 'm<'t>
+flatten ≔ seq →
   match head seq with
-  | Some x -> concat x (flatten (tail seq))
-  | None -> seq
+  | Some x ⇒ concat x (flatten (tail seq))
+  | None ⇒ seq
 
 # Returns the first element in the sequence, if it exists.
 #
@@ -275,7 +273,7 @@ flatten = seq ->
 # head []
 # # => None
 # ```
-head : 'm<'t> -> Maybe<'t> where 'm extends Sequence
+head : Sequence 'm ⇒ 'm<'t> → Maybe<'t>
 
 # Returns true if the given element is in the sequence. Returns false otherwise.
 #
@@ -290,11 +288,9 @@ head : 'm<'t> -> Maybe<'t> where 'm extends Sequence
 # is-element-of? 4 [1, 2, 3]
 # # => false
 # ```
-is-element-of? : 't -> 'm<'t> -> Boolean
-  where 'm extends Sequence
-  where 't extends Setoid
-is-element-of? = element -> seq ->
-  seq ∃ (x -> x == element)
+is-element-of? : Sequence 'm, Setoid 't ⇒ 't → 'm<'t> → 𝔹
+is-element-of? ≔ element → seq →
+  seq ∃ (x → x = element)
 
 # An infix alias for `is-element-of?`.
 #
@@ -306,7 +302,7 @@ is-element-of? = element -> seq ->
 # # => false
 # ```
 # @include is-element-of?
-(∈) = is-element-of?
+(∈) ≔ is-element-of?
 
 # Returns true if the given element is not in the sequence. Returns false
 # otherwise.
@@ -322,7 +318,7 @@ is-element-of? = element -> seq ->
 # 4 ∉ [1, 2, 3]
 # # => true
 # ```
-(∉) = not ∘' (∈)
+(∉) ≔ not ∘∘∘ (∈)
 
 # Returns true if the first sequence is a subset of the second sequence; in
 # other words, if all elements in the first sequence are also in the second
@@ -343,11 +339,9 @@ is-element-of? = element -> seq ->
 # is-subset-of? [1, 2, 3] [1, 2]
 # # => false
 # ```
-is-subset-of? : 'm<'t> -> 'm<'t> -> Boolean
-  where 'm extends Sequence
-  where 't extends Setoid
-is-subset-of? = a -> b ->
-  a ∀ (x -> x ∈ b)
+is-subset-of? : Sequence 'm, Setoid 't ⇒ 'm<'t> → 'm<'t> → 𝔹
+is-subset-of? ≔ a → b →
+  a ∀ (x → x ∈ b)
 
 # An infix alias for `is-subset-of?`.
 #
@@ -362,7 +356,7 @@ is-subset-of? = a -> b ->
 # # => false
 # ```
 # @include is-subset-of?
-(⊂) = is-subset-of?
+(⊂) ≔ is-subset-of?
 
 # Checks to see if the first sequence is not a subset of the second sequence, or
 # in other words, if the first sequence contains at least one element that is
@@ -383,7 +377,7 @@ is-subset-of? = a -> b ->
 # [1, 2, 3] ⊄ [1, 2]
 # # => true
 # ```
-(⊄) = not ∘' (⊂)
+(⊄) ≔ not ∘∘∘ (⊂)
 
 # Returns the length of the sequence.
 #
@@ -395,8 +389,8 @@ is-subset-of? = a -> b ->
 # length [1, 2, 3]
 # # => 3
 # ```
-length : 'm<'t> -> Int where 'm extends Sequence
-length = seq -> reduce seq ((add 1) ∘' const) 0
+length : Sequence 'm ⇒ 'm<'t> → ℕ
+length ≔ seq → reduce seq ((add 1) ∘∘∘ const) 0
 
 # Returns a new sequence with the given element added on the front.
 #
@@ -404,7 +398,7 @@ length = seq -> reduce seq ((add 1) ∘' const) 0
 # prepend 1 [2, 3]
 # # => [1, 2, 3]
 # ```
-prepend : 't -> 'm<'t> -> 'm<'t> where 'm extends Sequence
+prepend : Sequence 'm ⇒ 't → 'm<'t> → 'm<'t>
 
 # An infix alias for `prepend`.
 #
@@ -413,7 +407,7 @@ prepend : 't -> 'm<'t> -> 'm<'t> where 'm extends Sequence
 # # => [1, 2, 3]
 # ```
 # @include prepend
-(::) = prepend
+(::) ≔ prepend
 
 # Reduce a sequence to a single value by applying a function to each element and
 # passing an accumulator value between each application.
@@ -426,11 +420,11 @@ prepend : 't -> 'm<'t> -> 'm<'t> where 'm extends Sequence
 # reduce [1, 2, 3] (+) 0
 # # => 6
 # ```
-reduce : 'm<'t> -> ('a -> 't -> 'a) -> 'a -> 'a where 'm extends Sequence
-reduce = seq -> callback -> initial ->
+reduce : Sequence 'm ⇒ 'm<'t> → ('a → 't → 'a) → 'a → 'a
+reduce ≔ seq → callback → initial →
   match head seq
-  | Some x -> reduce (tail seq) callback (callback initial x)
-  | None -> initial
+  | Some x ⇒ reduce (tail seq) callback (callback initial x)
+  | None ⇒ initial
 
 # Sums the elements of the sequence.
 #
@@ -442,11 +436,9 @@ reduce = seq -> callback -> initial ->
 # sum [1, 2, 3]
 # # => 6
 # ```
-sum : 'm<'t> -> 't
-  where 'm extends Sequence
-  where 't extends Addable # FIXME: Need exact type here
-  where 't extends Plus
-sum = seq -> reduce seq ('t.+) 't.zero
+# FIXME: Need exact type for `Addable` stand-in here
+sum : Sequence 'm, Addable 't, Plus 't ⇒ 'm<'t> → 't
+sum ≔ seq → reduce seq ('t.+) 't.zero
 
 # An alias for `sum`.
 #
@@ -454,7 +446,7 @@ sum = seq -> reduce seq ('t.+) 't.zero
 # ∑ [1, 2, 3]
 # # => 6
 # ```
-∑ = sum
+∑ ≔ sum
 
 # Returns a new sequence with all elements in the input sequence except the
 # first one. If the input sequence is empty, an empty sequence is returned.
@@ -463,7 +455,7 @@ sum = seq -> reduce seq ('t.+) 't.zero
 # tail [1, 2, 3]
 # # => [2, 3]
 # ```
-tail : 'm<'t> -> 'm<'t> where 'm extends Sequence
+tail : Sequence 'm ⇒ 'm<'t> → 'm<'t>
 
 # Returns a new sequence which contains all the unique elements of both input
 # sequences.
@@ -472,8 +464,8 @@ tail : 'm<'t> -> 'm<'t> where 'm extends Sequence
 # union [1, 2, 3] [2, 3, 4]
 # # => [1, 2, 3, 4]
 # ```
-union : 'm<'t> -> 'm<'t> -> 'm<'t> where 'm extends Sequence
-union = a -> b -> a ++ (b ∖ a)
+union : Sequence 'm ⇒ 'm<'t> → 'm<'t> → 'm<'t>
+union ≔ a → b → a ++ (b ∖ a)
 
 # An infix alias for `union`.
 #
@@ -482,4 +474,4 @@ union = a -> b -> a ++ (b ∖ a)
 # # => [1, 2, 3, 4]
 # ```
 # @include union
-(∪) = union
+(∪) ≔ union

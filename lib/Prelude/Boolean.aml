@@ -1,35 +1,36 @@
-module Boolean extends Setoid<_>
+module Boolean extends Setoid
 
-type Boolean extends Setoid<_> =
+type 𝔹 extends Setoid =
   | True of true
   | False of false
 
-true =  a -> _ -> a
-false = _ -> b -> b
+type Boolean ≔ 𝔹
 
-equals : Boolean -> Boolean -> Boolean
-equals = a -> b ->
-  a b (¬ b)
+true ≔  a → _ → a
+false ≔ _ → b → b
 
-and : Boolean -> Boolean -> Boolean
-(and) = a -> b -> a b a
-(∧) = and
+(=) : 𝔹 → 𝔹 → 𝔹
+(=) ≔ a → b → a b (¬ b)
 
-or : Boolean -> Boolean -> Boolean
-(or) = a -> b -> a a b
-(∨) = or
+(∧) : 𝔹 → 𝔹 → 𝔹
+(∧) ≔ a → b → a b a
+(and) ≔ ∧
 
-xor : Boolean -> Boolean -> Boolean
-(xor) = not ∘' equals
-⊻ = xor
-⊕ = xor
+(∨) : 𝔹 → 𝔹 → 𝔹
+(∨) ≔ a → b → a a b
+(or) ≔ ∨
 
-not : Boolean -> Boolean
-not = condition -> flip condition
-¬ = not
+(⊻) : 𝔹 → 𝔹 → 𝔹
+(⊻) ≔ ¬ ∘∘∘ (=)
+(⊕) ≔ ⊻
+(xor) ≔ ⊻
 
-nand = not ∘' and
-(⊼) = nand
+¬ : 𝔹 → 𝔹
+¬ ≔ condition → flip condition
+not ≔ ¬
 
-nor = not ∘' or
-(⊽) = nor
+(⊼) ≔ not ∘∘∘ and
+(nand) ≔ ⊼
+
+(⊽) ≔ not ∘∘∘ or
+(nor) ≔ ⊽

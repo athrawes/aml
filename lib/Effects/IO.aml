@@ -5,10 +5,10 @@ type IO<'a> =
   | Running
   | Complete<'a>
 
-from = Complete
+from ≔ Complete
 
-chain = io -> callback ->
+chain ≔ io → callback →
   match io
-  | Complete (value) => callback value
-  | Running => todo!
-  | Pending => todo!
+  | Complete (value) ⇒ callback value
+  | Running ⇒ todo!
+  | Pending ⇒ todo!

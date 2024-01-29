@@ -1,25 +1,26 @@
-pipe : 'a -> ('a -> 'b) -> 'b
-pipe = argument -> callback -> callback argument
+type Function<'a, 'b> extends Semigroupoid<'a, 'b>
+(→) : 'a → b → Function<'a, 'b>
 
-(▷) = pipe
-(◁) = flip (▷)
+(▷) : 'a → ('a → 'b) → 'b
+(▷) ≔ argument → callback → callback argument
+(|>) ≔ ▷
 
-compose : ('a -> 'b) -> ('b -> 'c) -> ('a -> 'c)
-compose = a_to_b -> b_to_c ->
-  a -> b_to_c (a_to_b a)
+(◁) ≔ flip (▷)
+(<|) ≔ ◁
 
-(∘) = compose
+(∘) : ('a → 'b) → ('b → 'c) → ('a → 'c)
+(∘) ≔ ab → bc → a → bc (ab a)
 
-compose' : ('a -> 'b) -> ('c -> 'd -> 'a) -> ('c -> 'd -> 'b)
-compose' = compose ∘ compose
-(∘') = compose'
+(∘∘∘) : ('a → 'b) → ('c → 'd → 'a) → ('c → 'd → 'b)
+(∘∘∘) ≔ (∘) ∘ (∘)
 
-flip : ('a -> 'b -> 'c) -> ('b -> 'a -> 'c)
-flip = callback ->
-  b -> a -> callback a b
+flip : ('a → 'b → 'c) → ('b → 'a → 'c)
+flip ≔ callback →
+  b → a → callback a b
 
-id : 'a -> 'a
-id = a -> a
+ɩ : 'a → 'a
+ɩ ≔ a → a
+id ≔ ɩ
 
-const : 'a -> 'b -> 'a
-const = true
+const : 'a → 'b → 'a
+const ≔ true

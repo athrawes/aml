@@ -4,9 +4,9 @@ type Result<'ok, 'error> =
   | Ok 'ok
   | Error 'error
 
-from = Ok
+from ≔ Ok
 
-chain = result -> callback ->
+chain ≔ result → callback →
   match result
-  | Ok (value) => callback value
-  | Error (_) => result
+  | Ok (value) ⇒ callback value
+  | Error (_) ⇒ result

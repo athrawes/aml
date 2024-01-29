@@ -1,55 +1,46 @@
 type Alt<'a> extends Functor<'a>
 trait Alt extends Functor
-  alt : 'm<'a> -> 'm<'a> -> 'm<'a>
-    where 'm extends Alt
+  alt : Alt 'm ⇒ 'm<'a> → 'm<'a> → 'm<'a>
 
 type Alternative<'a> extends Applicative<'a>, Plus<'a>
 trait Alternative extends Applicative Plus
 
 type Applicative<'a> extends Apply<'a>
 trait Applicative extends Apply
-  from : 'a -> 'm<'a>
-    where 'm extends Applicative
+  from : Applicative 'm ⇒ 'a → 'm<'a>
 
-  replace : 'm<'a> -> 'b -> 'm<'b>
-    where 'm extends Applicative
-  replace = ma -> b -> lift-a1 (const b) ma
+  replace : Applicative 'm ⇒ 'm<'a> → 'b → 'm<'b>
+  replace ≔ ma → b → lift-a1 (const b) ma
 
-  (<$) = replace
+  (<$) ≔ replace
 
-  inject : 'a -> 'm<'b> -> 'm<'a>
-    where 'm extends Applicative
-  inject = a -> mb -> lift-a1 (const a) mb
+  inject : Applicative 'm ⇒ 'a → 'm<'b> → 'm<'a>
+  inject ≔ a → mb → lift-a1 (const a) mb
 
-  ($>) = inject
+  ($>) ≔ inject
 
-  lift-a0 : 'a -> 'm<'a>
-    where 'm extends Applicative
-  lift-a0 = from
+  lift-a0 : Applicative 'm ⇒ 'a → 'm<'a>
+  lift-a0 ≔ from
 
-  lift-a1 : ('a -> 'b) -> 'm<'a> -> 'm<'b>
-    where 'm extends Applicative
-  lift-a1 = callback -> ma -> (from callback) <*> ma
+  lift-a1 : Applicative 'm ⇒ ('a → 'b) → 'm<'a> → 'm<'b>
+  lift-a1 ≔ callback → ma → (from callback) <*> ma
 
-  lift-a2 : ('a -> 'b -> 'c) -> 'm<'a> -> 'm<'b> -> 'm<'c>
-    where 'm extends Applicative
-  lift-a2 = callback -> ma -> mb -> (from callback) <*> ma <*> mb
+  lift-a2 : Applicative 'm ⇒ ('a → 'b → 'c) → 'm<'a> → 'm<'b> → 'm<'c>
+  lift-a2 ≔ callback → ma → mb → (from callback) <*> ma <*> mb
 
 type Apply<'a> extends Functor<'a>
 trait Apply extends Functor
-  ap : 'm<('a -> 'b)> -> 'm<'a> -> 'm<'b>
-    where 'm extends Apply
+  ap : Apply 'm ⇒ 'm<('a → 'b)> → 'm<'a> → 'm<'b>
 
   # An alias for `ap`.
   # @include ap
-  (<*>) = ap
+  (<*>) ≔ ap
 
-  (<**>) = flip (<*>)
+  (<**>) ≔ flip (<*>)
 
 type Bifunctor<'a, 'b> extends Functor<'b>
 trait Bifunctor extends Functor
-  bimap : 'm<'a, 'c> -> ('a -> 'b) -> ('c -> 'd) -> 'm<'b, 'd>
-    where 'm extends Bifunctor
+  bimap : Bifunctor 'm ⇒ 'm<'a, 'c> → ('a → 'b) → ('c → 'd) → 'm<'b, 'd>
 
 type Category<'a> extends Semigroupoid<'a, 'a>
 trait Category extends Semigroupoid
@@ -67,8 +58,7 @@ trait Category extends Semigroupoid
   #
   # - `identity >> a` should be the same as `a`
   # - `a >> identity` should be the same as `a`
-  identity : 'm<_>
-    where 'm extends Category
+  identity : Category 'm ⇒ 'm<_>
 
 type Chain<'a> extends Apply<'a>
 trait Chain extends Apply
@@ -76,21 +66,20 @@ trait Chain extends Apply
   #
   # ```aml
   # (Maybe.from 42)
-  # ▷ chain (value -> value / 2) # Maybe<Float> (21.0)
-  # ▷ chain (value -> value / 5) # Maybe<Float> (4.2)
+  # ▷ chain (value → value / 2) # Maybe<Float> (21.0)→
+  # ▷ chain (value → value / 5) # Maybe<Float> (4.2)
   # ```
-  chain : 'm<'a> -> ('a -> 'm<'b>) -> 'm<'b>
-    where 'm extends Chain
+  chain : Chain 'm ⇒ 'm<'a> → ('a → 'm<'b>) → 'm<'b>
 
   # An alias for `chain`. Allows chaining functions which return instances of
   # the current type.
   #
   # ```aml
   # (Maybe.from 42)
-  # ▷ then (value -> value / 2) # Maybe<Float> (21.0)
-  # ▷ then (value -> value / 5) # Maybe<Float> (4.2)
+  # ▷ then (value → value / 2) # Maybe<Float> (21.0)
+  # ▷ then (value → value / 5) # Maybe<Float> (4.2)
   # ```
-  then = chain
+  then ≔ chain
 
   # An infix alias for `chain`.
   #
@@ -98,37 +87,36 @@ trait Chain extends Apply
   #
   # ```aml
   # (Maybe.from 42)
-  # >>= (value -> value / 2) # Maybe<Float> (21.0)
-  # >>= (value -> value / 5) # Maybe<Float> (4.2)
+  # >>= (value → value / 2) # Maybe<Float> (21.0)
+  # >>= (value → value / 5) # Maybe<Float> (4.2)
   # ```
-  (>>=) = chain
+  (>>=) ≔ chain
 
   # An infix alias for `chain`, but with the arguments reversed.
   #
   # @include chain
   #
   # ```aml
-  # (value -> value / 2) =<< (Maybe.from 42) # Maybe<Float> (21)
+  # (value → value / 2) =<< (Maybe.from 42) # Maybe<Float> (21)
   # ```
-  (=<<) = flip (>>=)
+  (=<<) ≔ flip (>>=)
 
   # Composes two functions by Kleisli composition.
-  k-compose : ('a -> 'm<'b>) -> ('b -> 'm<'c>) -> ('a -> 'm<'c>)
-  k-compose = a-to-mb b-to-mc ->
+  k-compose : ('a → 'm<'b>) → ('b → 'm<'c>) → ('a → 'm<'c>)
+  k-compose ≔ a-to-mb b-to-mc →
       a-to-mb >> ((flip chain) b-to-mc)
 
   # An infix alias for `k-compose`.
   # @include k-compose
-  (>=>) = k-compose
+  (>=>) ≔ k-compose
 
   # An infix alias for `k-compose`, but with the arguments reversed.
   # @include k-compose
-  (<=<) = flip (>=>)
+  (<=<) ≔ flip (>=>)
 
-  flatten : 'm<'m<'a>> -> 'm<'a>
-    where 'm extends Chain
-  flatten = mma ->
-      mma >>= id
+  flatten : Chain 'm ⇒ 'm<'m<'a>> → 'm<'a>
+  flatten ≔ mma →
+      mma >>= ɩ
 
 type ChainRec<'a> extends Chain<'a>
 trait ChainRec extends Chain
@@ -150,62 +138,43 @@ trait ChainRec extends Chain
   # number is found:
   #
   # ```aml
-  # first-even : ChainRec<'a> -> ('a -> 'a) -> Maybe<'a>
-  # first-even = chain-rec -> callback ->
-  #   loop = callback -> next -> done ->
-  #     match next () with
-  #     | Some -> x -> if x % 2 == 0 then done (Some x) else loop next done
-  #     | None -> done None
-  #   loop callback
-  #
-  # first-even (_ -> Some 1) (x -> Some (x + 1)) == Some 2
-  # first-even (_ -> Some 1) (x -> Some (x + 2)) == Some 2
-  # first-even (_ -> Some 1) (x -> Some (x + 3)) == Some 4
-  # first-even (_ -> Some 1) (x -> Some (x + 4)) == Some 4
-  # first-even (_ -> Some 1) (x -> Some (x + 5)) == Some 6
-  # first-even (_ -> Some 1) (x -> Some (x + 6)) == Some 6
   # ```
-  chain-rec : ((('a -> 'c) -> ('b -> 'c) -> 'a) -> 'm<'c> -> 'a) -> 'm<'b>
-    where 'm extends ChainRec
+  chain-rec : ChainRec 'm
+    ⇒ (('a → 'c) → ('b → 'c) → 'a → 'm<'c>)
+    → 'a
+    → 'm<'b>
 
 type Contramap<'a>
 trait Contramap
-  contramap : 'm<'a> -> ('b -> 'a) -> 'm<'b>
-    where 'm extends Contravariant
+  contramap : Contravariant 'm ⇒ 'm<'a> → ('b → 'a) → 'm<'b>
 
 type Comonad<'a> extends Extend<'a>
 trait Comonad extends Extend
-  extract : 'm<'a> -> _ -> 'a
-    where 'm extends Comonad
+  extract : Comonad 'm ⇒ 'm<'a> → _ → 'a
 
 type Extend<'a> extends Functor<'a>
 trait Extend extends Functor
-  extend 'm<'a> -> ('m<'a> -> 'b) -> 'm<'b>
-    where 'm extends Extend
+  extend : Extend 'm ⇒ 'm<'a> → ('m<'a> → 'b) → 'm<'b>
 
 type Filterable<'a>
 trait Filterable
-  filter : 'm<'a> -> ('a -> Bool) -> 'm<'a>
-    where 'm extends Filterable
+  filter : Filterable 'm ⇒ 'm<'a> → ('a → 𝔹) → 'm<'a>
 
 type Foldable<'a>
 trait Foldable
-  reduce : 'm<'a> -> ('b -> 'a -> 'b) -> 'b -> 'b
-    where 'm extends Foldable
+  reduce : Foldable 'm ⇒ 'm<'a> → ('b → 'a → 'b) → 'b → 'b
 
 type Functor<'a>
 trait Functor
-  map : 'm<'a> -> ('a -> 'b) -> 'm<'b>
-    where 'm extends Functor
+  map : Functor 'm ⇒ 'm<'a> → ('a → 'b) → 'm<'b>
 
   # An infix alias for `map`.
   # @include map
-  (<$>) = map
+  (<$>) ≔ map
 
 type Group<'a> extends Monoid<'a>
 trait Group extends Monoid
-  invert : 'm<'a> -> 'm<'a>
-    where 'm extends Group
+  invert : Group 'm ⇒ 'm<'a> → 'm<'a>
 
 type Monad<'a> extends Applicative<'a>, Chain<'a>
 trait Monad extends Applicative Chain
@@ -213,74 +182,50 @@ trait Monad extends Applicative Chain
 type Monoid<'a> extends Semigroup<'a>
 trait Monoid extends Semigroup
   # The empty value for a monoid.
-  empty : 'm<'a>
-    where 'm extends Monoid
+  empty : Monoid 'm ⇒ 'm<'a>
 
   # @include empty
-  ∅ = empty
+  ∅ ≔ empty
 
-type Ord<'a> extends Setoid<'a>
-trait Ord extends Setoid
+type Ordered extends Setoid
+trait Ordered extends Setoid
   # Less than or equal to. Returns true if the first argument is less than or
   # equal to the second argument.
-  lte : 'm<'a> -> 'm<'a> -> bool
-    where 'm extends Ord
-
-  # An infix operator for `lte`.
-  # @include lte
-  (<=) = lte
-  (≤) = lte
+  (≤) : Ordered 'a ⇒ 'a → 'a → 𝔹
+  (<=) ≔ ≤
 
   # Strictly less than. Returns true if the first argument is strictly less than
   # the second argument.
-  lt : 'm<'a> -> 'm<'a> -> bool
-    where 'm extends Ord
-  lt = a -> b -> ¬ (a == b) ∧ (a <= b)
-
-  # An infix operator for `lt`.
-  # @include lt
-  (<) = lt
+  (<) : Ordered 'a ⇒ 'a → 'a → 𝔹
+  (<) ≔ a → b → ¬ (a = b) ∧ (a ≤ b)
 
   # Greater than or equal to. Returns true if the first argument is greater than
   # or equal to the second argument.
-  gte : 'm<'a> -> 'm<'a> -> bool
-    where 'm extends Ord
-  gte = a -> b -> (a == b) ∨ (¬ (a <= b))
-
-  # An infix operator for `gte`.
-  # @include gte
-  (>=) = gte
-  (≥) = gte
+  (≥) : Ordered 'a ⇒ 'a → 'a → 𝔹
+  (≥) ≔ a → b → (a = b) ∨ (¬ (a ≤ b))
+  (>=) ≔ ≥
 
   # Strict greater than. Returns true if the first argument is strictly greater
   # than the second argument.
-  gt : 'm<'a> -> 'm<'a> -> bool
-    where 'm extends Ord
-  gt = a -> b -> ¬ (a <= b)
-
-  # An infix operator for `gt`.
-  # @include gt
-  (>) = gt
+  (>) : Ordered 'a ⇒ 'a → 'a → 𝔹
+  (>) ≔ ¬ ∘∘∘ ≤
 
 type Plus<'a> extends Alt<'a>
 trait Plus extends Alt
-  zero : 'm<_>
-    where 'm extends Plus
+  zero : Plus 'm ⇒ 'm<_>
 
 type Profunctor<'a, 'b> extends Functor<'b>
 trait Profunctor extends Functor
-  promap : 'm<'b, 'c> -> ('a -> 'b) -> ('c -> 'd) -> 'm<'a, 'd>
-    where 'm extends Profunctor
+  promap : Profunctor 'm ⇒ 'm<'b, 'c> → ('a → 'b) → ('c → 'd) → 'm<'a, 'd>
 
 type Semigroup<'a>
 trait Semigroup
   # Combines two values by appending them together.
-  concat : 'm<'a> -> 'm<'a> -> 'm<'a>
-    where 'm extends Semigroup
+  concat : Semigroup 'm ⇒ 'm<'a> → 'm<'a> → 'm<'a>
 
   # An infix alias for `concat`.
   # @include concat
-  (++) = concat
+  (++) ≔ concat
 
 type Semigroupoid<'a, 'b>
 trait Semigroupoid
@@ -291,36 +236,23 @@ trait Semigroupoid
   # of `compose` which behaves nicely with respect to associativity. So, given
   # values `a`, `b`, and `c` of the same type:
   #
-  # - `compose a (compose b c)` should be the same as `compose (compose a b) c`
-  compose : 'm<'a, 'b> -> 'm<'b, 'c> -> 'm<'a, 'c>
-    where 'm extends Semigroupoid
+  # - `a ∘ (b ∘ c)` should be the same as `(a ∘ b) ∘ c`
+  (∘) : Semigroupoid 'm ⇒ 'm<'a, 'b> → 'm<'b, 'c> → 'm<'a, 'c>
 
-  # An infix alias for `compose`.
-  # @include compose
-  (∘) = compose
-
-type Setoid<'a>
+type Setoid
 trait Setoid
   # An equality function for comparing two values of the same type. Equality
-  # should behave nicely here, so that `equals` is reflexive, symmetric, and
+  # should behave nicely here, so that `=` is reflexive, symmetric, and
   # transitive. So, given values `a`, `b`, and `c` of the same type:
   #
-  # - `equals a a` should be `true`
-  # - `equals a b` should be the same as `equals b a`
-  # - if `equals a b` and `equals b c` are both `true`, then `equals a c` should
-  #   also be `true`
-  # - if one of `equals a b` or `equals b c` are `false`, then `equals a c`
-  #   should also be `false`
-  # - if both are false, `equals a c` may be either `true` or `false`
-  equals : 'm<'a> -> 'm<'a> -> Bool
-    where 'm extends Setoid
-
-  # An infix alias for `equals`.
-  # @include equals
-  (==) = equals
+  # - `a = a` should be true
+  # - `a = b` should be the same as `b = a`
+  # - if `a = b` and `b = c` are both true, then `a = c` should also be true
+  # - if one of `a = b` or `b = c` are false, then `a = c` should also be false
+  # - if both are false, `a = c` may be either true or false
+  (=) : Setoid 'a ⇒ 'a → 'a → 𝔹
 
 type Traversable<'a> extends Foldable<'a>, Functor<'a>
 trait Traversable extends Foldable Functor
-  traverse : 't<'a> -> 'f<_> -> ('a -> 'f<'b>) -> 'f<'t<'b>>
-    where 't extends Traversable
-    where 'f extends Applicative
+  traverse : Traversable 't,  Applicative 'f
+    ⇒ 't<'a> → 'f<_> → ('a → 'f<'b>) → 'f<'t<'b>>
