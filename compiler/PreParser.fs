@@ -1,40 +1,40 @@
 module PreParser
 open Lexer
 
-let transform (tokens: (Token * TokenPosition) seq): Token seq =
-    let mutable currentIndent = 0
+let transform (tokens: (Token * TokenPosition) seq): (Token * TokenPosition) seq =
     let rec transform' (tokens: (Token * TokenPosition) seq) = seq {
         match tokens |> Seq.tryHead with
+        | None -> ()
         | Some (token, position) ->
             match token with
             | EOL | Indent _ ->
-                yield! collapseWhitespace (tokens |> Seq.skip 1)
+                yield! collapseWhitespace tokens
             | _ ->
-                yield token
-                yield! transform' (tokens |> Seq.skip 1)
-        | None -> ()
+                yield (token, position)
+                yield! transform' (Seq.tail tokens)
     }
     and peek (tokens: (Token * TokenPosition) seq) (n: int) =
         match Seq.tryItem n tokens with
         | Some (token, _) -> Some token
         | None -> None
     and collapseWhitespace (tokens: (Token * TokenPosition) seq) = seq {
-        yield! Seq.map fst tokens
-        // let mutable lastToken = None
-        // for token, position in tokens do
-        //     match (lastToken, token) with
-        //     | (Some (EOL), EOL) -> ()
-        //     | (Some (EOL), Indent _) when peek tokens 1 = Some EOL -> ()
-        //     | (Some (EOL), _) -> yield token
-        //     | (Some (Indent _), EOL) -> ()
-        //     | (Some (Indent _), _) -> yield token
-        //     | (Some (DeIndent _), EOL) -> ()
-        //     | (Some (DeIndent _), Indent _) -> ()
-        //     | (Some (DeIndent _), DeIndent _) -> ()
-        //     | (Some (DeIndent _), _) -> yield token
-        //     | (Some (_), _) -> yield token
-        //     | (None, _) -> yield token
-        //     lastToken <- Some (token)
+        let (token) = tokens |> Seq.tryHead
+        let nextToken = tokens |> Seq.tryItem 1
+
+        match (token, nextToken) with
+        | (Some (EOL, _), Some (EOL, _)) -> ()
+        | (Some (EOL, _), Some (Indent _, _)) when peek tokens 1 = Some EOL -> ()
+        | (Some (EOL, position), _) -> yield (EOL, position)
+        | (Some (Indent _, _), Some (EOL, _)) -> ()
+        | (Some (Indent n, position), _) -> yield (Indent n, position)
+        | (Some (DeIndent _, _), Some (EOL, _)) -> ()
+        | (Some (DeIndent _, _), Some (Indent _, _)) -> ()
+        | (Some (DeIndent _, _), Some (DeIndent _, _)) -> ()
+        | (Some (DeIndent n, position), _) -> yield (DeIndent n, position)
+        | (Some (t, position), _) -> yield (t, position)
+        | (None, _) -> ()
+
+        yield! transform' (Seq.tail tokens)
     }
 
     transform' tokens

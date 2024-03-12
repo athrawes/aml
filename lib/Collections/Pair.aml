@@ -1,20 +1,20 @@
 module Pair extends Bifunctor Setoid
 
 type Pair<'a, 'b> extends Bifunctor<'a, 'b> ≔
-  | First of true → 'a
-  | Second of false → 'b
+	| First of true → 'a
+	| Second of false → 'b
 
-(=) : Setoid 'a,  Setoid 'b ⇒ Pair<'a, 'b> → Pair<'a, 'b> → 𝔹
+(=) ∷ Setoid 'a, Setoid 'b ⇒ Pair<'a, 'b> → Pair<'a, 'b> → 𝔹
 (=) ≔ a → b → ((fst a) = (fst b)) ∧ ((snd a) = (snd b))
 
 # Constructs a new pair from two arguments
-from : 'a → 'b → Pair<'a, 'b>
+from ∷ 'a → 'b → Pair<'a, 'b>
 from ≔ a → b → which → which a b
 
 # Grabs the first item from a Pair
-fst : Pair<'a, 'b> → 'a
+fst ∷ Pair<'a, 'b> → 'a
 fst ≔ pair → pair true
 
 # Grabs the second item from a Pair
-snd : Pair<'a, 'b> → 'b
+snd ∷ Pair<'a, 'b> → 'b
 snd ≔ pair → pair false

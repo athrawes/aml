@@ -1,12 +1,12 @@
 module Result extends Monad
 
 type Result<'ok, 'error> ≔
-  | Ok 'ok
-  | Error 'error
+	| Ok 'ok
+	| Error 'error
 
 from ≔ Ok
 
-chain ≔ result → callback →
-  match result
-  | Ok (value) ⇒ callback value
-  | Error (_) ⇒ result
+(>>=) ≔ result → callback →
+	match result
+	| Ok (value) ⇒ callback value
+	| Error (_) ⇒ result

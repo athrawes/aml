@@ -2,13 +2,13 @@
 B ≔ a → b → c → a (b c)
 
 # Blackbird combinator
-B1 ≔ a → b → c → d → a (b c d)
+B₁ ≔ a → b → c → d → a (b c d)
 
 # Bunting combinator
-B2 ≔ a → b → c → d → e → a (b c d e)
+B₂ ≔ a → b → c → d → e → a (b c d e)
 
 # Becard combinator
-B3 ≔ a → b → c → d → a (b (c d))
+B₃ ≔ a → b → c → d → a (b (c d))
 
 # Cardinal combinator
 C ≔ a → b → c → a c b
@@ -17,16 +17,16 @@ C ≔ a → b → c → a c b
 D ≔ a → b → c → d → a b (c d)
 
 # Dickcissel combinator
-D1 ≔ a → b → c → d → e → a b c (d e)
+D₁ ≔ a → b → c → d → e → a b c (d e)
 
 # Dovekies combinator
-D2 ≔ a → b → c → d → e → a (b c) (d e)
+D₂ ≔ a → b → c → d → e → a (b c) (d e)
 
 # Eagle combinator
 E ≔ a → b → c → d → e → a b (c d e)
 
 # Bald Eagle combinator
-E1 ≔ a → b → c → d → e → f → g → a (b c d) (e f g)
+E₁ ≔ a → b → c → d → e → f → g → a (b c d) (e f g)
 
 # Finch combinator
 F ≔ a → b → c → c b a
@@ -53,7 +53,7 @@ L ≔ a → b → a (b b)
 M ≔ f → f f
 
 # Double Mockingbird combinator
-M2 ≔ a → b → a b (a b)
+M₁ ≔ a → b → a b (a b)
 
 # Owl combinator
 O ≔ a → b → b (a b)
@@ -62,16 +62,16 @@ O ≔ a → b → b (a b)
 Q ≔ a → b → c → b (a c)
 
 # Quixotic Bird combinator
-Q1 ≔ a → b → c → a (c b)
+Q₁ ≔ a → b → c → a (c b)
 
 # Quizzical Bird combinator
-Q2 ≔ a → b → c → b (c a)
+Q₂ ≔ a → b → c → b (c a)
 
 # Quirky Bird combinator
-Q3 ≔ a → b → c → c (a b)
+Q₃ ≔ a → b → c → c (a b)
 
 # Quacky Bird combinator
-Q4 ≔ a → b → c → c (b a)
+Q₄ ≔ a → b → c → c (b a)
 
 # Robin combinator
 R ≔ a → b → c → b c a
@@ -92,7 +92,7 @@ V ≔ a → b → c → c a b
 W ≔ a → b → a b b
 
 # Converse Warbler combinator
-W1 ≔ a → b → b a a
+W₁ ≔ a → b → b a a
 
 # Why Bird / Sage Bird / Y combinator
 Y ≔ f → (x → f (x x)) (x → f (x x))

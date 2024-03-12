@@ -1,14 +1,8 @@
 module IO extends Monad
 
-type IO<'a> ≔
-  | Pending
-  | Running
-  | Complete<'a>
+type IO<'a>
 
-from ≔ Complete
+from ≔ IO
 
-chain ≔ io → callback →
-  match io
-  | Complete (value) ⇒ callback value
-  | Running ⇒ todo!
-  | Pending ⇒ todo!
+(>>=) ≔ io → callback →
+	with io (value) ⇒ callback value

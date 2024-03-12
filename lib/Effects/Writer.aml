@@ -6,11 +6,11 @@ type Writer<'a> ≔ { value: 'a, logs: List<String> }
 
 from ≔ value → { value, logs: [] }
 
-chain ≔ writer → callback →
-  next ≔ callback writer.value
-  { value: next.value, logs: writer.logs ++ next.logs }
+(>>=) ≔ writer → callback →
+	next ≔ callback writer.value
+	{ value: next.value, logs: writer.logs ++ next.logs }
 
 # Write a log to the Writer, without modifying the value
-write : Writer<'a> → String → Writer<'a>
+write ∷ Writer<'a> → String → Writer<'a>
 write ≔ writer → log →
-  { value: writer.value, logs: writer.logs ++ (log :: []) }
+	{ value: writer.value, logs: writer.logs ++ (log :: []) }

@@ -4,8 +4,8 @@ List ≔ use "Collections/Sequences/List"
 type UnicodeCharacter ≔ Array<u8>
 type String ≔ Array<UnicodeCharacter>
 
-char-at : String → Int → Maybe<UnicodeCharacter>
-char-at ≔ Array.element-at
+(@) ∷ String → Int → Maybe<UnicodeCharacter>
+(@) ≔ Array.(@)
 
-length : String → Int
+length ∷ String → Int
 length ≔ Array.length string

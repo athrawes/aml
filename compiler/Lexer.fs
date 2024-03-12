@@ -21,10 +21,8 @@ type Token =
     // Operators
     | Arm // => (arm separator)
     | Binding // =
-    | Decorator // @
     | FieldSeparator // ,
     | Function // ->
-    | MacroDecorator // @@
     | Pipe // |
     | Splat // ...
     | StructMemberAccessor // .
@@ -74,6 +72,11 @@ let rec readToken lexer : Lexer * Token * TokenPosition =
             else
                 let newLexer = advance lexer 1
                 readToken newLexer
+        | '\r' ->
+            if peek lexer 1 = Some '\n' then
+                emit EOL 2
+            else
+                emit EOL 1
         | '\n' ->
             if currentIndent > 0
             then
@@ -97,10 +100,10 @@ let rec readToken lexer : Lexer * Token * TokenPosition =
         | ']' -> emit TupleClose 1
         | '<' -> emit GenericOpen 1
         | '>' -> emit GenericClose 1
-        | '=' when peek lexer 1 = Some '>' -> emit Arm 2
-        | '=' -> emit Binding 1
-        | '-' when peek lexer 1 = Some '>' -> emit Function 2
-        | ':' -> emit TypeBinding 1
+        | '⇒' -> emit Arm 1
+        | '≔' -> emit Binding 1
+        | '→' -> emit Function 1
+        | '∷' -> emit TypeBinding 1
         | '"' ->
             let (str, position) = readString lexer
             let next = advance lexer (position.finish.column - lexer.position.column + 1)

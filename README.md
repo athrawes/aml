@@ -24,7 +24,7 @@ Let bindings are expressions that evaluate to the value they are assigned to
 
 ```aml
 a ≔ 5
-▷ to-string # "5"; also, `a` is bound to an integer 5
+▷ to_string # "5"; also, `a` is bound to an integer 5
 ```
 
 #### Type declaration `:`
@@ -32,20 +32,20 @@ a ≔ 5
 When binding variables, a type declaration may be provided
 
 ```aml
-a : Integer ≔ 5
+a ∷ Integer ≔ 5
 ```
 
 To mark a type parameter, simply prepend with a `'` character:
 
 ```aml
-my-function : 'a → String
+my_function ∷ 'a → String
 ```
 
 #### Type Bounds
 
 ```aml
-my-function : Ordered 'a, Functor 'a, Map 'b ⇒ 'a → 'b → 'c
-my-function ≔ a → b → c
+my_function ∷ Ordered 'a, Functor 'a, Map 'b ⇒ 'a → 'b → 'c
+my_function ≔ a → b → c
 ```
 
 #### Cases `|`
@@ -69,11 +69,11 @@ Functions are 1st class citizens, and can be bound to variables and passed
 around like any other value
 
 ```aml
-return-42 ≔ _ → 42
-forty-two ≔ compose return-42 to-string
-forty-two _ # forty-two is "42"
+return_42 ≔ _ → 42
+forty_two ≔ compose return_42 to_string
+forty_two _ # forty_two is "42"
 
-operationThatCanFail : ℤ → ℤ → Maybe<Float>
+operationThatCanFail ∷ ℤ → ℤ → Maybe<Float>
 operationThatCanFail ≔ a → b → a / b
 ```
 
@@ -83,11 +83,11 @@ To define an infix function, (ie, a function whose argument may be placed in
 front of the function call), place the name of the function in parenthesis:
 
 ```aml
-(%) : ℤ → ℤ → Maybe<ℤ>
+(%) ∷ ℤ → ℤ → Maybe<ℤ>
 (%) ≔ a → b → (a / b)
-  >>= to-integer
-  >>= (multiply b)
-  >>= (subtract a)
+	>>= to_integer
+	>>= (multiply b)
+	>>= (subtract a)
 
 6 % 3 # returns (Some 0)
 ```
@@ -103,23 +103,23 @@ As always, AML can automatically fill in the types
 To call a function, simply specify an argument after the function name:
 
 ```aml
-# add-1 will add 1 to any integer
-add-1 : ℤ → ℤ
+# add_1 will add 1 to any integer
+add_1 ∷ ℤ → ℤ
 
-add-1 1
-# => 2
+add_1 1
+# 2
 
-add-1 2
-# => 3
+add_1 2
+# 3
 ```
 
 For infix functions, specify the arguments both before and after the function:
 
 ```aml
-(%) : ℤ → ℤ → Maybe<ℤ>
+(%) ∷ ℤ → ℤ → Maybe<ℤ>
 
 6 % 3
-# => (Some 0)
+# (Some 0)
 ```
 
 ### Scopes and expressions `( )`
@@ -128,10 +128,10 @@ AML is an expression-based language.
 This applies to function definitions as well:
 
 ```aml
-call-and-add-two ≔ callback → 2 + (callback 1)
+call_and_add_two ≔ callback → 2 + (callback 1)
 
-add-one ≔ add 1 # Number → Number
-▷ call-and-add-two # 4; add-one is passed to call-and-add-two
+add_one ≔ add 1 # Number → Number
+▷ call_and_add_two # 4; add_one is passed to call_and_add_two
 ```
 
 Note the lack of indentation in this example; this indicates to AML that we
@@ -139,21 +139,21 @@ want to evaluate the second line as continuing at the same level as the first.
 This is equivalent to:
 
 ```aml
-call-and-add-two ≔ callback → 2 + (callback 1)
+call_and_add_two ≔ callback → 2 + (callback 1)
 
-(add-one ≔ add 1) ▷ call-and-add-two # 4
+(add_one ≔ add 1) ▷ call_and_add_two # 4
 ```
 
 To indicate that subsequent lines should be considered as part of the scope of
 the function definition, simply indent the subsequent lines:
 
 ```aml
-add-two : ℤ → ℤ
-add-two ≔ arg →
-  one ≔ 1
-  two ≔ add one one
+add_two ∷ ℤ → ℤ
+add_two ≔ arg →
+	one ≔ 1
+	two ≔ add one one
 
-  two + arg
+	two + arg
 ```
 
 #### Grouping expressions `( )`
@@ -228,13 +228,13 @@ The entire construct evaluates as an expression with the type of the branches.
 
 ```aml
 myNumber =
-  if true
-  then 1 + 1
-  else 2 + 2
-# => myNumber is 2
+	if true
+	then 1 + 1
+	else 2 + 2
+# myNumber is 2
 ```
 
-### Pattern matching: `match`, `|`, `=>`, `with`, `,`
+### Pattern matching: `match`, `|`, `⇒`, `with`, `,`
 
 If a given pattern has only one variant (e.g., the `Identity` monad which only
 has the value in the monad), then a `with` destructuring may be easier to use.
@@ -274,24 +274,24 @@ Importing everything from a module
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
 
-List.from (1, 2, 3) ▷ List.to-sequence ▷ map (el → el * 2)
+List.from (1, 2, 3) ▷ List.to_sequence ▷ map (el → el * 2)
 ```
 
 Importing multiple items from a module
 Note: multi-item imports may span multiple lines
 
 ```aml
-{ to-upper, to-lower } ≔ use "String"
+{ to_upper, to_lower } ≔ use "String"
 
-"Hello, World!" ▷ to-upper # "HELLO, WORLD!"
-"Hello, World!" ▷ to-lower # "hello, world!"
+"Hello, World!" ▷ to_upper # "HELLO, WORLD!"
+"Hello, World!" ▷ to_lower # "hello, world!"
 ```
 
 Aliasing imports
 
 ```aml
-{ map as list-map } ≔ use "Collections/List"
-{ map as seq-map } ≔ use "Collections/Sequence"
+{ map as list_map } ≔ use "Collections/List"
+{ map as seq_map } ≔ use "Collections/Sequence"
 ```
 
 #### Declaring a module
@@ -344,16 +344,16 @@ an Effect, AKA Monad. This makes creating IO pipelines a breeze:
 
 ```aml
 prompt =
-  IO.stdin "please input an integer: "
-  ▷ map String.to-integer
-  ▷ then
-    match
-    | Ok (value) =>
-      match value
-      | n when (n % 2 is 0) ⇒ IO.stdout "Number is even\n"
-      | n ⇒ IO.stdout "Number is odd\n"
-    | _ =>
-      IO.stderr "Invalid input, please try again.\n"
+	IO.stdin "please input an integer: "
+	▷ map String.to_integer
+	▷ then
+		match
+		| Ok (value) ⇒
+			match value
+			| n when (n % 2 is 0) ⇒ IO.stdout "Number is even\n"
+			| n ⇒ IO.stdout "Number is odd\n"
+		| _ ⇒
+			IO.stderr "Invalid input, please try again.\n"
 
 # IO has not actually occurred at this point, we've just created the
 # computations to do so.
@@ -380,7 +380,7 @@ Some examples:
 1. Grouped expressions
 
     ```aml
-    => (1 + 2) * (3 + 4)
+    ⇒ (1 + 2) * (3 + 4)
     #  ------- | -------
     #        3 *       7
     #        -----------
@@ -390,8 +390,8 @@ Some examples:
 2. Grouping by line
 
     ```aml
-    => 1 +
-    => 3 / 4
+    ⇒ 1 +
+    ⇒ 3 / 4
     #  -----
     #  (1 +) (3 / 4)
     #  ----- -------
@@ -403,7 +403,7 @@ Some examples:
 3. Infix functions
 
    ```aml
-   => pair 1  5 * 6
+   ⇒ pair 1  5 * 6
    #  --------------
    #  pair 1 (5 * 6)
    #     | | -------
@@ -415,7 +415,7 @@ Some examples:
 4. Left to right evaluation
 
     ```aml
-    => 2 + 4 * 3
+    ⇒ 2 + 4 * 3
     #  ----- | |
     #      6 * 3
     #      -----
@@ -423,7 +423,7 @@ Some examples:
     ```
 
     ```aml
-    => 2.0 ▷ divide   4.0
+    ⇒ 2.0 ▷ divide   4.0
     #  ------------------
     #  (2.0 ▷ divide) 4.0
     #  ---------------  |
@@ -437,9 +437,9 @@ Some examples:
 5. Greedy evaluation
 
     ```aml
-    do-things ≔ f → a → b → c → (f (f (f a 1) b) c)
+    do_things ≔ f → a → b → c → (f (f (f a 1) b) c)
 
-    => do-things multiply 1 2 3
+    ⇒ do_things multiply 1 2 3
     #  ------------------------
     #  f          → a → b → c → (f (f (f a 1) b) c)
     #  multiply    1    2    3
@@ -460,9 +460,9 @@ descriptor in camelCase. For example, `'a` or `'myParameter`
 
 Type names should be in PascalCase.
 
-Variable and function names should be in kebab-case.
+Variable and function names should be in snake_case.
 
 ### Naming
 
 Functions which return a `Boolean` value should end in a question mark for
-readability, e.g. `is-int?`, `is-string?`, and so on.
+readability, e.g. `is_int?`, `is_string?`, and so on.

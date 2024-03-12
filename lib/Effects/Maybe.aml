@@ -1,12 +1,12 @@
 module Maybe extends Monad
 
 type Maybe<'a> ≔
-  | Some<'a>
-  | None
+	| Some<'a>
+	| None
 
 from ≔ Some
 
-chain ≔ maybe → callback →
-  match maybe
-  | Some (value) ⇒ callback value
-  | None ⇒ None
+(>>=) ≔ maybe → callback →
+	match maybe
+	| Some (value) ⇒ callback value
+	| None ⇒ None

@@ -1,31 +1,31 @@
 type UnsignedInteger ≔
-  | u8 of INTRINSIC_UNSIGNED_8BIT
-  | u16 of INTRINSIC_UNSIGNED_16BIT
-  | u32 of INTRINSIC_UNSIGNED_32BIT
-  | u64 of INTRINSIC_UNSIGNED_64BIT
-  | u128 of INTRINSIC_UNSIGNED_128BIT
-  | usize of INTRINSIC_UNSIGNED_POINTER
+	| u8 of INTRINSIC_UNSIGNED_8BIT
+	| u16 of INTRINSIC_UNSIGNED_16BIT
+	| u32 of INTRINSIC_UNSIGNED_32BIT
+	| u64 of INTRINSIC_UNSIGNED_64BIT
+	| u128 of INTRINSIC_UNSIGNED_128BIT
+	| usize of INTRINSIC_UNSIGNED_POINTER
 
 type SignedInteger ≔
-  | i8 of INTRINSIC_SIGNED_8BIT
-  | i16 of INTRINSIC_SIGNED_16BIT
-  | i32 of INTRINSIC_SIGNED_32BIT
-  | i64 of INTRINSIC_SIGNED_64BIT
-  | i128 of INTRINSIC_SIGNED_128BIT
-  | isize of INTRINSIC_SIGNED_POINTER
+	| i8 of INTRINSIC_SIGNED_8BIT
+	| i16 of INTRINSIC_SIGNED_16BIT
+	| i32 of INTRINSIC_SIGNED_32BIT
+	| i64 of INTRINSIC_SIGNED_64BIT
+	| i128 of INTRINSIC_SIGNED_128BIT
+	| isize of INTRINSIC_SIGNED_POINTER
 
 # A natural number is a non-negative integer.
 type ℕ ≔ UnsignedInteger
 
 type ℤ ≔ Integer
 type Integer ≔
-  | UnsignedInteger
-  | SignedInteger
+	| UnsignedInteger
+	| SignedInteger
 
 # IEEE 754 floating point numbers.
 type Float ≔
-  | f32 of INTRINSIC_FLOAT_32BIT
-  | f64 of INTRINSIC_FLOAT_64BIT
+	| f32 of INTRINSIC_FLOAT_32BIT
+	| f64 of INTRINSIC_FLOAT_64BIT
 
 # A rational number is a number that can be expressed as the quotient or
 # fraction p/q of two integers, a numerator p and a non-zero denominator q.
@@ -43,9 +43,9 @@ type ℚ ≔ Rational
 # using the `Float` type.
 type ℝ ≔ Real
 type Real ≔
-  | Integer
-  | Rational
-  | Float
+	| Integer
+	| Rational
+	| Float
 
 # A complex number is a number that can be expressed in the form a + bⅈ, where a
 # is the real part and b is the imaginary part of the complex number. In AML,

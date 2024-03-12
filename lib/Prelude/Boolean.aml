@@ -1,36 +1,36 @@
 module Boolean extends Setoid
 
 type 𝔹 extends Setoid ≔
-  | True of true
-  | False of false
+	| True of true
+	| False of false
 
 type Boolean ≔ 𝔹
 
 true ≔  a → _ → a
 false ≔ _ → b → b
 
-(=) : 𝔹 → 𝔹 → 𝔹
+(=) ∷ 𝔹 → 𝔹 → 𝔹
 (=) ≔ a → b → a b (¬ b)
 
-(∧) : 𝔹 → 𝔹 → 𝔹
+(∧) ∷ 𝔹 → 𝔹 → 𝔹
 (∧) ≔ a → b → a b a
 (and) ≔ ∧
 
-(∨) : 𝔹 → 𝔹 → 𝔹
+(∨) ∷ 𝔹 → 𝔹 → 𝔹
 (∨) ≔ a → b → a a b
 (or) ≔ ∨
 
-(⊻) : 𝔹 → 𝔹 → 𝔹
-(⊻) ≔ ¬ ∘∘∘ (=)
+(⊻) ∷ 𝔹 → 𝔹 → 𝔹
+(⊻) ≔ ¬ ∘∘> (=)
 (⊕) ≔ ⊻
 (xor) ≔ ⊻
 
-¬ : 𝔹 → 𝔹
-¬ ≔ condition → flip condition
+¬ ∷ 𝔹 → 𝔹
+¬ ≔ condition → ⇋ condition
 not ≔ ¬
 
-(⊼) ≔ not ∘∘∘ and
+(⊼) ≔ not ∘∘> and
 (nand) ≔ ⊼
 
-(⊽) ≔ not ∘∘∘ or
+(⊽) ≔ not ∘∘> or
 (nor) ≔ ⊽
