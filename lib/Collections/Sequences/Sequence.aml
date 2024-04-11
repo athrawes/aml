@@ -1,7 +1,11 @@
-{ 𝔹, false, or, ¬ } ≔ use "Prelude/Boolean"
+{ 𝔹, false, ∨, ¬ } ≔ use "Prelude/Boolean"
 
-module Sequence extends Monoid Monad Traversable
-	type Sequence<'a>
+type Sequence<'a> extends
+	Foldable<'a>,
+	Filterable<'a>,
+	Monoid<'a>,
+	Monad<'a>,
+	Traversable<'a>,
 
 # Returns true if all elements in the sequence satisfy the given predicate
 # function. Returns false otherwise.
@@ -27,7 +31,7 @@ module Sequence extends Monoid Monad Traversable
 # # false
 # ```
 ∀ ∷ Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 𝔹
-∀ ≔ seq → predicate → ¬ (∃ seq (¬ ∘> predicate)))
+∀ ≔ seq → predicate → ¬ (∃ seq (¬ ∘> predicate))
 
 # Returns true if there exists any element in the sequence satisfies the given
 # predicate function. Returns false otherwise.
@@ -53,7 +57,43 @@ module Sequence extends Monoid Monad Traversable
 # # false
 # ```
 ∃ ∷ Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 𝔹
-∃ ≔ seq → predicate → reduce seq (or ∘> predicate) false
+∃ ≔ seq → predicate → reduce seq (∨ ∘> predicate) false
+
+# Returns true if there exists exactly one element in the sequence that
+# satisfies the given predicate function. Returns false otherwise.
+#
+# @template 't
+#   The type of the elements in the sequence.
+# @template {Sequence} 'm
+#   The type of the sequence.
+#
+# @param {'m<'t>} seq
+#   The sequence to check.
+# @param {('t → 𝔹)} predicate
+#   The predicate function to check against.
+#
+# @returns {𝔹}
+#   True if exactly one element in the sequence satisfies the given
+#   predicate.
+#
+# ```aml
+# ∃! [1, 2, 3] (x → x = 2)
+# # true
+#
+# ∃! [1, 2, 3] (x → x = 4)
+# # false
+#
+# ∃! [1, 2, 3] (x → x < 3)
+# # false
+# ```
+∃! ∷ Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 𝔹
+∃! ≔ seq → predicate →
+	case seq
+	| [] ⇒ false
+	| x :: xs ⇒
+		case (predicate x)
+		| true ⇒ ¬ (∃ xs predicate)
+		| false ⇒ ∃! xs predicate
 
 # Returns true if none of the elements in the sequence satisfy the given
 # predicate function. Returns false otherwise.
@@ -80,8 +120,38 @@ module Sequence extends Monoid Monad Traversable
 # ```
 (∄) ≔ ¬ ∘∘> ∃
 
+# Applies a sequence of functions to a sequence of values, returning a new
+# sequence with the results.
+#
+# @template 'a
+#   The type of the items in the values sequence; also, the input type of
+#   the functions in the functions sequence.
+# @template 'b
+#   The type of the items in the output sequence; also, the output type of
+#   the functions in the functions sequence.
+# @template {Sequence} 'm
+#   The type of the sequence.
+#
+# @param {'m<('a → 'b)>} fs
+#   The sequence of functions to apply.
+# @param {'m<'a>} xs
+#   The sequence of values to apply the functions to.
+#
+# @returns {'m<'b>}
+#   A new sequence with the results of applying the functions to the values.
+#
+# ```aml
+# [(+ 1), (* 10)] <*> [1, 2]
+# # [2, 3, 10, 20]
+# ```
+(<*>) ∷ Sequence 'm ⇒ 'm<('a → 'b)> → 'm<'a> → 'm<'b>
+(<*>) ≔ fs → xs →
+	case xs
+	| [] ⇒ []
+	| x :: xs' ⇒ (fs <$> (▷ x)) ++ (fs <*> xs')
+
 # @inheritdoc
-(>>=) ≔ flatten ∘∘> <$>
+(>>=) ≔ <$> <∘∘ ↓
 
 # Determines if the given element is in the sequence. The elements of the
 # sequence must be comparable using the `=` operator.
@@ -178,9 +248,9 @@ module Sequence extends Monoid Monad Traversable
 # ```
 drop ∷ Sequence 'm ⇒ 'm<'t> → ℕ → 'm<'t>
 drop ≔ seq → count →
-	if count < 1
-	then seq
-	else drop (count - 1) (tail seq)
+	case (count < 1)
+	| true ⇒ seq
+	| false ⇒ drop (count - 1) (tail seq)
 
 # Drops elements from the sequence until the predicate function returns false.
 # Returns a new sequence with the remaining elements. If the predicate function
@@ -205,12 +275,12 @@ drop ≔ seq → count →
 # ```
 drop_while ∷ Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 'm<'t>
 drop_while ≔ seq → predicate →
-	match head seq
+	case head seq
 	| None ⇒ seq
 	| Some x ⇒
-		if predicate x
-		then drop_while (tail seq) predicate
-		else seq
+		case (predicate x)
+		| true ⇒ drop_while (tail seq) predicate
+		| false ⇒ seq
 
 # Attempts to return the element at the given index in the sequence. If the
 # index is out of bounds, `None` is returned.
@@ -237,15 +307,15 @@ drop_while ≔ seq → predicate →
 # ```
 (@) ∷ Sequence 'm ⇒ 'm<'t> → ℤ → Maybe<'t>
 (@) ≔ seq → index →
-	if index < 0
-	then None
-	else
-		match head seq
+	case (index < 0)
+	| true ⇒ None
+	| false ⇒
+		case head seq
 		| None ⇒ None
 		| Some x ⇒
-			if index = 0
-			then Some x
-			else (tail seq) @ (index - 1)
+			case (index = 0)
+			| true ⇒ Some x
+			| false ⇒ (tail seq) @ (index - 1)
 
 # Returns a new sequence which contains all the elements of the first sequence
 # which match the given predicate function.
@@ -270,14 +340,14 @@ drop_while ≔ seq → predicate →
 filter ∷ Sequence 'm ⇒ 'm<'t> → ('t → 𝔹) → 'm<'t>
 filter ≔ seq → predicate →
 	filter_helper ≔ seq' → predicate' → acc →
-		match head seq'
+		case head seq'
 		| None ⇒ reverse acc
 		| Some x ⇒
-			if predicate' x
-			then filter_helper (tail seq') predicate' (x :: acc)
-			else filter_helper (tail seq') predicate' acc
+			case (predicate' x)
+			| true ⇒ filter_helper (tail seq') predicate' (x :: acc)
+			| false ⇒ filter_helper (tail seq') predicate' acc
 
-	filter_helper seq predicate empty
+	filter_helper seq predicate []
 
 # Takes a sequence of sequences and returns a new sequence with all of the
 # elements in the sub-sequences concatenated together.
@@ -294,14 +364,39 @@ filter ≔ seq → predicate →
 #   A new sequence with all the elements of the sub-sequences concatenated
 #
 # ```aml
-# flatten [[1, 2], [3, 4]]
+# ↓ [[1, 2], [3, 4]]
 # # [1, 2, 3, 4]
 # ```
-flatten ∷ Sequence 'm ⇒ 'm<'m<'t>> → 'm<'t>
-flatten ≔ seq →
-	match head seq with
-	| Some x ⇒ concat x (flatten (tail seq))
-	| None ⇒ seq
+↓ ∷ Sequence 'm ⇒ 'm<'m<'t>> → 'm<'t>
+↓ ≔ seq → fold seq (++)
+
+# Folds a sequence into a single value by applying a function pairwise to
+# all elements in the sequence.
+#
+# @template 't
+#   The type of the elements in the sequence.
+# @template {Sequence} 'm
+#   The type of the sequence.
+#
+# @param {'m<'t>} seq
+#   The sequence to fold.
+#
+# @param {('t → 't → 't)} callback
+#   The function to apply to each pair of elements in the sequence.
+#
+# @returns {'t}
+#   The final value of the fold.
+#
+# ```aml
+# fold [1, 2, 3] (+)
+# # 6
+# ```
+fold ∷ Sequence 'm, Plus 't ⇒ 'm<'t> → ('t → 't → 't) → 't
+fold ≔ seq → callback →
+	case seq
+	| [ ] ⇒ 𝟘
+	| [x] ⇒ x
+	| x :: xs ⇒ reduce xs callback x
 
 # Returns the first element in the sequence, if it exists.
 #
@@ -500,7 +595,7 @@ length ≔ seq → reduce seq ((+ 1) ∘∘> const) 0
 # ```
 reduce ∷ Sequence 'm ⇒ 'm<'t> → ('a → 't → 'a) → 'a → 'a
 reduce ≔ seq → callback → initial →
-	match head seq
+	case head seq
 	| Some x ⇒ reduce (tail seq) callback (callback initial x)
 	| None ⇒ initial
 
@@ -523,12 +618,11 @@ reduce ≔ seq → callback → initial →
 # ```
 reverse ∷ Sequence 'm ⇒ 'm<'t> → 'm<'t>
 reverse ≔ seq →
-	reverse_helper ≔ seq' → acc →
-		match head seq'
+	(seq' → acc →
+		case head seq'
 		| Some x ⇒ reverse_helper (tail seq') (x :: acc)
 		| None ⇒ acc
-
-	reverse_helper seq []
+	) seq []
 
 # Sums the elements of the sequence.
 #

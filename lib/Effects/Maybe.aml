@@ -1,12 +1,10 @@
-module Maybe extends Monad
-
-type Maybe<'a> ≔
+type Maybe<'a> extends Monad<'a> ≔
 	| Some<'a>
 	| None
 
-from ≔ Some
+↑ ≔ Some
 
 (>>=) ≔ maybe → callback →
-	match maybe
+	case maybe
 	| Some (value) ⇒ callback value
 	| None ⇒ None

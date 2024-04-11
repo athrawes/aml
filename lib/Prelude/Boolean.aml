@@ -1,16 +1,15 @@
-module Boolean extends Setoid
-
 type 𝔹 extends Setoid ≔
 	| True of true
 	| False of false
-
-type Boolean ≔ 𝔹
 
 true ≔  a → _ → a
 false ≔ _ → b → b
 
 (=) ∷ 𝔹 → 𝔹 → 𝔹
 (=) ≔ a → b → a b (¬ b)
+
+(≠) ∷ 𝔹 → 𝔹 → 𝔹
+(≠) ≔ ¬ ∘∘> =
 
 (∧) ∷ 𝔹 → 𝔹 → 𝔹
 (∧) ≔ a → b → a b a

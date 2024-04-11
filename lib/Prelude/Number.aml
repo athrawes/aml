@@ -4,7 +4,9 @@ type UnsignedInteger ≔
 	| u32 of INTRINSIC_UNSIGNED_32BIT
 	| u64 of INTRINSIC_UNSIGNED_64BIT
 	| u128 of INTRINSIC_UNSIGNED_128BIT
-	| usize of INTRINSIC_UNSIGNED_POINTER
+	| usize of INTRINSIC_UNSIGNED_DEFAULT_SIZE
+
+	𝟘 ≔ 0b0
 
 type SignedInteger ≔
 	| i8 of INTRINSIC_SIGNED_8BIT
@@ -12,7 +14,9 @@ type SignedInteger ≔
 	| i32 of INTRINSIC_SIGNED_32BIT
 	| i64 of INTRINSIC_SIGNED_64BIT
 	| i128 of INTRINSIC_SIGNED_128BIT
-	| isize of INTRINSIC_SIGNED_POINTER
+	| isize of INTRINSIC_SIGNED_DEFAULT_SIZE
+
+	𝟘 ≔ 0b0
 
 # A natural number is a non-negative integer.
 type ℕ ≔ UnsignedInteger
@@ -29,10 +33,10 @@ type Float ≔
 
 # A rational number is a number that can be expressed as the quotient or
 # fraction p/q of two integers, a numerator p and a non-zero denominator q.
-# In AML, this is represented by a pair of a real number and a natural number,
+# In AML, this is represented by a pair of an integer and a natural number,
 # where the first number is the numerator and the second number is the
-# denominator.
-type Rational ≔ Pair<ℤ, ℕ>
+# denominator. Note that the denominator cannot be 0.
+type Rational ≔ Pair<ℤ, Omit<ℕ, 𝟘>>
 type ℚ ≔ Rational
 
 # A real number is a value that represents a quantity along a continuous line.

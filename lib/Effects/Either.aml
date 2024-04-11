@@ -1,14 +1,10 @@
-Either ≔ use "Effects/Either"
-
-module Either extends Monad
-
-type Either<'left, 'right> ≔
+type Either<'left, 'right> extends Monad<'left> ≔
 	| Left 'left
 	| Right 'right
 
-from ≔ Left
+↑ ≔ Left
 
 (>>=) ≔ either → callback →
-	match either
+	case either
 	| Left (value) ⇒ callback value
-	| Right (_) ⇒ either
+	| Right _ ⇒ either

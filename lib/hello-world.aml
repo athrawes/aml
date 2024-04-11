@@ -1,12 +1,7 @@
-platform {
-	name ≔ "POSIX",
-	requires ≔ { main },
-	provides ≔ { POSIX.prelude },
-}
+{ ENTRYPOINT, IO } ≔ use "POSIX"
 
-Console ≔ use "POSIX.IO.Console"
-
-main ∷ List<String> → IO<ℤ>
+@platform "POSIX" ENTRYPOINT
+main ∷ List<String> → IO<i32>
 main ≔ _ →
-	Console.stdout "Hello, world!\n"
+	IO.stdout "Hello, world!\n"
 	<$ 0

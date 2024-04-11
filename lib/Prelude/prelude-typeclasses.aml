@@ -1,41 +1,37 @@
 type Alt<'a> extends Functor<'a>
-trait Alt extends Functor
 	alt ∷ Alt 'm ⇒ 'm<'a> → 'm<'a> → 'm<'a>
 
 type Alternative<'a> extends Applicative<'a>, Plus<'a>
-trait Alternative extends Applicative Plus
 
 type Applicative<'a> extends Apply<'a>
-trait Applicative extends Apply
-	from ∷ Applicative 'm ⇒ 'a → 'm<'a>
+	↑ ∷ Applicative 'm ⇒ 'a → 'm<'a>
 
 	(<$) ∷ Applicative 'm ⇒ 'm<'a> → 'b → 'm<'b>
-	(<$) ≔ ma → b → lift_a1 (const b) ma
+	(<$) ≔ ma → b → ma <$> (const b)
 
 	($>) ∷ Applicative 'm ⇒ 'a → 'm<'b> → 'm<'a>
 	($>) ≔ ⇋ <$
 
-	lift_a0 ∷ Applicative 'm ⇒ 'a → 'm<'a>
-	lift_a0 ≔ from
+	↑¹ ∷ Applicative 'm ⇒ ('a → 'b) → 'm<'a> → 'm<'b>
+	↑¹ ≔ callback → ma → (↑ callback) <*> ma
 
-	lift_a1 ∷ Applicative 'm ⇒ ('a → 'b) → 'm<'a> → 'm<'b>
-	lift_a1 ≔ callback → ma → (from callback) <*> ma
+	(<$>) ≔ ⇋ ↑¹
 
-	lift_a2 ∷ Applicative 'm ⇒ ('a → 'b → 'c) → 'm<'a> → 'm<'b> → 'm<'c>
-	lift_a2 ≔ callback → ma → mb → (from callback) <*> ma <*> mb
+	↑² ∷ Applicative 'm ⇒ ('a → 'b → 'c) → 'm<'a> → 'm<'b> → 'm<'c>
+	↑² ≔ callback → ma → mb → (↑ callback) <*> ma <*> mb
+
+	↑³ ∷ Applicative 'm ⇒ ('a → 'b → 'c → 'd) → 'm<'a> → 'm<'b> → 'm<'c> → 'm<'d>
+	↑³ ≔ callback → ma → mb → mc → (↑ callback) <*> ma <*> mb <*> mc
 
 type Apply<'a> extends Functor<'a>
-trait Apply extends Functor
 	(<*>) ∷ Apply 'm ⇒ 'm<('a → 'b)> → 'm<'a> → 'm<'b>
 
-	(<**>) ≔ ⇋ (<*>)
+	(<**>) ≔ ⇋ <*>
 
 type Bifunctor<'a, 'b> extends Functor<'b>
-trait Bifunctor extends Functor
 	bimap ∷ Bifunctor 'm ⇒ 'm<'a, 'c> → ('a → 'b) → ('c → 'd) → 'm<'b, 'd>
 
 type Category<'a> extends Semigroupoid<'a, 'a>
-trait Category extends Semigroupoid
 	# The identity object for a given category.
 	#
 	# This object should behave as one would expect for an identity object.
@@ -53,13 +49,12 @@ trait Category extends Semigroupoid
 	ι ∷ Category 'm ⇒ 'm<_>
 
 type Chain<'a> extends Apply<'a>
-trait Chain extends Apply
 	# Allows chaining functions which return instances of the current type.
 	#
 	# ```aml
-	# (Maybe.from 42)
+	# Some 42
 	# >>= (value → value / 2) # Maybe<Float> (21.0)
-	# >>= (value → value / 5) # Maybe<Float> (4.2)
+	# >>= (value → value / 5.0) # Maybe<Float> (4.2)
 	# ```
 	(>>=) ∷ Chain 'm ⇒ 'm<'a> → ('a → 'm<'b>) → 'm<'b>
 
@@ -68,23 +63,19 @@ trait Chain extends Apply
 	# @include >>=
 	#
 	# ```aml
-	# (value → value / 2) =<< (Maybe.from 42) # Maybe<Float> (21)
+	# (value → value / 2) =<< (Some 42) # Maybe<Float> (21)
 	# ```
 	(=<<) ≔ ⇋ (>>=)
 
 	# Composes two functions by Kleisli composition.
 	(>=>) ∷ ('a → 'm<'b>) → ('b → 'm<'c>) → ('a → 'm<'c>)
-	(>=>) ≔ a_to_mb → b_to_mc → a_to_mb ∘> ((⇋ >>=) b_to_mc)
+	(>=>) ≔ amb → bmc → amb ∘> ((⇋ >>=) bmc)
 
 	# An infix alias for `>=>`, but with the arguments reversed.
 	# @include >=>
 	(<=<) ≔ ⇋ (>=>)
 
-	flatten ∷ Chain 'm ⇒ 'm<'m<'a>> → 'm<'a>
-	flatten ≔ mma → mma >>= ɩ
-
 type ChainRec<'a> extends Chain<'a>
-trait ChainRec extends Chain
 	# the same type as the next function in the sequence. The first function in
 	# Chains together a sequence of functions, each of which returns a value of
 	# the sequence is passed the `next` and `done` callbacks, which it can use to
@@ -107,43 +98,34 @@ trait ChainRec extends Chain
 	chain_rec ∷ ChainRec 'm ⇒ (('a → 'c) → ('b → 'c) → 'a → 'm<'c>) → 'a → 'm<'b>
 
 type Contramap<'a>
-trait Contramap
 	contramap ∷ Contravariant 'm ⇒ 'm<'a> → ('b → 'a) → 'm<'b>
 
 type Comonad<'a> extends Extend<'a>
-trait Comonad extends Extend
 	extract ∷ Comonad 'm ⇒ 'm<'a> → _ → 'a
 
 type Extend<'a> extends Functor<'a>
-trait Extend extends Functor
 	extend ∷ Extend 'm ⇒ 'm<'a> → ('m<'a> → 'b) → 'm<'b>
 
 type Filterable<'a>
-trait Filterable
 	filter ∷ Filterable 'm ⇒ 'm<'a> → ('a → 𝔹) → 'm<'a>
 
 type Foldable<'a>
-trait Foldable
+	fold ∷ Foldable 'm ⇒ 'm<'a> → ('a → 'a → 'a) → 'a
 	reduce ∷ Foldable 'm ⇒ 'm<'a> → ('b → 'a → 'b) → 'b → 'b
 
 type Functor<'a>
-trait Functor
 	(<$>) ∷ Functor 'm ⇒ 'm<'a> → ('a → 'b) → 'm<'b>
 
 type Group<'a> extends Monoid<'a>
-trait Group extends Monoid
 	invert ∷ Group 'm ⇒ 'm<'a> → 'm<'a>
 
 type Monad<'a> extends Applicative<'a>, Chain<'a>
-trait Monad extends Applicative Chain
 
 type Monoid<'a> extends Semigroup<'a>
-trait Monoid extends Semigroup
 	# The empty value for a monoid.
 	∅ ∷ Monoid 'm ⇒ 'm<'a>
 
-type Ordered extends Setoid
-trait Ordered extends Setoid
+type Ordered<'a> extends Setoid<'a>
 	# Less than or equal to. Returns true if the first argument is less than or
 	# equal to the second argument.
 	(≤) ∷ Ordered 'a ⇒ 'a → 'a → 𝔹
@@ -164,21 +146,17 @@ trait Ordered extends Setoid
 	(>) ≔ ¬ ∘∘> ≤
 
 type Plus<'a> extends Alt<'a>
-trait Plus extends Alt
-	𝟘 ∷ Plus 'm ⇒ 'm<_>
+	𝟘 ∷ Plus 'm ⇒ 'm<'a>
 	(+) ∷ Plus 'm ⇒ 'm<'a> → 'm<'a> → 'm<'a>
 
 type Profunctor<'a, 'b> extends Functor<'b>
-trait Profunctor extends Functor
 	promap ∷ Profunctor 'm ⇒ 'm<'b, 'c> → ('a → 'b) → ('c → 'd) → 'm<'a, 'd>
 
 type Semigroup<'a>
-trait Semigroup
 	# Combines two values by appending them together.
 	(++) ∷ Semigroup 'm ⇒ 'm<'a> → 'm<'a> → 'm<'a>
 
 type Semigroupoid<'a, 'b>
-trait Semigroupoid
 	# A composition function which takes two objects of the same type and returns
 	# a new object which represents 'gluing' the two objects together.
 	#
@@ -190,8 +168,7 @@ trait Semigroupoid
 	(∘>) ∷ Semigroupoid 'm ⇒ 'm<'a, 'b> → 'm<'b, 'c> → 'm<'a, 'c>
 	(<∘) ≔ ⇋ (∘>)
 
-type Setoid
-trait Setoid
+type Setoid<'a>
 	# An equality function for comparing two values of the same type. Equality
 	# should behave nicely here, so that `=` is reflexive, symmetric, and
 	# transitive. So, given values `a`, `b`, and `c` of the same type:
@@ -203,7 +180,11 @@ trait Setoid
 	# - if both are false, `a = c` may be either true or false
 	(=) ∷ Setoid 'a ⇒ 'a → 'a → 𝔹
 
+	# An inequality function for comparing two values of the same type. Simply
+	# negates the result of the equality function.
+	(≠) ∷ Setoid 'a ⇒ 'a → 'a → 𝔹
+	(≠) ≔ ¬ ∘∘> =
+
 type Traversable<'a> extends Foldable<'a>, Functor<'a>
-trait Traversable extends Foldable Functor
-	traverse ∷ Traversable 't,  Applicative 'f
+	traverse ∷ Traversable 't, Applicative 'f
 		⇒ 't<'a> → 'f<_> → ('a → 'f<'b>) → 'f<'t<'b>>

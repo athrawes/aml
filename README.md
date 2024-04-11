@@ -27,7 +27,7 @@ a ≔ 5
 ▷ to_string # "5"; also, `a` is bound to an integer 5
 ```
 
-#### Type declaration `:`
+#### Type declaration `∷`, `'`
 
 When binding variables, a type declaration may be provided
 
@@ -194,7 +194,7 @@ a.b.c # 42
 
 When specified as a function parameter, ignores this parameter.
 
-When used in a destructuring operation, such as a `match` arm, ignores the
+When used in a destructuring operation, such as a `case` arm, ignores the
 destructured value.
 
 When used in a guard expression, represents the default case.
@@ -206,35 +206,7 @@ documentation comments.
 
 ### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `()`
 
-### Branching `if`, `then`, `else`
-
-In AML, boolean values are first-class functions which are capable of directly
-choosing between values. This makes `if`/`then`/`else` constructions
-unnecessary. However, explicit `if`/`then`/`else` sets may be used for
-readability.
-
-If using this pattern, all elements of the construct are mandatory. The `if`
-keyword must be followed by an expression which evaluates to a boolean value,
-and both the `then` and `else` blocks must evaluate to expressions of the same
-type.
-
-```aml
-if true
-then 1 + 1
-else 2 + 2
-```
-
-The entire construct evaluates as an expression with the type of the branches.
-
-```aml
-myNumber =
-	if true
-	then 1 + 1
-	else 2 + 2
-# myNumber is 2
-```
-
-### Pattern matching: `match`, `|`, `⇒`, `with`, `,`
+### Pattern matching: `case`, `|`, `⇒`, `with`, `,`
 
 If a given pattern has only one variant (e.g., the `Identity` monad which only
 has the value in the monad), then a `with` destructuring may be easier to use.
@@ -245,7 +217,7 @@ i ≔ Identity 42
 with i (value) ⇒ value`
 ```
 
-To be clear, this is syntactic sugar for a `match` statement that only has a
+To be clear, this is syntactic sugar for a `case` statement that only has a
 single arm:
 
 ```aml
@@ -254,7 +226,7 @@ i ≔ Identity 42
 # These two code blocks are equivalent
 # ---
 
-match i
+case i
 | Identity (value) ⇒ value * 2
 
 # ---
@@ -274,7 +246,7 @@ Importing everything from a module
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
 
-List.from (1, 2, 3) ▷ List.to_sequence ▷ map (el → el * 2)
+List.↑ (1, 2, 3) ▷ List.to_sequence ▷ map (el → el * 2)
 ```
 
 Importing multiple items from a module
@@ -347,9 +319,9 @@ prompt =
 	IO.stdin "please input an integer: "
 	▷ map String.to_integer
 	▷ then
-		match
+		case
 		| Ok (value) ⇒
-			match value
+			case value
 			| n when (n % 2 is 0) ⇒ IO.stdout "Number is even\n"
 			| n ⇒ IO.stdout "Number is odd\n"
 		| _ ⇒
@@ -380,58 +352,58 @@ Some examples:
 1. Grouped expressions
 
     ```aml
-    ⇒ (1 + 2) * (3 + 4)
-    #  ------- | -------
-    #        3 *       7
-    #        -----------
-    #                 21
+    # (1 + 2) * (3 + 4)
+    # ------- | -------
+    #       3 *       7
+    #       -----------
+    #                21
     ```
 
 2. Grouping by line
 
     ```aml
-    ⇒ 1 +
-    ⇒ 3 / 4
-    #  -----
-    #  (1 +) (3 / 4)
-    #  ----- -------
-    #  fn +1    0.75
-    #  -------------
-    #           1.75
+    # 1 +
+    # 3 / 4
+    # -----
+    # (1 +) (3 / 4)
+    # ----- -------
+    # fn +1    0.75
+    # -------------
+    #          1.75
     ```
 
 3. Infix functions
 
    ```aml
-   ⇒ pair 1  5 * 6
-   #  --------------
-   #  pair 1 (5 * 6)
-   #     | | -------
-   #  pair 1 30
-   #  ---------
-   #  Pair(1, 30)
+   # pair 1  5 * 6
+   # --------------
+   # pair 1 (5 * 6)
+   #    | | -------
+   # pair 1 30
+   # ---------
+   # Pair(1, 30)
    ```
 
 4. Left to right evaluation
 
     ```aml
-    ⇒ 2 + 4 * 3
-    #  ----- | |
-    #      6 * 3
-    #      -----
-    #         18
+    # 2 + 4 * 3
+    # ----- | |
+    #     6 * 3
+    #     -----
+    #        18
     ```
 
     ```aml
-    ⇒ 2.0 ▷ divide   4.0
-    #  ------------------
-    #  (2.0 ▷ divide) 4.0
-    #  ---------------  |
-    #  fn divide 2.0 $  |
-    #  ---------------  |
-    #  fn divide 2.0  4.0
-    #  ------------------
-    #                 0.5
+    # 2.0 ▷ divide   4.0
+    # ------------------
+    # (2.0 ▷ divide) 4.0
+    # ---------------  |
+    # fn divide 2.0 $  |
+    # ---------------  |
+    # fn divide 2.0  4.0
+    # ------------------
+    #                0.5
     ```
 
 5. Greedy evaluation
@@ -439,18 +411,18 @@ Some examples:
     ```aml
     do_things ≔ f → a → b → c → (f (f (f a 1) b) c)
 
-    ⇒ do_things multiply 1 2 3
-    #  ------------------------
-    #  f          → a → b → c → (f (f (f a 1) b) c)
-    #  multiply    1    2    3
-    #  --------------------------------------------
-    #  (multiply (multiply (multiply 1 1) 2) 3)
-    #          |         | -------------- |  |
-    #          | (multiply              1 2) |
-    #          | --------------------------- |
-    #  (multiply                           2 3)
-    #  ----------------------------------------
-    #                                         6
+    # do_things multiply 1 2 3
+    # ------------------------
+    # f          → a → b → c → (f (f (f a 1) b) c)
+    # multiply    1    2    3
+    # --------------------------------------------
+    # (multiply (multiply (multiply 1 1) 2) 3)
+    #         |         | -------------- |  |
+    #         | (multiply              1 2) |
+    #         | --------------------------- |
+    # (multiply                           2 3)
+    # ----------------------------------------
+    #                                        6
     ```
 
 ### Casing

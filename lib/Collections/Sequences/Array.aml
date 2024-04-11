@@ -1,35 +1,37 @@
-module Array extends Sequence
+{ Sequence } ≔ use "Collections/Sequences/Sequence"
 
-type Array<'a> extends Sequence<'a> ≔ {
-	address: Pointer,
+type Array<'a> extends Sequence<'a> ≔  {
+	address: Pointer<self>,
 	element_size: ℕ ≔ sizeof<'a>,
 	length: ℕ,
 }
 
 (@) ∷ Array<'a> → ℤ → Maybe<'a>
 (@) ≔ array → index →
-	if ((index ≥ 0) ∧ (index < array.length))
-	then
+	case ((index ≥ 0) ∧ (index < array.length))
+	| true ⇒
 		read_address ≔ array.address + (array.element_size * index)
 		read_length ≔ array.element_size
 		Some (INTRINSIC_MEMORY_READ read_address read_length)
-	else None
+	| false ⇒ None
 
-empty ≔ Array {
+∅ ≔ Array {
 	address ≔ Pointer 0,
 	element_size ≔ 0,
 	length ≔ 0,
 }
 
+[] ≔ ∅
+
 head ≔ array →
-	if array.length = 0
-	then None
-	else Some (INTRINSIC_MEMORY_READ array.address array.element_size)
+	case (array.length = 0)
+	| true ⇒ None
+	| false ⇒ Some (INTRINSIC_MEMORY_READ array.address array.element_size)
 
 tail ≔ array →
-	if array.length ≤ 1
-	then empty
-	else Array {
+	case (array.length ≤ 1)
+	| true ⇒ ∅
+	| false ⇒ Array {
 		address ≔ Pointer (array.address + array.element_size),
 		element_size ≔ array.element_size,
 		length ≔ array.length - 1,
@@ -37,26 +39,31 @@ tail ≔ array →
 
 read ∷ Array<'a> → ℕ → Maybe<'a>
 read ≔ array → index →
-	if ((index ≥ 0) ∧ (index < array.length))
-	then
+	case ((index ≥ 0) ∧ (index < array.length))
+	| true ⇒
 		read_address ≔ array.address + (array.element_size * index)
 		read_length ≔ array.element_size
 		Some (INTRINSIC_MEMORY_READ read_address read_length)
-	else None
+	| false ⇒ None
 
+# Prepend an element to the front of the array.
+#
+# Note that in contrast to List.::, this operation is not cheap to do and takes
+# O(n) time, as it needs to copy the contents of the old array into a new region
+# in memory.
 (::) ∷ Array<'a> → 'a → Array<'a>
 (::) ≔ array → element →
 	address ≔ INTRINSIC_ALLOCATE_MEMORY (array.element_size * (array.length + 1))
 
 	INTRINSIC_MEMORY_COPY
-		(address)
-		(address + array.element_size)
-		(array.element_size * array.length)
+		address
+		address + array.element_size
+		array.element_size * array.length
 
 	INTRINSIC_MEMORY_COPY
-		(address_of element)
-		(address)
-		(size_of element)
+		address_of element
+		address
+		size_of element
 
 	Array {
 		address ≔ address,

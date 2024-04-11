@@ -1,5 +1,12 @@
-type Function<'a, 'b> extends Semigroupoid<'a, 'b>
-(→) ∷ 'a → b → Function<'a, 'b>
+type Function<'a, 'b> extends
+	Functor<'b>,
+	Category<'a>,
+	Semigroupoid<'a, 'b>,
+
+(→) ∷ 'a → 'b → Function<'a, 'b>
+
+(<$>) ∷ Function<'a, 'b> → ('b → 'c) → Function<'a, 'c>
+(<$>) ≔ ∘>
 
 (▷) ∷ 'a → ('a → 'b) → 'b
 (▷) ≔ argument → callback → callback argument
@@ -9,9 +16,6 @@ type Function<'a, 'b> extends Semigroupoid<'a, 'b>
 
 (∘>) ∷ ('a → 'b) → ('b → 'c) → ('a → 'c)
 (∘>) ≔ ab → bc → a → bc (ab a)
-
-(<∘) ∷ ('b → 'c) → ('a → 'b) → ('a → 'c)
-(<∘) ≔ ⇋ ∘>
 
 (∘∘>) ∷ ('a → 'b) → ('c → 'd → 'a) → ('c → 'd → 'b)
 (∘∘>) ≔ (∘>) ∘> (∘>)

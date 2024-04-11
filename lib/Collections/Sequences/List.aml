@@ -2,8 +2,6 @@
 Sequence ≔ use "Collections/Sequences/Sequence"
 { None } ≔ use "Effects/Maybe"
 
-module List extends Sequence
-
 type List<'t> extends Sequence<'t> ≔
 	| NonEmpty of Pair<'t, List<'t>>
 	| Empty of None
@@ -31,7 +29,7 @@ type List<'t> extends Sequence<'t> ≔
 # ```
 (=) ∷ Setoid 't ⇒ List<'t> → List<'t> → 𝔹
 (=) ≔ a → b →
-	match a, b
+	case a, b
 	| Empty, Empty ⇒ true
 	| NonEmpty (p1), NonEmpty (p2) ⇒ p1 = p2
 	| _ ⇒ false
@@ -54,9 +52,9 @@ type List<'t> extends Sequence<'t> ≔
 # # [1, 2, 3, 4]
 # ```
 append ≔ list → item →
-	match list
-	| Empty ⇒ from item
-	| NonEmpty (pair) ⇒ Pair.from
+	case list
+	| Empty ⇒ ↑ item
+	| NonEmpty (pair) ⇒ Pair.↑
 		(fst pair)
 		(append (snd pair) item)
 
@@ -81,9 +79,9 @@ append ≔ list → item →
 # # [1, 2, 3, 4, 5, 6]
 # ```
 concat ≔ first → second →
-	match first
+	case first
 	| Empty ⇒ second
-	| NonEmpty (pair) ⇒ Pair.from
+	| NonEmpty (pair) ⇒ Pair.↑
 		(fst pair)
 		(concat (snd pair) second)
 
@@ -99,10 +97,10 @@ concat ≔ first → second →
 #   A new list with the given value as the first and only element.
 #
 # ```aml
-# from 1
+# ↑ 1
 # # [1]
 # ```
-from ≔ value → Pair.from value Empty
+↑ ≔ value → Pair.↑ value Empty
 
 # Returns the first element of a list, if it exists.
 #
@@ -124,7 +122,7 @@ from ≔ value → Pair.from value Empty
 # ```
 head ∷ List<'t> → Maybe<'t>
 head ≔ list →
-	match list
+	case list
 	| Empty ⇒ None
 	| NonEmpty (pair) ⇒ Some (fst pair)
 
@@ -149,9 +147,9 @@ head ≔ list →
 # # [2, 3, 4]
 # ```
 (<$>) ≔ list → callback →
-	match list
+	case list
 	| Empty ⇒ list
-	| NonEmpty (pair) ⇒ Pair.from
+	| NonEmpty (pair) ⇒ Pair.↑
 		(callback (fst pair))
 		((snd pair) <$> callback)
 
@@ -180,7 +178,7 @@ head ≔ list →
 # ```
 tail ∷ List<'t> → List<'t>
 tail ≔ list →
-	match list
+	case list
 	| Empty ⇒ list
 	| NonEmpty (pair) ⇒ snd pair
 
@@ -200,7 +198,7 @@ tail ≔ list →
 # # [1, 2, 3]
 # ```
 (::) ∷ 't → List<'t> → List<'t>
-(::) ≔ Pair.from
+(::) ≔ Pair.↑
 
 # Returns a new list which is in the reverse order of the input list.
 #
@@ -219,8 +217,8 @@ tail ≔ list →
 # ```
 reverse ∷ List<'t> → List<'t>
 reverse ≔ list →
-	match list
+	case list
 	| Empty ⇒ list
 	| NonEmpty (pair) ⇒ concat
 		(reverse (snd pair))
-		(from (fst pair))
+		(↑ (fst pair))

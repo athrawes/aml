@@ -1,16 +1,14 @@
-module Async extends Monad
-
 type Resolved<'a>
 type Pending<'a> of (_ → Resolved<'a>)
 
-type Async<'a> ≔
+type Async<'a> extends Monad<'a> ≔
 	| Resolved<'a>
 	| Pending<'a>
 
-from ≔ Resolved
+↑ ≔ Resolved
 
 (>>=) ∷ Async<'a> → ('a → Async<'b>) → Async<'b>
 (>>=) ≔ async → callback →
-	match async
-	| Resolved (_) ⇒ callback async
+	case async
+	| Resolved _ ⇒ callback async
 	| Pending (suspended) ⇒ Pending (_ → >>= (suspended _) callback)

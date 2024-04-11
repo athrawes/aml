@@ -1,10 +1,8 @@
 { List, [], ++, :: } ≔ use "Collections/Sequences/List"
 
-module Writer extends Monad
+type Writer<'a> extends Monad<'a> ≔ { value: 'a, logs: List<String> }
 
-type Writer<'a> ≔ { value: 'a, logs: List<String> }
-
-from ≔ value → { value, logs: [] }
+↑ ≔ value → { value, logs: [] }
 
 (>>=) ≔ writer → callback →
 	next ≔ callback writer.value

@@ -1,8 +1,6 @@
-module Identity extends Effect
+type Identity<'a> extends Monad<'a>
 
-type Identity
-
-from ≔ Identity
+↑ ≔ Identity
 
 (>>=) ≔ identity → callback →
 	with identity (value) ⇒ callback value

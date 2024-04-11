@@ -1,13 +1,11 @@
-module Continuation extends Monad
-
-type Continuation<'r, 'a> of ('a → 'r) → 'r
+type Continuation<'r, 'a> extends Monad<'a> ≔ ('a → 'r) → 'r
 
 run ∷ Continuation<'r, 'a> → ('a → 'r) → 'r
 run ≔ continuation → callback →
 	with continuation (k) ⇒ k callback
 
-from ∷ 'a → Continuation<'r, 'a>
-from ≔ value → Continuation (callback → callback value)
+↑ ∷ 'a → Continuation<'r, 'a>
+↑ ≔ value → Continuation (callback → callback value)
 
 (>>=) ∷ Continuation<'r, 'a>
 	→ ('a → Continuation<'r, 'b>)
