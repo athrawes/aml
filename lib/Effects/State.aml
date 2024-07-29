@@ -1,0 +1,18 @@
+{ Pair, fst, snd } ≔ use "Collections/Pair"
+
+type State<'t, 's> extends
+	Monad<'t>,
+	Bifunctor<'t, 's>,
+	≔
+	Pair<'t, 's>
+
+↑ ≔ t → Pair.↑ t _
+
+(>>=) ≔ state → callback →
+	fst ∘> callback
+
+(<*>) ≔ mfn → ma →
+	Pair.↑ ((fst mfn) (fst ma)) (snd mfn)
+
+bimap ≔ mts → tu → ss' →
+	Pair.↑ (fst mts ▷ tu) (snd mts ▷ ss')

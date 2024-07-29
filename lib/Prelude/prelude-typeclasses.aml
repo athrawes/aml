@@ -46,7 +46,7 @@ type Category<'a> extends Semigroupoid<'a, 'a>
 	#
 	# - `ι ∘> a` should be the same as `a`
 	# - `a ∘> ι` should be the same as `a`
-	ι ∷ Category 'm ⇒ 'm<_>
+	ι ∷ Category 'm ⇒ 'm<'a>
 
 type Chain<'a> extends Apply<'a>
 	# Allows chaining functions which return instances of the current type.
@@ -63,7 +63,8 @@ type Chain<'a> extends Apply<'a>
 	# @include >>=
 	#
 	# ```aml
-	# (value → value / 2) =<< (Some 42) # Maybe<Float> (21)
+	# (value → value / 2)
+	# =<< (Some 42) # Maybe<Float> (21)
 	# ```
 	(=<<) ≔ ⇋ (>>=)
 

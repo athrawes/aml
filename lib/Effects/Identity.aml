@@ -3,4 +3,4 @@ type Identity<'a> extends Monad<'a>
 ↑ ≔ Identity
 
 (>>=) ≔ identity → callback →
-	with identity (value) ⇒ callback value
+	case identity (value) ⇒ callback value

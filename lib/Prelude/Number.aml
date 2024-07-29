@@ -22,9 +22,18 @@ type SignedInteger ≔
 type ℕ ≔ UnsignedInteger
 
 type ℤ ≔ Integer
-type Integer ≔
+type Integer extends
+	Ordered<_>,
+	≔
 	| UnsignedInteger
 	| SignedInteger
+
+	(=) ≔ a → b → case (a, b)
+		| ('t _, 't _) ⟹ INTRINSIC_OPERATOR_EQUALS a b
+		| ('t _, 'u _) when sizeof<'t> > sizeof<'u> ⟹
+			INTRINSIC_OPERATOR_EQUALS a (b :> 't)
+		| ('t _, 'u _) ⟹
+			INTRINSIC_OPERATOR_EQUALS (a :> 'u) b
 
 # IEEE 754 floating point numbers.
 type Float ≔

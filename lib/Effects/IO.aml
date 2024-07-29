@@ -3,4 +3,4 @@ type IO<'a> extends Monad<'a>
 ↑ ≔ IO
 
 (>>=) ≔ io → callback →
-	with io (value) ⇒ callback value
+	case io (value) ⇒ callback value
