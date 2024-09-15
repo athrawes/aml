@@ -1,14 +1,17 @@
-type Continuation<'r, 'a> extends Monad<'a> ≔ ('a → 'r) → 'r
+type Continuation<'r, 'a> extends Monad<'a> := ('a -> 'r) -> 'r
 
-run ∷ Continuation<'r, 'a> → ('a → 'r) → 'r
-run ≔ continuation → callback →
-	with continuation (k) ⇒ k callback
+run :: Continuation<'r, 'a> -> ('a -> 'r) -> 'r
+run := continuation -> callback ->
+	case continuation | Continuation (k) => k callback
 
-↑ ∷ 'a → Continuation<'r, 'a>
-↑ ≔ value → Continuation (callback → callback value)
+new :: 'a -> Continuation<'r, 'a>
+new := value -> Continuation (callback -> callback value)
 
-(>>=) ∷ Continuation<'r, 'a>
-	→ ('a → Continuation<'r, 'b>)
-	→ Continuation<'r, 'b>
-(>>=) ≔ continuation → callback → Continuation
-	(continue → run continuation (value → run (callback value) continue))
+(>>=) :: Continuation<'r, 'a>
+	-> ('a -> Continuation<'r, 'b>)
+	-> Continuation<'r, 'b>
+(>>=) := continuation -> callback ->
+	Continuation (continue ->
+		nextFn := value -> run (callback value) continue
+		run continuation nextFn
+	)

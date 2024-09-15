@@ -1,18 +1,18 @@
-type Pair<'a, 'b> extends Bifunctor<'a, 'b> ≔
-	| First of true → 'a
-	| Second of false → 'b
+type Pair<'a, 'b> extends Bifunctor<'a, 'b> :=
+	| First of true -> 'a
+	| Second of false -> 'b
 
-(=) ∷ Setoid 'a, Setoid 'b ⇒ Pair<'a, 'b> → Pair<'a, 'b> → 𝔹
-(=) ≔ a → b → ((fst a) = (fst b)) ∧ ((snd a) = (snd b))
+(=) :: Comparable 'a, Comparable 'b => Pair<'a, 'b> -> Pair<'a, 'b> -> 𝔹
+(=) := a -> b -> ((fst a) = (fst b)) ∧ ((snd a) = (snd b))
 
 # Constructs a new pair from two arguments
-↑ ∷ 'a → 'b → Pair<'a, 'b>
-↑ ≔ a → b → which → which a b
+new :: 'a -> 'b -> Pair<'a, 'b>
+new := a -> b -> which -> which a b
 
 # Grabs the first item from a Pair
-fst ∷ Pair<'a, 'b> → 'a
-fst ≔ pair → pair true
+fst :: Pair<'a, 'b> -> 'a
+fst := pair -> pair true
 
 # Grabs the second item from a Pair
-snd ∷ Pair<'a, 'b> → 'b
-snd ≔ pair → pair false
+snd :: Pair<'a, 'b> -> 'b
+snd := pair -> pair false

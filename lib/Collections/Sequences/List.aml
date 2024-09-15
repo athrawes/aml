@@ -1,15 +1,15 @@
-{ Pair, fst, snd } ≔ use "Collections/Pair"
-Sequence ≔ use "Collections/Sequences/Sequence"
-{ None } ≔ use "Effects/Maybe"
+{ Pair, fst, snd } := use "Collections/Pair"
+Sequence := use "Collections/Sequences/Sequence"
+{ None } := use "Effects/Maybe"
 
-type List<'t> extends Sequence<'t> ≔
+type List<'t> extends Sequence<'t> :=
 	| NonEmpty of Pair<'t, List<'t>>
 	| Empty of None
 
 # Determines whether two lists are equal. Two lists are equal if they have the
 # same elements in the same order.
 #
-# @template {Setoid} 't
+# @template {Comparable} 't
 #   The type of the elements in the list.
 #
 # @param {List<'t>} a
@@ -27,12 +27,12 @@ type List<'t> extends Sequence<'t> ≔
 # [1, 2, 3] = [1, 2, 4]
 # # false
 # ```
-(=) ∷ Setoid 't ⇒ List<'t> → List<'t> → 𝔹
-(=) ≔ a → b →
+(=) :: Comparable 't => List<'t> -> List<'t> -> 𝔹
+(=) := a -> b ->
 	case a, b
-	| Empty, Empty ⇒ true
-	| NonEmpty (p1), NonEmpty (p2) ⇒ p1 = p2
-	| _ ⇒ false
+	| Empty, Empty => true
+	| NonEmpty (p1), NonEmpty (p2) => p1 = p2
+	| _ => false
 
 # Returns a new list which has the given item appended to the end of it.
 #
@@ -51,10 +51,10 @@ type List<'t> extends Sequence<'t> ≔
 # append [1, 2, 3] 4
 # # [1, 2, 3, 4]
 # ```
-append ≔ list → item →
+append := list -> item ->
 	case list
-	| Empty ⇒ ↑ item
-	| NonEmpty (pair) ⇒ Pair.↑
+	| Empty => new item
+	| NonEmpty (pair) => Pair.new
 		(fst pair)
 		(append (snd pair) item)
 
@@ -78,10 +78,10 @@ append ≔ list → item →
 # concat [1, 2, 3] [4, 5, 6]
 # # [1, 2, 3, 4, 5, 6]
 # ```
-concat ≔ first → second →
+concat := first -> second ->
 	case first
-	| Empty ⇒ second
-	| NonEmpty (pair) ⇒ Pair.↑
+	| Empty => second
+	| NonEmpty (pair) => Pair.new
 		(fst pair)
 		(concat (snd pair) second)
 
@@ -97,10 +97,10 @@ concat ≔ first → second →
 #   A new list with the given value as the first and only element.
 #
 # ```aml
-# ↑ 1
+# new 1
 # # [1]
 # ```
-↑ ≔ value → Pair.↑ value Empty
+new := value -> Pair.new value Empty
 
 # Returns the first element of a list, if it exists.
 #
@@ -120,11 +120,11 @@ concat ≔ first → second →
 # head []
 # # None
 # ```
-head ∷ List<'t> → Maybe<'t>
-head ≔ list →
+head :: List<'t> -> Maybe<'t>
+head := list ->
 	case list
-	| Empty ⇒ None
-	| NonEmpty (pair) ⇒ Some (fst pair)
+	| Empty => None
+	| NonEmpty (pair) => Some (fst pair)
 
 # Creates a new list from a given list and a callback to transform each element
 # in the list.
@@ -136,20 +136,20 @@ head ≔ list →
 #
 # @param {List<'t>} list
 #   The list to map over.
-# @param {'t → 'u} callback
+# @param {'t -> 'u} callback
 #   The callback to transform each element in the list.
 #
 # @returns {List<'u>}
 #   A new list with the result of applying the callback to each element in the
 #
 # ```aml
-# [1, 2, 3] <$> (x → x + 1)
+# [1, 2, 3] <$> (x -> x + 1)
 # # [2, 3, 4]
 # ```
-(<$>) ≔ list → callback →
+(<$>) := list -> callback ->
 	case list
-	| Empty ⇒ list
-	| NonEmpty (pair) ⇒ Pair.↑
+	| Empty => list
+	| NonEmpty (pair) => Pair.new
 		(callback (fst pair))
 		((snd pair) <$> callback)
 
@@ -176,11 +176,11 @@ head ≔ list →
 # tail []
 # # []
 # ```
-tail ∷ List<'t> → List<'t>
-tail ≔ list →
+tail :: List<'t> -> List<'t>
+tail := list ->
 	case list
-	| Empty ⇒ list
-	| NonEmpty (pair) ⇒ snd pair
+	| Empty => list
+	| NonEmpty (pair) => snd pair
 
 # Returns a new list with a given item prepended to it.
 #
@@ -197,8 +197,8 @@ tail ≔ list →
 # 1 :: [2, 3]
 # # [1, 2, 3]
 # ```
-(::) ∷ 't → List<'t> → List<'t>
-(::) ≔ Pair.↑
+(∷) :: 't -> List<'t> -> List<'t>
+(∷) := Pair.new
 
 # Returns a new list which is in the reverse order of the input list.
 #
@@ -215,10 +215,10 @@ tail ≔ list →
 # reverse [1, 2, 3]
 # # [3, 2, 1]
 # ```
-reverse ∷ List<'t> → List<'t>
-reverse ≔ list →
+reverse :: List<'t> -> List<'t>
+reverse := list ->
 	case list
-	| Empty ⇒ list
-	| NonEmpty (pair) ⇒ concat
+	| Empty => list
+	| NonEmpty (pair) => concat
 		(reverse (snd pair))
-		(↑ (fst pair))
+		(new (fst pair))

@@ -1,6 +1,6 @@
 type Identity<'a> extends Monad<'a>
 
-↑ ≔ Identity
+new := Identity
 
-(>>=) ≔ identity → callback →
-	case identity (value) ⇒ callback value
+(>>=) := identity -> callback ->
+	case identity | Identity (value) => callback value

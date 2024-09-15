@@ -1,14 +1,17 @@
-type Resolved<'a>
-type Pending<'a> of (_ → Resolved<'a>)
-
-type Async<'a> extends Monad<'a> ≔
+type Async<'a> :=
 	| Resolved<'a>
-	| Pending<'a>
+	| Pending<'a> of (_ -> Resolved<'a>)
 
-↑ ≔ Resolved
+new := Resolved
 
-(>>=) ∷ Async<'a> → ('a → Async<'b>) → Async<'b>
-(>>=) ≔ async → callback →
+(>>=) :: Async<'a> -> ('a -> Async<'b>) -> Async<'b>
+(>>=) := async -> callback ->
 	case async
-	| Resolved _ ⇒ callback async
-	| Pending (suspended) ⇒ Pending (_ → >>= (suspended _) callback)
+	| Resolved (value) => callback value
+	| Pending (suspended) => Pending (_ -> (suspended _) >>= callback)
+
+await :: Async<'a> -> 'a
+await := async ->
+	case async
+	| Resolved (value) => value
+	| Pending (suspended) => case (suspended _) | Resolved (value) => value

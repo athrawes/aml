@@ -1,10 +1,10 @@
-type Maybe<'a> extends Monad<'a> ≔
+type Maybe<'a> extends Monad<'a> :=
 	| Some<'a>
 	| None
 
-↑ ≔ Some
+new := Some
 
-(>>=) ≔ maybe → callback →
+(>>=) := maybe -> callback ->
 	case maybe
-	| Some (value) ⇒ callback value
-	| None ⇒ None
+	| Some (value) => callback value
+	| None => None

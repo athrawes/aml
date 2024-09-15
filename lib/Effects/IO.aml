@@ -1,6 +1,0 @@
-type IO<'a> extends Monad<'a>
-
-↑ ≔ IO
-
-(>>=) ≔ io → callback →
-	case io (value) ⇒ callback value

@@ -1,35 +1,35 @@
-type 𝔹 extends Setoid ≔
+type 𝔹 extends Comparable :=
 	| True of true
 	| False of false
 
-true ≔  a → _ → a
-false ≔ _ → b → b
+true :=  a -> _ -> a
+false := _ -> b -> b
 
-(=) ∷ 𝔹 → 𝔹 → 𝔹
-(=) ≔ a → b → a b (¬ b)
+(=) :: 𝔹 -> 𝔹 -> 𝔹
+(=) := a -> b -> a b (¬ b)
 
-(≠) ∷ 𝔹 → 𝔹 → 𝔹
-(≠) ≔ ¬ ∘∘> =
+(≠) :: 𝔹 -> 𝔹 -> 𝔹
+(≠) := ¬ ∘∘∘ =
 
-(∧) ∷ 𝔹 → 𝔹 → 𝔹
-(∧) ≔ a → b → a b a
-(and) ≔ ∧
+(∧) :: 𝔹 -> 𝔹 -> 𝔹
+(∧) := a -> b -> a b a
+(and) := ∧
 
-(∨) ∷ 𝔹 → 𝔹 → 𝔹
-(∨) ≔ a → b → a a b
-(or) ≔ ∨
+(∨) :: 𝔹 -> 𝔹 -> 𝔹
+(∨) := a -> b -> a a b
+(or) := ∨
 
-(⊻) ∷ 𝔹 → 𝔹 → 𝔹
-(⊻) ≔ ¬ ∘∘> (=)
-(⊕) ≔ ⊻
-(xor) ≔ ⊻
+(⊻) :: 𝔹 -> 𝔹 -> 𝔹
+(⊻) := ¬ ∘∘∘ (=)
+(⊕) := ⊻
+(xor) := ⊻
 
-¬ ∷ 𝔹 → 𝔹
-¬ ≔ condition → ⇋ condition
-not ≔ ¬
+¬ :: 𝔹 -> 𝔹
+¬ := condition -> ⇋ condition
+not := ¬
 
-(⊼) ≔ not ∘∘> and
-(nand) ≔ ⊼
+(⊼) := not ∘∘∘ and
+(nand) := ⊼
 
-(⊽) ≔ not ∘∘> or
-(nor) ≔ ⊽
+(⊽) := not ∘∘∘ or
+(nor) := ⊽

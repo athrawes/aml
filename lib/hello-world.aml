@@ -1,7 +1,7 @@
-{ ENTRYPOINT, IO } ≔ use "POSIX"
+{ ENTRYPOINT, IO } := use "POSIX"
 
 @platform "POSIX" ENTRYPOINT
-main ∷ List<String> → IO<i32>
-main ≔ _ →
+main :: List<String> -> IO<i32>
+main := _ ->
 	IO.stdout "Hello, world!\n"
 	<$ 0
