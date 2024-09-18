@@ -1,4 +1,4 @@
-type Identity<'a> extends Monad<'a>
+type Identity<`a> extends Monad<`a>
 
 new := Identity
 

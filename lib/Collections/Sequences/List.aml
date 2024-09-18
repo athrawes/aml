@@ -2,23 +2,12 @@
 Sequence := use "Collections/Sequences/Sequence"
 { None } := use "Effects/Maybe"
 
-type List<'t> extends Sequence<'t> :=
-	| NonEmpty of Pair<'t, List<'t>>
+type List<`t> extends Sequence<`t> :=
+	| NonEmpty of Pair<`t, List<`t>>
 	| Empty of None
 
 # Determines whether two lists are equal. Two lists are equal if they have the
 # same elements in the same order.
-#
-# @template {Comparable} 't
-#   The type of the elements in the list.
-#
-# @param {List<'t>} a
-#   The first list to compare.
-# @param {List<'t>} b
-#   The second list to compare.
-#
-# @returns {𝔹}
-#   `true` if the lists are equal, `false` otherwise.
 #
 # ```aml
 # [1, 2, 3] = [1, 2, 3]
@@ -27,7 +16,7 @@ type List<'t> extends Sequence<'t> :=
 # [1, 2, 3] = [1, 2, 4]
 # # false
 # ```
-(=) :: Comparable 't => List<'t> -> List<'t> -> 𝔹
+(=) :: Comparable `t => List<`t> -> List<`t> -> 𝔹
 (=) := a -> b ->
 	case a, b
 	| Empty, Empty => true
@@ -35,17 +24,6 @@ type List<'t> extends Sequence<'t> :=
 	| _ => false
 
 # Returns a new list which has the given item appended to the end of it.
-#
-# @template 't
-#   The type of the elements in the list.
-#
-# @param {List<'t>} list
-#   The list to which the item should be appended.
-# @param {'t} item
-#   The item to append to the list.
-#
-# @returns {List<'t>}
-#   A new list which is the result of appending the item to the end of the input
 #
 # ```aml
 # append [1, 2, 3] 4
@@ -63,17 +41,6 @@ append := list -> item ->
 # provided come first in the list, and the elements from the second list
 # provided come later.
 #
-# @template 't
-#   The type of the elements in the list.
-#
-# @param {List<'t>} first
-#   The first list to concatenate.
-# @param {List<'t>} second
-#   The second list to concatenate.
-#
-# @returns {List<'t>}
-#   A new list which is the result of concatenating the two lists together.
-#
 # ```aml
 # concat [1, 2, 3] [4, 5, 6]
 # # [1, 2, 3, 4, 5, 6]
@@ -87,15 +54,6 @@ concat := first -> second ->
 
 # Returns a new list with the given item as the first and only element.
 #
-# @template 't
-#   The type of the elements in the list.
-#
-# @param {'t} value
-#   The value to put in the list.
-#
-# @returns {List<'t>}
-#   A new list with the given value as the first and only element.
-#
 # ```aml
 # new 1
 # # [1]
@@ -104,15 +62,6 @@ new := value -> Pair.new value Empty
 
 # Returns the first element of a list, if it exists.
 #
-# @template 't
-#   The type of the elements in the list.
-#
-# @param {List<'t>} list
-#   The list from which to get the first element.
-#
-# @returns {Maybe<'t>}
-#   `Some` with the first element of the list if it exists, `None` otherwise.
-#
 # ```aml
 # head [1, 2, 3]
 # # Some 1
@@ -120,7 +69,7 @@ new := value -> Pair.new value Empty
 # head []
 # # None
 # ```
-head :: List<'t> -> Maybe<'t>
+head :: List<`t> -> Maybe<`t>
 head := list ->
 	case list
 	| Empty => None
@@ -128,19 +77,6 @@ head := list ->
 
 # Creates a new list from a given list and a callback to transform each element
 # in the list.
-#
-# @template 't
-#   The type of the elements in the list.
-# @template 'u
-#   The type of the elements in the new list.
-#
-# @param {List<'t>} list
-#   The list to map over.
-# @param {'t -> 'u} callback
-#   The callback to transform each element in the list.
-#
-# @returns {List<'u>}
-#   A new list with the result of applying the callback to each element in the
 #
 # ```aml
 # [1, 2, 3] <$> (x -> x + 1)
@@ -157,15 +93,6 @@ head := list ->
 # first element. If the input list is empty or has only one element, an empty
 # list is returned.
 #
-# @template 't
-#   The type of the elements in the list.
-#
-# @param {List<'t>} list
-#   The list from which to remove the first element.
-#
-# @returns {List<'t>}
-#   A new list with all elements of the input list except for the first element.
-#
 # ```aml
 # tail [1, 2, 3]
 # # [2, 3]
@@ -176,7 +103,7 @@ head := list ->
 # tail []
 # # []
 # ```
-tail :: List<'t> -> List<'t>
+tail :: List<`t> -> List<`t>
 tail := list ->
 	case list
 	| Empty => list
@@ -184,38 +111,20 @@ tail := list ->
 
 # Returns a new list with a given item prepended to it.
 #
-# @template 't
-#   The type of the elements in the list.
-#
-# @param {'t} item
-#   The item to prepend to the list.
-#
-# @returns {List<'t>}
-#   A new list with the given item as the first element.
-#
 # ```aml
 # 1 :: [2, 3]
 # # [1, 2, 3]
 # ```
-(∷) :: 't -> List<'t> -> List<'t>
+(∷) :: `t -> List<`t> -> List<`t>
 (∷) := Pair.new
 
 # Returns a new list which is in the reverse order of the input list.
-#
-# @template 't
-#   The type of the elements in the list.
-#
-# @param {List<'t>} list
-#   The list to reverse.
-#
-# @returns {List<'t>}
-#   A new list which is the reverse of the input list.
 #
 # ```aml
 # reverse [1, 2, 3]
 # # [3, 2, 1]
 # ```
-reverse :: List<'t> -> List<'t>
+reverse :: List<`t> -> List<`t>
 reverse := list ->
 	case list
 	| Empty => list

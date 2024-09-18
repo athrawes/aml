@@ -1,12 +1,12 @@
-type Either<'left, 'right> extends Monad<'left> :=
-	| Left 'left
-	| Right 'right
+type Either<`left, `right> extends Monad<`left> :=
+	| Left `left
+	| Right `right
 
 new := Left
 
-(>>=) :: Either<'t, 'r1>
-	-> ('t -> Either<'u, 'r2>)
-	-> Either<'u, 'r1 | 'r2>
+(>>=) :: Either<`t, `r1>
+	-> (`t -> Either<`u, `r2>)
+	-> Either<`u, `r1 | `r2>
 (>>=) := either -> callback ->
 	case either
 	| Left (value) => callback value

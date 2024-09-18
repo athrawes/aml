@@ -1,5 +1,5 @@
-type Maybe<'a> extends Monad<'a> :=
-	| Some<'a>
+type Maybe<`a> extends Monad<`a> :=
+	| Some<`a>
 	| None
 
 new := Some

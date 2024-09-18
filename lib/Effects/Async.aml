@@ -1,16 +1,16 @@
-type Async<'a> :=
-	| Resolved<'a>
-	| Pending<'a> of (_ -> Resolved<'a>)
+type Async<`a> :=
+	| Resolved<`a>
+	| Pending<`a> of (_ -> Resolved<`a>)
 
 new := Resolved
 
-(>>=) :: Async<'a> -> ('a -> Async<'b>) -> Async<'b>
+(>>=) :: Async<`a> -> (`a -> Async<`b>) -> Async<`b>
 (>>=) := async -> callback ->
 	case async
 	| Resolved (value) => callback value
 	| Pending (suspended) => Pending (_ -> (suspended _) >>= callback)
 
-await :: Async<'a> -> 'a
+await :: Async<`a> -> `a
 await := async ->
 	case async
 	| Resolved (value) => value

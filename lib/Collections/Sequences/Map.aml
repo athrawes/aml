@@ -1,19 +1,10 @@
 Pair := use "Collections/Pair"
 Sequence := use "Collections/Sequences/Sequence"
 
-type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
+type Map<`k, `v> := Sequence<Pair<`k, `v>>
 
 # Returns true if all keys in the map satisfy the given predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the elements in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check the keys of
-# @param {('k -> 𝔹)} predicate
-#   The predicate function to check against
+#predicate function to check against
 #
 # ```aml
 # ∀ₖ { 'a' := 1, 'b' := 2 } (k -> k ≠ 'z')
@@ -22,20 +13,10 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∀ₖ { 'a' := 1, 'b' := 2 } (k -> k ≠ 'a')
 # # false
 # ```
-∀ₖ :: Map 'm => 'm<'k, 'v> -> ('k -> 𝔹) -> 𝔹
+∀ₖ :: Map `m => `m<`k, `v> -> (`k -> 𝔹) -> 𝔹
 ∀ₖ := map -> predicate -> ∀ map (fst ∘ predicate)
 
 # Returns true if all values in the map satisfy the given predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('v -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∀ᵥ { 'a' := 1, 'b' := 2 } (v -> v ≠ 10)
@@ -44,20 +25,10 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∀ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
 # # false
 # ```
-∀ᵥ :: Map<'k, 'v> -> ('v -> 𝔹) -> 𝔹
+∀ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
 ∀ᵥ := map -> predicate -> ∀ map (snd ∘ predicate)
 
 # Returns true if any key in the map satisfies the given predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('k -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∃ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'a')
@@ -66,21 +37,11 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∃ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'z')
 # # false
 # ```
-∃ₖ :: Map<'k, 'v> -> ('k -> 𝔹) -> 𝔹
+∃ₖ :: Map<`k, `v> -> (`k -> 𝔹) -> 𝔹
 ∃ₖ := map -> predicate -> ∃ map (fst ∘ predicate)
 
 # Returns true if exactly one value in the map satisfies the given
 # predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('k -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∃!ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'a')
@@ -92,20 +53,10 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∃!ₖ { 'a' := 1, 'b' := 2 } (k -> k ≠ 'z')
 # # false
 # ```
-∃!ₖ :: Map<'k, 'v> -> ('k -> 𝔹) -> 𝔹
+∃!ₖ :: Map<`k, `v> -> (`k -> 𝔹) -> 𝔹
 ∃!ₖ := map -> predicate -> ∃! map (fst ∘ predicate)
 
 # Returns true if any value in the map satisfies the given predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('v -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∃ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
@@ -114,21 +65,11 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∃ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 10)
 # # false
 # ```
-∃ᵥ :: Map<'k, 'v> -> ('v -> 𝔹) -> 𝔹
+∃ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
 ∃ᵥ := map -> predicate -> ∃ map (snd ∘ predicate)
 
 # Returns true if exactly one value in the map satisfies the given
 # predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('v -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∃!ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
@@ -140,20 +81,10 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∃!ᵥ { 'a' := 1, 'b' := 2 } (v -> v ≠ 10)
 # # false
 # ```
-∃!ᵥ :: Map<'k, 'v> -> ('v -> 𝔹) -> 𝔹
+∃!ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
 ∃!ᵥ := map -> predicate -> ∃! map (snd ∘ predicate)
 
 # Returns true if no key in the map satisfies the given predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('k -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∄ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'z')
@@ -162,22 +93,12 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∄ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'a')
 # # false
 # ```
-∄ₖ :: Map<'k, 'v> -> ('k -> 𝔹) -> 𝔹
+∄ₖ :: Map<`k, `v> -> (`k -> 𝔹) -> 𝔹
 ∄ₖ := map -> predicate -> (∄ map (fst ∘ predicate))
 
 # Returns true if there is not exactly one key in the map that satisfies
 # the given predicate. This can mean that there are either zero keys that
 # satisfy the predicate or more than one key that satisfies the predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('k -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∄!ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'z')
@@ -189,20 +110,10 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∄!ₖ { 'a' := 1, 'b' := 2 } (k -> k ≠ 'z')
 # # false
 # ```
-∄!ₖ :: Map<'k, 'v> -> ('k -> 𝔹) -> 𝔹
+∄!ₖ :: Map<`k, `v> -> (`k -> 𝔹) -> 𝔹
 ∄!ₖ := map -> predicate -> ∄! map (fst ∘ predicate)
 
 # Returns true if no value in the map satisfies the given predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('v -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∄ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 10)
@@ -211,22 +122,12 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∄ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
 # # false
 # ```
-∄ᵥ :: Map<'k, 'v> -> ('v -> 𝔹) -> 𝔹
+∄ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
 ∄ᵥ := map -> predicate -> ∄ map (snd ∘ predicate)
 
 # Returns true if there is not exactly one value in the map that satisfies
 # the given predicate. This can mean that there are either zero values that
 # satisfy the predicate or more than one value that satisfies the predicate.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {('v -> 𝔹)} predicate
-#   The predicate function to check against
 #
 # ```aml
 # ∄!ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 10)
@@ -238,20 +139,10 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # ∄!ᵥ { 'a' := 1, 'b' := 2 } (v -> v ≠ 10)
 # # true
 # ```
-∄!ᵥ :: Map<'k, 'v> -> ('v -> 𝔹) -> 𝔹
+∄!ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
 ∄!ᵥ := map -> predicate -> ∄! map (snd ∘ predicate)
 
 # Determines if a key is in the map.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {'k} key
-#   The key to search for
 #
 # ```aml
 # { 'a' := 1, 'b' := 2 } ∋ₖ 'a'
@@ -260,20 +151,10 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # { 'a' := 1, 'b' := 2 } ∋ₖ 'z'
 # # false
 # ```
-(∋ₖ) :: Map<'k, 'v> -> 'k -> 𝔹
+(∋ₖ) :: Map<`k, `v> -> `k -> 𝔹
 (∋ₖ) := map -> key -> ∃ map (fst ∘ (= key))
 
 # Determines if a value is in the map.
-#
-# @template 'k
-#   The type of the keys in the map
-# @template 'v
-#   The type of the values in the map
-#
-# @param {Map<'k, 'v>} map
-#   The map to check
-# @param {'v} value
-#   The value to search for
 #
 # ```aml
 # { 'a' := 1, 'b' := 2 } ∋ᵥ 1
@@ -282,5 +163,5 @@ type Map<'k, 'v> := Sequence<Pair<'k, 'v>>
 # { 'a' := 1, 'b' := 2 } ∋ᵥ 10
 # # false
 # ```
-(∋ᵥ) :: Map<'k, 'v> -> 'v -> 𝔹
+(∋ᵥ) :: Map<`k, `v> -> `v -> 𝔹
 (∋ᵥ) := map -> value -> ∃ map (snd ∘ (= value))

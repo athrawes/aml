@@ -1,19 +1,19 @@
 { Pair, fst, snd } := use "Collections/Pair"
 
-type State<'t, 's> extends Monad<'t>, Bifunctor<'t, 's> := Pair<'t, 's>
+type State<`t, `s> extends Monad<`t>, Bifunctor<`t, `s> := Pair<`t, `s>
 
-new :: 't -> State<'t, _>
+new :: `t -> State<`t, _>
 new := t -> Pair.new t _
 
-(>>=) :: State<'t, _>
-	-> ('t -> State<'u, 's>)
-	-> State<'u, 's>
+(>>=) :: State<`t, _>
+	-> (`t -> State<`u, `s>)
+	-> State<`u, `s>
 (>>=) := state -> callback ->
 	fst ∘ callback
 
-(<*>) :: State<('a -> 'b), _>
-	-> State<'a, 's>
-	-> State<'b, 's>
+(<*>) :: State<(`a -> `b), _>
+	-> State<`a, `s>
+	-> State<`b, `s>
 (<*>) := state_fn -> state_a ->
 	fn := fst state_fn
 	a  := fst state_a
@@ -21,10 +21,10 @@ new := t -> Pair.new t _
 
 	State (fn a) s
 
-bimap :: State<'t, 'state>
-	-> ('t -> 'u)
-	-> ('state -> 'updated_state)
-	-> State<'u, 'updated_state>
+bimap :: State<`t, `state>
+	-> (`t -> `u)
+	-> (`state -> `updated_state)
+	-> State<`u, `updated_state>
 bimap := state_t_s -> callback_t -> callback_update_state ->
 	t := fst state_t_s
 	u := callback_t t

@@ -1,27 +1,14 @@
 { 𝔹, false, ∨, ¬ } := use "Prelude/Boolean"
 
-type Sequence<'a> extends
-	Foldable<'a>,
-	Filterable<'a>,
-	Monoid<'a>,
-	Monad<'a>,
-	Traversable<'a>,
+type Sequence<`a> extends
+	Foldable<`a>,
+	Filterable<`a>,
+	Monoid<`a>,
+	Monad<`a>,
+	Traversable<`a>,
 
 # Returns true if all elements in the sequence satisfy the given predicate
 # function. Returns false otherwise.
-#
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to check.
-# @param {('t -> 𝔹)} predicate
-#   The predicate function to check against.
-#
-# @returns {𝔹}
-#   True if all elements in the sequence satisfy the given predicate.
 #
 # ```aml
 # ∀ [1, 2, 3] (x -> x < 4)
@@ -30,21 +17,11 @@ type Sequence<'a> extends
 # ∀ [1, 2, 3] (x -> x < 3)
 # # false
 # ```
-∀ :: Sequence 'm => 'm<'t> -> ('t -> 𝔹) -> 𝔹
+∀ :: Sequence `m => `m<`t> -> (`t -> 𝔹) -> 𝔹
 ∀ := seq -> predicate -> ¬ (∃ seq (¬ ∘ predicate))
 
 # Returns true if there exists any element in the sequence satisfies the given
 # predicate function. Returns false otherwise.
-#
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to check.
-# @param {('t -> 𝔹)} predicate
-#   The predicate function to check against.
 #
 # @returns {𝔹}
 #   True if any element in the sequence satisfies the given predicate.
@@ -56,21 +33,11 @@ type Sequence<'a> extends
 # ∃ [1, 2, 3] (x -> x = 4)
 # # false
 # ```
-∃ :: Sequence 'm => 'm<'t> -> ('t -> 𝔹) -> 𝔹
+∃ :: Sequence `m => `m<`t> -> (`t -> 𝔹) -> 𝔹
 ∃ := seq -> predicate -> reduce seq (∨ ∘ predicate) false
 
 # Returns true if there exists exactly one element in the sequence that
 # satisfies the given predicate function. Returns false otherwise.
-#
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to check.
-# @param {('t -> 𝔹)} predicate
-#   The predicate function to check against.
 #
 # @returns {𝔹}
 #   True if exactly one element in the sequence satisfies the given
@@ -86,7 +53,7 @@ type Sequence<'a> extends
 # ∃! [1, 2, 3] (x -> x < 3)
 # # false
 # ```
-∃! :: Sequence 'm => 'm<'t> -> ('t -> 𝔹) -> 𝔹
+∃! :: Sequence `m => `m<`t> -> (`t -> 𝔹) -> 𝔹
 ∃! := seq -> predicate ->
 	case seq
 	| [] => false
@@ -97,19 +64,6 @@ type Sequence<'a> extends
 
 # Returns true if none of the elements in the sequence satisfy the given
 # predicate function. Returns false otherwise.
-#
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to check.
-# @param {('t -> 𝔹)} predicate
-#   The predicate function to check against.
-#
-# @returns {𝔹}
-#   True if none of the elements in the sequence satisfy the given predicate.
 #
 # ```aml
 # [1, 2, 3] ∄ (x -> x = 2)
@@ -123,28 +77,11 @@ type Sequence<'a> extends
 # Applies a sequence of functions to a sequence of values, returning a new
 # sequence with the results.
 #
-# @template 'a
-#   The type of the items in the values sequence; also, the input type of
-#   the functions in the functions sequence.
-# @template 'b
-#   The type of the items in the output sequence; also, the output type of
-#   the functions in the functions sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<('a -> 'b)>} fs
-#   The sequence of functions to apply.
-# @param {'m<'a>} xs
-#   The sequence of values to apply the functions to.
-#
-# @returns {'m<'b>}
-#   A new sequence with the results of applying the functions to the values.
-#
 # ```aml
 # [(+ 1), (* 10)] <*> [1, 2]
 # # [2, 3, 10, 20]
 # ```
-(<*>) :: Sequence 'm => 'm<('a -> 'b)> -> 'm<'a> -> 'm<'b>
+(<*>) :: Sequence `m => `m<(`a -> `b)> -> `m<`a> -> `m<`b>
 (<*>) := fs -> xs ->
 	case xs
 	| [] => []
@@ -156,19 +93,6 @@ type Sequence<'a> extends
 # Determines if the given element is in the sequence. The elements of the
 # sequence must be comparable using the `=` operator.
 #
-# @template {Comparable} 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to check.
-# @param {'t} element
-#   The element to check for.
-#
-# @returns {𝔹}
-#   True if the element is in the sequence. False otherwise.
-#
 # ```aml
 # [1, 2, 3] ∋ 2
 # # true
@@ -176,22 +100,11 @@ type Sequence<'a> extends
 # [1, 2, 3] ∋ 4
 # # false
 # ```
-(∋) :: Sequence 'm, Comparable 't => 'm<'t> -> 't -> 𝔹
+(∋) :: Sequence `m, Comparable `t => `m<`t> -> `t -> 𝔹
 (∋) := seq -> element -> ∃ seq (= element)
 
 # Determines if the given element is not in the sequence. The elements of the
 # sequence must be comparable using the `=` operator.
-#
-# @template {Comparable} 't The type of the elements in the sequence.
-# @template {Sequence} 'm The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to check.
-# @param {'t} element
-#   The element to check for.
-#
-# @returns {𝔹}
-#   True if the element is not in the sequence. False otherwise.
 #
 # ```aml
 # 2 ∌ [1, 2, 3]
@@ -205,48 +118,22 @@ type Sequence<'a> extends
 # Returns a new sequence which contains all the elements of the first sequence
 # which are not in the second sequence.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} a
-#   The first sequence.
-# @param {'m<'t>} b
-#   The second sequence.
-#
-# @returns {'m<'t>}
-#   A new sequence with the difference of the two sequences.
-#
 # ```aml
 # [1, 2, 3] \ [2, 3, 4]
 # # [1]
 # ```
-(\) :: Sequence 'm => 'm<'t> -> 'm<'t> -> 'm<'t>
+(\) :: Sequence `m => `m<`t> -> `m<`t> -> `m<`t>
 (\) := a -> b -> filter a (∌ b)
 
 # Drops the first `count` elements from the sequence and returns a new sequence
 # with the remaining elements. If `count` is greater than the number of elements
 # in the sequence, an empty sequence is returned.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to drop elements from.
-# @param {ℕ} count
-#   The number of elements to drop.
-#
-# @returns {'m<'t>}
-#   A new sequence with the remaining elements.
-#
 # ```aml
 # drop 2 [1, 2, 3]
 # # [3]
 # ```
-drop :: Sequence 'm => 'm<'t> -> ℕ -> 'm<'t>
+drop :: Sequence `m => `m<`t> -> ℕ -> `m<`t>
 drop := seq -> count ->
 	case (count < 1)
 	| true => seq
@@ -256,24 +143,11 @@ drop := seq -> count ->
 # Returns a new sequence with the remaining elements. If the predicate function
 # always returns true, an empty sequence is returned.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to drop elements from.
-# @param {('t -> 𝔹)} predicate
-#   The predicate function to check against.
-#
-# @returns {'m<'t>}
-#   A new sequence with the remaining elements.
-#
 # ```aml
 # drop_while [1, 2, 3, 1, 2, 3] (x -> x < 3)
 # # [3, 1, 2, 3]
 # ```
-drop_while :: Sequence 'm => 'm<'t> -> ('t -> 𝔹) -> 'm<'t>
+drop_while :: Sequence `m => `m<`t> -> (`t -> 𝔹) -> `m<`t>
 drop_while := seq -> predicate ->
 	case head seq
 	| None => seq
@@ -285,19 +159,6 @@ drop_while := seq -> predicate ->
 # Attempts to return the element at the given index in the sequence. If the
 # index is out of bounds, `None` is returned.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to get the element from.
-# @param {ℤ} index
-#   The index of the element to get.
-#
-# @returns {Maybe<'t>}
-#   The element at the given index, or `None` if the index is out of bounds.
-#
 # ```aml
 # [1, 2, 3] @ 0
 # # Some 1
@@ -305,7 +166,7 @@ drop_while := seq -> predicate ->
 # [1, 2, 3] @ 3
 # # None
 # ```
-(@) :: Sequence 'm => 'm<'t> -> ℤ -> Maybe<'t>
+(@) :: Sequence `m => `m<`t> -> ℤ -> Maybe<`t>
 (@) := seq -> index ->
 	case (index < 0)
 	| true => None
@@ -320,24 +181,11 @@ drop_while := seq -> predicate ->
 # Returns a new sequence which contains all the elements of the first sequence
 # which match the given predicate function.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to filter.
-# @param {('t -> 𝔹)} predicate
-#   The predicate function to check against.
-#
-# @returns {'m<'t>}
-#   A new sequence with the elements that match the predicate.
-#
 # ```aml
 # filter [1, 2, 3] (x -> x < 3)
 # # [1, 2]
 # ```
-filter :: Sequence 'm => 'm<'t> -> ('t -> 𝔹) -> 'm<'t>
+filter :: Sequence `m => `m<`t> -> (`t -> 𝔹) -> `m<`t>
 filter := seq -> predicate ->
 	filter_helper := seq' -> predicate' -> acc ->
 		case head seq'
@@ -352,46 +200,21 @@ filter := seq -> predicate ->
 # Takes a sequence of sequences and returns a new sequence with all of the
 # elements in the sub-sequences concatenated together.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'m<'t>>} seq
-#   The sequence of sequences to flatten.
-#
-# @returns {'m<'t>}
-#   A new sequence with all the elements of the sub-sequences concatenated
-#
 # ```aml
 # ↓ [[1, 2], [3, 4]]
 # # [1, 2, 3, 4]
 # ```
-↓ :: Sequence 'm => 'm<'m<'t>> -> 'm<'t>
+↓ :: Sequence `m => `m<`m<`t>> -> `m<`t>
 ↓ := seq -> fold seq (++)
 
 # Folds a sequence into a single value by applying a function pairwise to
 # all elements in the sequence.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to fold.
-#
-# @param {('t -> 't -> 't)} callback
-#   The function to apply to each pair of elements in the sequence.
-#
-# @returns {'t}
-#   The final value of the fold.
-#
 # ```aml
 # fold [1, 2, 3] (+)
 # # 6
 # ```
-fold :: Sequence 'm, Plus 't => 'm<'t> -> ('t -> 't -> 't) -> 't
+fold :: Sequence `m, Plus `t => `m<`t> -> (`t -> `t -> `t) -> `t
 fold := seq -> callback ->
 	case seq
 	| [ ] => 𝟘
@@ -400,17 +223,6 @@ fold := seq -> callback ->
 
 # Returns the first element in the sequence, if it exists.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to get the first element from.
-#
-# @returns {Maybe<'t>}
-#   The first element in the sequence, or `None` if the sequence is empty.
-#
 # ```aml
 # head [1, 2, 3]
 # # Some 1
@@ -418,22 +230,9 @@ fold := seq -> callback ->
 # head []
 # # None
 # ```
-head :: Sequence 'm => 'm<'t> -> Maybe<'t>
+head :: Sequence `m => `m<`t> -> Maybe<`t>
 
 # Returns true if the given element is in the sequence. Returns false otherwise.
-#
-# @template {Comparable} 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'t} element
-#   The element to check for.
-# @param {'m<'t>} seq
-#   The sequence to check.
-#
-# @returns {𝔹}
-#   True if the element is in the sequence. False otherwise.
 #
 # ```aml
 # 2 ∈ [1, 2, 3]
@@ -442,24 +241,11 @@ head :: Sequence 'm => 'm<'t> -> Maybe<'t>
 # 4 ∈ [1, 2, 3]
 # # false
 # ```
-(∈) :: Sequence 'm, Comparable 't => 't -> 'm<'t> -> 𝔹
+(∈) :: Sequence `m, Comparable `t => `t -> `m<`t> -> 𝔹
 (∈) := ⇋ ∋
 
 # Returns true if the given element is not in the sequence. Returns false
 # otherwise.
-#
-# @template {Comparable} 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'t} element
-#   The element to check for.
-# @param {'m<'t>} seq
-#   The sequence to check.
-#
-# @returns {𝔹}
-#   True if the element is not in the sequence. False otherwise.
 #
 # ```aml
 # 2 ∉ [1, 2, 3]
@@ -474,19 +260,6 @@ head :: Sequence 'm => 'm<'t> -> Maybe<'t>
 # other words, if all elements in the first sequence are also in the second
 # sequence.
 #
-# @template {Comparable} 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} a
-#   The first sequence.
-# @param {'m<'t>} b
-#   The second sequence.
-#
-# @returns {𝔹}
-#   True if the first sequence is a subset of the second sequence.
-#
 # ```aml
 # [1, 2, 3] ⊂ [1, 2, 3, 4]
 # # true
@@ -497,25 +270,12 @@ head :: Sequence 'm => 'm<'t> -> Maybe<'t>
 # [1, 2, 3] ⊂ [1, 2]
 # # false
 # ```
-(⊂) :: Sequence 'm, Comparable 't => 'm<'t> -> 'm<'t> -> 𝔹
+(⊂) :: Sequence `m, Comparable `t => `m<`t> -> `m<`t> -> 𝔹
 (⊂) := a -> b -> ∀ a (∋ b)
 
 # Checks to see if the first sequence is not a subset of the second sequence, or
 # in other words, if the first sequence contains at least one element that is
 # not in the second sequence.
-#
-# @template {Comparable} 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} a
-#   The first sequence.
-# @param {'m<'t>} b
-#   The second sequence.
-#
-# @returns {𝔹}
-#   True if the first sequence is not a subset of the second sequence.
 #
 # ```aml
 # [1, 2, 3] ⊄ [1, 2, 3, 4]
@@ -531,69 +291,29 @@ head :: Sequence 'm => 'm<'t> -> Maybe<'t>
 
 # Returns the length of the sequence.
 #
-# @template 't
-# @template {Sequence} 'm
-#
-# @param {'m<'t>} seq
-#   The sequence to get the length of.
-#
-# @returns {ℕ}
-#   The length of the sequence.
-#
 # ```aml
 # length [1, 2, 3]
 # # 3
 # ```
-length :: Sequence 'm => 'm<'t> -> ℕ
+length :: Sequence `m => `m<`t> -> ℕ
 length := seq -> reduce seq ((+ 1) ∘∘∘ const) 0
 
 # Returns a new sequence with the given element added on the front.
-#
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'t} element
-#   The element to add to the front of the sequence.
-# @param {'m<'t>} seq
-#   The sequence to add the element to.
-#
-# @returns {'m<'t>}
-#   A new sequence with the element added to the front.
 #
 # ```aml
 # 1 :: [2, 3]
 # # [1, 2, 3]
 # ```
-(::) :: Sequence 'm => 't -> 'm<'t> -> 'm<'t>
+(::) :: Sequence `m => `t -> `m<`t> -> `m<`t>
 
 # Reduce a sequence to a single value by applying a function to each element and
 # passing an accumulator value between each application.
-#
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-# @template 'a
-#   The type of the accumulator.
-#
-# @param {'m<'t>} seq
-#   The sequence to reduce.
-# @param {('a -> 't -> 'a)} callback
-#   The function to apply to each element and the accumulator. Should return the
-#   new accumulator value.
-# @param {'a} initial
-#   The initial value of the accumulator.
-#
-# @returns {'a}
-#   The final value of the accumulator after reducing the sequence.
 #
 # ```aml
 # reduce [1, 2, 3] (+) 0
 # # 6
 # ```
-reduce :: Sequence 'm => 'm<'t> -> ('a -> 't -> 'a) -> 'a -> 'a
+reduce :: Sequence `m => `m<`t> -> (`a -> `t -> `a) -> `a -> `a
 reduce := seq -> callback -> initial ->
 	case head seq
 	| Some x => reduce (tail seq) callback (callback initial x)
@@ -601,22 +321,11 @@ reduce := seq -> callback -> initial ->
 
 # Returns a new sequence with the order of the elements reversed.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to reverse.
-#
-# @returns {'m<'t>}
-#   A new sequence with the elements reversed.
-#
 # ```aml
 # reverse [1, 2, 3]
 # # [3, 2, 1]
 # ```
-reverse :: Sequence 'm => 'm<'t> -> 'm<'t>
+reverse :: Sequence `m => `m<`t> -> `m<`t>
 reverse := seq ->
 	(seq' -> acc ->
 		case head seq'
@@ -626,66 +335,28 @@ reverse := seq ->
 
 # Sums the elements of the sequence.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to sum.
-# @param {('t -> ℤ)} map
-#   A function to transform each element into a number to sum by. If you want to
-#   sum the elements as they are, you can use the identity function `ι`.
-#
-# @returns {ℤ}
-#   The sum of the elements in the sequence.
-#
 # ```aml
 # ∑ [1, 2, 3] ι
 # # 6
 # ```
-∑ :: Sequence 'm => 'm<'a> -> ('a -> ℤ) -> 't
+∑ :: Sequence `m => `m<`a> -> (`a -> ℤ) -> `t
 ∑ := seq -> map -> reduce (seq <$> map) (+) 0
 
 # Returns a new sequence with all elements in the input sequence except the
 # first one. If the input sequence is empty, an empty sequence is returned.
 #
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} seq
-#   The sequence to get the tail of.
-#
-# @returns {'m<'t>}
-#   A new sequence with all elements except the first one.
-#
 # ```aml
 # tail [1, 2, 3]
 # # [2, 3]
 # ```
-tail :: Sequence 'm => 'm<'t> -> 'm<'t>
+tail :: Sequence `m => `m<`t> -> `m<`t>
 
 # Returns a new sequence which contains all the unique elements of both input
 # sequences.
-#
-# @template 't
-#   The type of the elements in the sequence.
-# @template {Sequence} 'm
-#   The type of the sequence.
-#
-# @param {'m<'t>} a
-#   The first sequence.
-# @param {'m<'t>} b
-#   The second sequence.
-#
-# @returns {'m<'t>}
-#   A new sequence with all the unique elements of both input sequences.
 #
 # ```aml
 # [1, 2, 3] ∪ [2, 3, 4]
 # # [1, 2, 3, 4]
 # ```
-(∪) :: Sequence 'm => 'm<'t> -> 'm<'t> -> 'm<'t>
+(∪) :: Sequence `m => `m<`t> -> `m<`t> -> `m<`t>
 (∪) := a -> b -> a ++ (b \ a)

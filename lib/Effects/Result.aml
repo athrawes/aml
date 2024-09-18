@@ -1,6 +1,6 @@
-type Result<'ok, 'error> extends Monad<'ok> :=
-	| Ok 'ok
-	| Error 'error
+type Result<`ok, `error> extends Monad<`ok> :=
+	| Ok `ok
+	| Error `error
 
 new := Ok
 
