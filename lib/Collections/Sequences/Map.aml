@@ -1,167 +1,167 @@
-Pair := use "Collections/Pair"
-Sequence := use "Collections/Sequences/Sequence"
+Pair = use "Collections/Pair"
+Sequence = use "Collections/Sequences/Sequence"
 
-type Map<`k, `v> := Sequence<Pair<`k, `v>>
+type Map<`k, `v> = Sequence<Pair<`k, `v>>
 
 # Returns true if all keys in the map satisfy the given predicate.
 #predicate function to check against
 #
 # ```aml
-# ∀ₖ { 'a' := 1, 'b' := 2 } (k -> k ≠ 'z')
+# ∀ₖ { a: 1, b: 2 } (k -> k != 'z')
 # # true
 #
-# ∀ₖ { 'a' := 1, 'b' := 2 } (k -> k ≠ 'a')
+# ∀ₖ { a: 1, b: 2 } (k -> k != 'a')
 # # false
 # ```
 ∀ₖ :: Map `m => `m<`k, `v> -> (`k -> 𝔹) -> 𝔹
-∀ₖ := map -> predicate -> ∀ map (fst ∘ predicate)
+∀ₖ = map -> predicate -> ∀ map (fst ∘ predicate)
 
 # Returns true if all values in the map satisfy the given predicate.
 #
 # ```aml
-# ∀ᵥ { 'a' := 1, 'b' := 2 } (v -> v ≠ 10)
+# ∀ᵥ { a: 1, b: 2 } (v -> v != 10)
 # # true
 #
-# ∀ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
+# ∀ᵥ { a: 1, b: 2 } (v -> v == 1)
 # # false
 # ```
 ∀ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
-∀ᵥ := map -> predicate -> ∀ map (snd ∘ predicate)
+∀ᵥ = map -> predicate -> ∀ map (snd ∘ predicate)
 
 # Returns true if any key in the map satisfies the given predicate.
 #
 # ```aml
-# ∃ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'a')
+# ∃ₖ { a: 1, b: 2 } (k -> k == 'a')
 # # true
 #
-# ∃ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'z')
+# ∃ₖ { a: 1, b: 2 } (k -> k == 'z')
 # # false
 # ```
 ∃ₖ :: Map<`k, `v> -> (`k -> 𝔹) -> 𝔹
-∃ₖ := map -> predicate -> ∃ map (fst ∘ predicate)
+∃ₖ = map -> predicate -> ∃ map (fst ∘ predicate)
 
 # Returns true if exactly one value in the map satisfies the given
 # predicate.
 #
 # ```aml
-# ∃!ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'a')
+# ∃!ₖ { a: 1, b: 2 } (k -> k == 'a')
 # # true
 #
-# ∃!ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'z')
+# ∃!ₖ { a: 1, b: 2 } (k -> k == 'z')
 # # false
 #
-# ∃!ₖ { 'a' := 1, 'b' := 2 } (k -> k ≠ 'z')
+# ∃!ₖ { a: 1, b: 2 } (k -> k =≠ 'z')
 # # false
 # ```
 ∃!ₖ :: Map<`k, `v> -> (`k -> 𝔹) -> 𝔹
-∃!ₖ := map -> predicate -> ∃! map (fst ∘ predicate)
+∃!ₖ = map -> predicate -> ∃! map (fst ∘ predicate)
 
 # Returns true if any value in the map satisfies the given predicate.
 #
 # ```aml
-# ∃ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
+# ∃ᵥ { a: 1, b: 2 } (v -> v == 1)
 # # true
 #
-# ∃ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 10)
+# ∃ᵥ { a: 1, b: 2 } (v -> v == 10)
 # # false
 # ```
 ∃ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
-∃ᵥ := map -> predicate -> ∃ map (snd ∘ predicate)
+∃ᵥ = map -> predicate -> ∃ map (snd ∘ predicate)
 
 # Returns true if exactly one value in the map satisfies the given
 # predicate.
 #
 # ```aml
-# ∃!ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
+# ∃!ᵥ { a: 1, b: 2 } (v -> v == 1)
 # # true
 #
-# ∃!ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 10)
+# ∃!ᵥ { a: 1, b: 2 } (v -> v == 10)
 # # false
 #
-# ∃!ᵥ { 'a' := 1, 'b' := 2 } (v -> v ≠ 10)
+# ∃!ᵥ { a: 1, b: 2 } (v -> v =≠ 10)
 # # false
 # ```
 ∃!ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
-∃!ᵥ := map -> predicate -> ∃! map (snd ∘ predicate)
+∃!ᵥ = map -> predicate -> ∃! map (snd ∘ predicate)
 
 # Returns true if no key in the map satisfies the given predicate.
 #
 # ```aml
-# ∄ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'z')
+# ∄ₖ { a: 1, b: 2 } (k -> k == 'z')
 # # true
 #
-# ∄ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'a')
+# ∄ₖ { a: 1, b: 2 } (k -> k == 'a')
 # # false
 # ```
 ∄ₖ :: Map<`k, `v> -> (`k -> 𝔹) -> 𝔹
-∄ₖ := map -> predicate -> (∄ map (fst ∘ predicate))
+∄ₖ = map -> predicate -> (∄ map (fst ∘ predicate))
 
 # Returns true if there is not exactly one key in the map that satisfies
 # the given predicate. This can mean that there are either zero keys that
 # satisfy the predicate or more than one key that satisfies the predicate.
 #
 # ```aml
-# ∄!ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'z')
+# ∄!ₖ { a: 1, b: 2 } (k -> k == 'z')
 # # true
 #
-# ∄!ₖ { 'a' := 1, 'b' := 2 } (k -> k = 'a')
+# ∄!ₖ { a: 1, b: 2 } (k -> k == 'a')
 # # false
 #
-# ∄!ₖ { 'a' := 1, 'b' := 2 } (k -> k ≠ 'z')
+# ∄!ₖ { a: 1, b: 2 } (k -> k =≠ 'z')
 # # false
 # ```
 ∄!ₖ :: Map<`k, `v> -> (`k -> 𝔹) -> 𝔹
-∄!ₖ := map -> predicate -> ∄! map (fst ∘ predicate)
+∄!ₖ = map -> predicate -> ∄! map (fst ∘ predicate)
 
 # Returns true if no value in the map satisfies the given predicate.
 #
 # ```aml
-# ∄ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 10)
+# ∄ᵥ { a: 1, b: 2 } (v -> v == 10)
 # # true
 #
-# ∄ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
+# ∄ᵥ { a: 1, b: 2 } (v -> v == 1)
 # # false
 # ```
 ∄ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
-∄ᵥ := map -> predicate -> ∄ map (snd ∘ predicate)
+∄ᵥ = map -> predicate -> ∄ map (snd ∘ predicate)
 
 # Returns true if there is not exactly one value in the map that satisfies
 # the given predicate. This can mean that there are either zero values that
 # satisfy the predicate or more than one value that satisfies the predicate.
 #
 # ```aml
-# ∄!ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 10)
+# ∄!ᵥ { a: 1, b: 2 } (v -> v == 10)
 # # true
 #
-# ∄!ᵥ { 'a' := 1, 'b' := 2 } (v -> v = 1)
+# ∄!ᵥ { a: 1, b: 2 } (v -> v == 1)
 # # false
 #
-# ∄!ᵥ { 'a' := 1, 'b' := 2 } (v -> v ≠ 10)
+# ∄!ᵥ { a: 1, b: 2 } (v -> v =≠ 10)
 # # true
 # ```
 ∄!ᵥ :: Map<`k, `v> -> (`v -> 𝔹) -> 𝔹
-∄!ᵥ := map -> predicate -> ∄! map (snd ∘ predicate)
+∄!ᵥ = map -> predicate -> ∄! map (snd ∘ predicate)
 
 # Determines if a key is in the map.
 #
 # ```aml
-# { 'a' := 1, 'b' := 2 } ∋ₖ 'a'
+# { a: 1, b: 2 } ∋ₖ 'a'
 # # true
 #
-# { 'a' := 1, 'b' := 2 } ∋ₖ 'z'
+# { a: 1, b: 2 } ∋ₖ 'z'
 # # false
 # ```
 (∋ₖ) :: Map<`k, `v> -> `k -> 𝔹
-(∋ₖ) := map -> key -> ∃ map (fst ∘ (= key))
+(∋ₖ) = map -> key -> ∃ map (fst ∘ (== key))
 
 # Determines if a value is in the map.
 #
 # ```aml
-# { 'a' := 1, 'b' := 2 } ∋ᵥ 1
+# { a: 1, b: 2 } ∋ᵥ 1
 # # true
 #
-# { 'a' := 1, 'b' := 2 } ∋ᵥ 10
+# { a: 1, b: 2 } ∋ᵥ 10
 # # false
 # ```
 (∋ᵥ) :: Map<`k, `v> -> `v -> 𝔹
-(∋ᵥ) := map -> value -> ∃ map (snd ∘ (= value))
+(∋ᵥ) = map -> value -> ∃ map (snd ∘ (== value))

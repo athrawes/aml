@@ -7,18 +7,18 @@ type Applicative<`a> extends Apply<`a>
 	new :: Applicative `m => `a -> `m<`a>
 
 	(<$) :: Applicative `m => `m<`a> -> `b -> `m<`b>
-	(<$) := ma -> b -> ma <$> (const b)
+	(<$) = ma -> b -> ma <$> (const b)
 
 	($>) :: Applicative `m => `a -> `m<`b> -> `m<`a>
-	($>) := ⇋ <$
+	($>) = ⇋ <$
 
 	↑¹ :: Applicative `m => (`a -> `b) -> `m<`a> -> `m<`b>
-	↑¹ := callback -> ma -> (new callback) <*> ma
+	↑¹ = callback -> ma -> (new callback) <*> ma
 
-	(<$>) := ⇋ ↑¹
+	(<$>) = ⇋ ↑¹
 
 	↑² :: Applicative `m => (`a -> `b -> `c) -> `m<`a> -> `m<`b> -> `m<`c>
-	↑² := callback -> ma -> mb -> (new callback) <*> ma <*> mb
+	↑² = callback -> ma -> mb -> (new callback) <*> ma <*> mb
 
 	↑³ :: Applicative `m
 		=> (`a -> `b -> `c -> `d)
@@ -26,12 +26,12 @@ type Applicative<`a> extends Apply<`a>
 		-> `m<`b>
 		-> `m<`c>
 		-> `m<`d>
-	↑³ := callback -> ma -> mb -> mc -> (new callback) <*> ma <*> mb <*> mc
+	↑³ = callback -> ma -> mb -> mc -> (new callback) <*> ma <*> mb <*> mc
 
 type Apply<`a> extends Functor<`a>
 	(<*>) :: Apply `m => `m<(`a -> `b)> -> `m<`a> -> `m<`b>
 
-	(<**>) := ⇋ <*>
+	(<**>) = ⇋ <*>
 
 type Bifunctor<`a, `b> extends Functor<`b>
 	bimap :: Bifunctor `m => `m<`a, `c> -> (`a -> `b) -> (`c -> `d) -> `m<`b, `d>
@@ -54,15 +54,15 @@ type Chainable<`a> extends Apply<`a>
 	# (value -> value / 2)
 	# =<< (Some 42) # Maybe<Float> (21)
 	# ```
-	(=<<) := ⇋ (>>=)
+	(=<<) = ⇋ (>>=)
 
 	# Composes two functions by Kleisli composition.
 	(>=>) :: (`a -> `m<`b>) -> (`b -> `m<`c>) -> (`a -> `m<`c>)
-	(>=>) := amb -> bmc -> amb ∘ ((⇋ >>=) bmc)
+	(>=>) = amb -> bmc -> amb ∘ ((⇋ >>=) bmc)
 
 	# An infix alias for `>=>`, but with the arguments reversed.
 	# @include >=>
-	(<=<) := ⇋ (>=>)
+	(<=<) = ⇋ (>=>)
 
 type ChainRec<`a> extends Chainable<`a>
 	chain_rec :: ChainRec `m => ((`a -> `c) -> (`b -> `c) -> `a -> `m<`c>) -> `a -> `m<`b>
@@ -94,7 +94,7 @@ type Monad<`a> extends Applicative<`a>, Chainable<`a>
 type Monoid<`a> extends Appendable<`a>
 	# The empty value for a monoid.
 	∅ :: Monoid `m => `m<`a>
-	empty := ∅
+	empty = ∅
 
 type Orderable<`a> extends Comparable<`a>
 	# Less than or equal to. Returns true if the first argument is less than or
@@ -104,17 +104,17 @@ type Orderable<`a> extends Comparable<`a>
 	# Strictly less than. Returns true if the first argument is strictly less than
 	# the second argument.
 	(<) :: Orderable `a => `a -> `a -> 𝔹
-	(<) := a -> b -> ¬ (a = b) ∧ (a ≤ b)
+	(<) = a -> b -> ¬ (a == b) ∧ (a ≤ b)
 
 	# Greater than or equal to. Returns true if the first argument is greater than
 	# or equal to the second argument.
 	(≥) :: Orderable `a => `a -> `a -> 𝔹
-	(≥) := a -> b -> (a = b) ∨ (¬ (a ≤ b))
+	(≥) = a -> b -> (a == b) ∨ (¬ (a ≤ b))
 
 	# Strict greater than. Returns true if the first argument is strictly greater
 	# than the second argument.
 	(>) :: Orderable `a => `a -> `a -> 𝔹
-	(>) := ¬ ∘∘∘ ≤
+	(>) = ¬ ∘∘∘ ≤
 
 type Plus<`a> extends Alt<`a>
 	𝟘 :: Plus `m => `m<`a>
@@ -137,24 +137,24 @@ type Composable<`a, `b>
 	#
 	# - `a ∘ (b ∘ c)` should be the same as `(a ∘ b) ∘ c`
 	(∘) :: Composable `m => `m<`a, `b> -> `m<`b, `c> -> `m<`a, `c>
-	(<∘) := ⇋ (∘)
+	(<∘) = ⇋ (∘)
 
 type Comparable<`a>
 	# An equality function for comparing two values of the same type. Equality
-	# should behave nicely here, so that `=` is reflexive, symmetric, and
+	# should behave nicely here, so that `==` is reflexive, symmetric, and
 	# transitive. So, given values `a`, `b`, and `c` of the same type:
 	#
-	# - `a = a` should be true
-	# - `a = b` should be the same as `b = a`
-	# - if `a = b` and `b = c` are both true, then `a = c` should also be true
-	# - if one of `a = b` or `b = c` are false, then `a = c` should also be false
-	# - if both are false, `a = c` may be either true or false
-	(=) :: Comparable `a => `a -> `a -> 𝔹
+	# - `a == a` should be true
+	# - `a == b` should be the same as `b == a`
+	# - if `a == b` and `b == c` are both true, then `a == c` should also be true
+	# - if one of `a == b` or `b == c` are false, then `a == c` should also be false
+	# - if both are false, `a == c` may be either true or false
+	(==) :: Comparable `a => `a -> `a -> 𝔹
 
 	# An inequality function for comparing two values of the same type. Simply
 	# negates the result of the equality function.
-	(≠) :: Comparable `a => `a -> `a -> 𝔹
-	(≠) := ¬ ∘∘∘ =
+	(!=) :: Comparable `a => `a -> `a -> 𝔹
+	(!=) = ¬ ∘∘∘ ==
 
 type Traversable<`a> extends Foldable<`a>, Functor<`a>
 	traverse :: Traversable `t, Applicative `f

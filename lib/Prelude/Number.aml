@@ -1,4 +1,4 @@
-type UnsignedInteger :=
+type UnsignedInteger =
 	| u8 of INTRINSIC_UNSIGNED_8BIT
 	| u16 of INTRINSIC_UNSIGNED_16BIT
 	| u32 of INTRINSIC_UNSIGNED_32BIT
@@ -6,9 +6,9 @@ type UnsignedInteger :=
 	| u128 of INTRINSIC_UNSIGNED_128BIT
 	| usize of INTRINSIC_UNSIGNED_DEFAULT_SIZE
 
-	𝟘 := 0b0
+	𝟘 = 0b0
 
-type SignedInteger :=
+type SignedInteger =
 	| i8 of INTRINSIC_SIGNED_8BIT
 	| i16 of INTRINSIC_SIGNED_16BIT
 	| i32 of INTRINSIC_SIGNED_32BIT
@@ -16,19 +16,19 @@ type SignedInteger :=
 	| i128 of INTRINSIC_SIGNED_128BIT
 	| isize of INTRINSIC_SIGNED_DEFAULT_SIZE
 
-	𝟘 := 0b0
+	𝟘 = 0b0
 
 # A natural number is a non-negative integer.
-type ℕ := UnsignedInteger
+type ℕ = UnsignedInteger
 
-type ℤ := Integer
+type ℤ = Integer
 type Integer extends
 	Orderable<_>,
-	:=
+	=
 	| UnsignedInteger
 	| SignedInteger
 
-	(=) := a -> b -> case (a, b)
+	(==) = a -> b -> case (a, b)
 		| (`t _, `t _) ⟹ INTRINSIC_OPERATOR_EQUALS a b
 		| (`t _, `u _) when sizeof<`t> > sizeof<`u> ⟹
 			INTRINSIC_OPERATOR_EQUALS a (b :> `t)
@@ -36,7 +36,7 @@ type Integer extends
 			INTRINSIC_OPERATOR_EQUALS (a :> `u) b
 
 # IEEE 754 floating point numbers.
-type Float :=
+type Float =
 	| f32 of INTRINSIC_FLOAT_32BIT
 	| f64 of INTRINSIC_FLOAT_64BIT
 
@@ -45,8 +45,8 @@ type Float :=
 # In AML, this is represented by a pair of an integer and a natural number,
 # where the first number is the numerator and the second number is the
 # denominator. Note that the denominator cannot be 0.
-type Rational := Pair<ℤ, Omit<ℕ, 𝟘>>
-type ℚ := Rational
+type Rational = Pair<ℤ, Omit<ℕ, 𝟘>>
+type ℚ = Rational
 
 # A real number is a value that represents a quantity along a continuous line.
 # In AML, this is represented by a sum type of integers, rationals, and floats.
@@ -54,8 +54,8 @@ type ℚ := Rational
 # does not include irrational numbers such as π or √2 due to the limits of
 # floating point arithmetic. Approximations of these numbers can be represented
 # using the `Float` type.
-type ℝ := Real
-type Real :=
+type ℝ = Real
+type Real =
 	| Integer
 	| Rational
 	| Float
@@ -64,5 +64,5 @@ type Real :=
 # is the real part and b is the imaginary part of the complex number. In AML,
 # this is represented by a pair of real numbers, where the first number is the
 # real part and the second number is the imaginary part.
-type Complex := Pair<ℝ, ℝ>
-type ℂ := Complex
+type Complex = Pair<ℝ, ℝ>
+type ℂ = Complex

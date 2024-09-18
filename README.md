@@ -14,16 +14,16 @@ The main goals are:
 
 ## Syntax
 
-### Variable binding `=`, `:`, ``` ` ```, `extends`
+### Variable binding `==`, `:`, ``` ` ```, `extends`
 
 ```aml
-a := 5
+a = 5
 ```
 
 Let bindings are expressions that evaluate to the value they are assigned to
 
 ```aml
-a := 5
+a = 5
 |> to_string # "5"; also, `a` is bound to an integer 5
 ```
 
@@ -32,7 +32,7 @@ a := 5
 When binding variables, a type declaration may be provided
 
 ```aml
-a :: Integer := 5
+a :: Integer = 5
 ```
 
 To mark a type parameter, simply prepend with a ``` ` ``` character:
@@ -45,7 +45,7 @@ my_function :: `a -> String
 
 ```aml
 my_function :: Orderable `a, Functor `a, Map `b => `a -> `b -> `c
-my_function := a -> b -> c
+my_function = a -> b -> c
 ```
 
 #### Cases `|`
@@ -69,12 +69,12 @@ Functions are 1st class citizens, and can be bound to variables and passed
 around like any other value
 
 ```aml
-return_42 := _ -> 42
-forty_two := compose return_42 to_string
+return_42 = _ -> 42
+forty_two = compose return_42 to_string
 forty_two _ # forty_two is "42"
 
 operationThatCanFail :: ℤ -> ℤ -> Maybe<Float>
-operationThatCanFail := a -> b -> a / b
+operationThatCanFail = a -> b -> a / b
 ```
 
 #### Infix functions
@@ -84,7 +84,7 @@ front of the function call), place the name of the function in parenthesis:
 
 ```aml
 (%) :: ℤ -> ℤ -> Maybe<ℤ>
-(%) := a -> b -> (a / b)
+(%) = a -> b -> (a / b)
 	>>= to_integer
 	>>= (multiply b)
 	>>= (subtract a)
@@ -95,7 +95,7 @@ front of the function call), place the name of the function in parenthesis:
 As always, AML can automatically fill in the types
 
 ```aml
-(+) := add # ℤ -> ℤ
+(+) = add # ℤ -> ℤ
 ```
 
 #### Calling functions
@@ -128,9 +128,9 @@ AML is an expression-based language.
 This applies to function definitions as well:
 
 ```aml
-call_and_add_two := callback -> 2 + (callback 1)
+call_and_add_two = callback -> 2 + (callback 1)
 
-add_one := add 1 # Number -> Number
+add_one = add 1 # Number -> Number
 |> call_and_add_two # 4; add_one is passed to call_and_add_two
 ```
 
@@ -139,9 +139,9 @@ want to evaluate the second line as continuing at the same level as the first.
 This is equivalent to:
 
 ```aml
-call_and_add_two := callback -> 2 + (callback 1)
+call_and_add_two = callback -> 2 + (callback 1)
 
-(add_one := add 1) |> call_and_add_two # 4
+(add_one = add 1) |> call_and_add_two # 4
 ```
 
 To indicate that subsequent lines should be considered as part of the scope of
@@ -149,9 +149,9 @@ the function definition, simply indent the subsequent lines:
 
 ```aml
 add_two :: ℤ -> ℤ
-add_two := arg ->
-	one := 1
-	two := add one one
+add_two = arg ->
+	one = 1
+	two = add one one
 
 	two + arg
 ```
@@ -163,10 +163,10 @@ Parenthesis may be used to group expressions
 ### Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `extends`, `module`, `_`
 
 ```aml
-a := { b := 1, c := 2 }
-{ b, c } := a   # b is 1, c is 2
-{ b as d } := a # partial destructuring is allowed, and aliasing is available
-Name := use "Some/Module" # collect all from structure/module as alias
+a = { b: 1, c: 2 }
+{ b, c } = a   # b is 1, c is 2
+{ b as d } = a # partial destructuring is allowed, and aliasing is available
+Name = use "Some/Module" # collect all from structure/module as alias
 ```
 
 Punning is allowed:
@@ -178,14 +178,14 @@ value -> { value } # `a -> Map<String, `a>
 #### Tuples `()`
 
 ```aml
-a := (1, 2, 3)
-(b, c) := a
+a = (1, 2, 3)
+(b, c) = a
 ```
 
 #### Struct member accessor `.`
 
 ```aml
-a := { b := { c := 42 } }
+a = { b: { c: 42 } }
 
 a.b.c # 42
 ```
@@ -212,7 +212,7 @@ If a given pattern has only one variant (e.g., the `Identity` monad which only
 has the value in the monad), then a `with` destructuring may be easier to use.
 
 ```aml
-i := Identity 42
+i = Identity 42
 
 with i (value) => value`
 ```
@@ -221,7 +221,7 @@ To be clear, this is syntactic sugar for a `case` statement that only has a
 single arm:
 
 ```aml
-i := Identity 42
+i = Identity 42
 
 # These two code blocks are equivalent
 # ---
@@ -241,7 +241,7 @@ with i (value) => value * 2
 Importing everything from a module
 
 ```aml
-{ ... } := use "Collections"
+{ ... } = use "Collections"
 
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
@@ -253,7 +253,7 @@ Importing multiple items from a module
 Note: multi-item imports may span multiple lines
 
 ```aml
-{ to_upper, to_lower } := use "String"
+{ to_upper, to_lower } = use "String"
 
 "Hello, World!" |> to_upper # "HELLO, WORLD!"
 "Hello, World!" |> to_lower # "hello, world!"
@@ -262,8 +262,8 @@ Note: multi-item imports may span multiple lines
 Aliasing imports
 
 ```aml
-{ map as list_map } := use "Collections/List"
-{ map as seq_map } := use "Collections/Sequence"
+{ map as list_map } = use "Collections/List"
+{ map as seq_map } = use "Collections/Sequence"
 ```
 
 #### Declaring a module
@@ -409,7 +409,7 @@ Some examples:
 5. Greedy evaluation
 
     ```aml
-    do_things := f -> a -> b -> c -> (f (f (f a 1) b) c)
+    do_things = f -> a -> b -> c -> (f (f (f a 1) b) c)
 
     # do_things multiply 1 2 3
     # ------------------------

@@ -6,28 +6,28 @@ type Function<`a, `b> extends
 (->) :: `a -> `b -> Function<`a, `b>
 
 (<$>) :: Function<`a, `b> -> (`b -> `c) -> Function<`a, `c>
-(<$>) := (∘)
+(<$>) = (∘)
 
 (|>) :: `a -> (`a -> `b) -> `b
-(|>) := argument -> callback -> callback argument
+(|>) = argument -> callback -> callback argument
 
 (<|) :: (`a -> `b) -> `a -> `b
-(<|) := ⇋ |>
+(<|) = ⇋ |>
 
 (∘) :: (`a -> `b) -> (`b -> `c) -> (`a -> `c)
-(∘) := ab -> bc -> a -> bc (ab a)
+(∘) = ab -> bc -> a -> bc (ab a)
 
 (∘∘∘) :: (`a -> `b) -> (`c -> `d -> `a) -> (`c -> `d -> `b)
-(∘∘∘) := (∘) ∘ (∘)
+(∘∘∘) = (∘) ∘ (∘)
 
 (<∘∘) :: (`c -> `d -> `a) -> (`a -> `b) -> (`c -> `d -> `b)
-(<∘∘) := ⇋ ∘∘∘
+(<∘∘) = ⇋ ∘∘∘
 
 ⇋ :: (`a -> `b -> `c) -> (`b -> `a -> `c)
-⇋ := callback -> b -> a -> callback a b
+⇋ = callback -> b -> a -> callback a b
 
 ɩ :: `a -> `a
-ɩ := a -> a
+ɩ = a -> a
 
 const :: `a -> `b -> `a
-const := true
+const = true

@@ -1,8 +1,8 @@
-{ Pair, fst, snd } := use "Collections/Pair"
-Sequence := use "Collections/Sequences/Sequence"
-{ None } := use "Effects/Maybe"
+{ Pair, fst, snd } = use "Collections/Pair"
+Sequence = use "Collections/Sequences/Sequence"
+{ None } = use "Effects/Maybe"
 
-type List<`t> extends Sequence<`t> :=
+type List<`t> extends Sequence<`t> =
 	| NonEmpty of Pair<`t, List<`t>>
 	| Empty of None
 
@@ -10,17 +10,17 @@ type List<`t> extends Sequence<`t> :=
 # same elements in the same order.
 #
 # ```aml
-# [1, 2, 3] = [1, 2, 3]
+# [1, 2, 3] == [1, 2, 3]
 # # true
 #
-# [1, 2, 3] = [1, 2, 4]
+# [1, 2, 3] == [1, 2, 4]
 # # false
 # ```
-(=) :: Comparable `t => List<`t> -> List<`t> -> 𝔹
-(=) := a -> b ->
+(==) :: Comparable `t => List<`t> -> List<`t> -> 𝔹
+(==) = a -> b ->
 	case a, b
 	| Empty, Empty => true
-	| NonEmpty (p1), NonEmpty (p2) => p1 = p2
+	| NonEmpty (p1), NonEmpty (p2) => p1 == p2
 	| _ => false
 
 # Returns a new list which has the given item appended to the end of it.
@@ -29,7 +29,7 @@ type List<`t> extends Sequence<`t> :=
 # append [1, 2, 3] 4
 # # [1, 2, 3, 4]
 # ```
-append := list -> item ->
+append = list -> item ->
 	case list
 	| Empty => new item
 	| NonEmpty (pair) => Pair.new
@@ -45,7 +45,7 @@ append := list -> item ->
 # concat [1, 2, 3] [4, 5, 6]
 # # [1, 2, 3, 4, 5, 6]
 # ```
-concat := first -> second ->
+concat = first -> second ->
 	case first
 	| Empty => second
 	| NonEmpty (pair) => Pair.new
@@ -58,7 +58,7 @@ concat := first -> second ->
 # new 1
 # # [1]
 # ```
-new := value -> Pair.new value Empty
+new = value -> Pair.new value Empty
 
 # Returns the first element of a list, if it exists.
 #
@@ -70,7 +70,7 @@ new := value -> Pair.new value Empty
 # # None
 # ```
 head :: List<`t> -> Maybe<`t>
-head := list ->
+head = list ->
 	case list
 	| Empty => None
 	| NonEmpty (pair) => Some (fst pair)
@@ -82,7 +82,7 @@ head := list ->
 # [1, 2, 3] <$> (x -> x + 1)
 # # [2, 3, 4]
 # ```
-(<$>) := list -> callback ->
+(<$>) = list -> callback ->
 	case list
 	| Empty => list
 	| NonEmpty (pair) => Pair.new
@@ -104,7 +104,7 @@ head := list ->
 # # []
 # ```
 tail :: List<`t> -> List<`t>
-tail := list ->
+tail = list ->
 	case list
 	| Empty => list
 	| NonEmpty (pair) => snd pair
@@ -116,7 +116,7 @@ tail := list ->
 # # [1, 2, 3]
 # ```
 (∷) :: `t -> List<`t> -> List<`t>
-(∷) := Pair.new
+(∷) = Pair.new
 
 # Returns a new list which is in the reverse order of the input list.
 #
@@ -125,7 +125,7 @@ tail := list ->
 # # [3, 2, 1]
 # ```
 reverse :: List<`t> -> List<`t>
-reverse := list ->
+reverse = list ->
 	case list
 	| Empty => list
 	| NonEmpty (pair) => concat
