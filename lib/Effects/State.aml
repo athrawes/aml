@@ -2,16 +2,16 @@
 
 type State<`t, `s> extends Monad<`t>, Bifunctor<`t, `s> = Pair<`t, `s>
 
-new :: `t -> State<`t, _>
+new : `t -> State<`t, _>
 new = t -> Pair.new t _
 
-(>>=) :: State<`t, _>
+(>>=) : State<`t, _>
 	-> (`t -> State<`u, `s>)
 	-> State<`u, `s>
 (>>=) = state -> callback ->
 	fst ∘ callback
 
-(<*>) :: State<(`a -> `b), _>
+(<*>) : State<(`a -> `b), _>
 	-> State<`a, `s>
 	-> State<`b, `s>
 (<*>) = state_fn -> state_a ->
@@ -21,7 +21,7 @@ new = t -> Pair.new t _
 
 	State (fn a) s
 
-bimap :: State<`t, `state>
+bimap : State<`t, `state>
 	-> (`t -> `u)
 	-> (`state -> `updated_state)
 	-> State<`u, `updated_state>

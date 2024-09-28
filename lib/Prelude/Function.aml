@@ -3,31 +3,34 @@ type Function<`a, `b> extends
 	Category<`a>,
 	Composable<`a, `b>,
 
-(->) :: `a -> `b -> Function<`a, `b>
+(->) : `a -> `b -> Function<`a, `b>
 
-(<$>) :: Function<`a, `b> -> (`b -> `c) -> Function<`a, `c>
+(<$>) : Function<`a, `b> -> (`b -> `c) -> Function<`a, `c>
 (<$>) = (∘)
 
-(|>) :: `a -> (`a -> `b) -> `b
+(|>) : `a -> (`a -> `b) -> `b
 (|>) = argument -> callback -> callback argument
 
-(<|) :: (`a -> `b) -> `a -> `b
+(<|) : (`a -> `b) -> `a -> `b
 (<|) = ⇋ |>
 
-(∘) :: (`a -> `b) -> (`b -> `c) -> (`a -> `c)
+(∘) : (`a -> `b) -> (`b -> `c) -> (`a -> `c)
 (∘) = ab -> bc -> a -> bc (ab a)
 
-(∘∘∘) :: (`a -> `b) -> (`c -> `d -> `a) -> (`c -> `d -> `b)
+(<∘) : (`b -> `c) -> (`a -> `b) -> (`a -> `c)
+(<∘) = ⇋ ∘
+
+(∘∘∘) : (`a -> `b) -> (`c -> `d -> `a) -> (`c -> `d -> `b)
 (∘∘∘) = (∘) ∘ (∘)
 
-(<∘∘) :: (`c -> `d -> `a) -> (`a -> `b) -> (`c -> `d -> `b)
+(<∘∘) : (`c -> `d -> `a) -> (`a -> `b) -> (`c -> `d -> `b)
 (<∘∘) = ⇋ ∘∘∘
 
-⇋ :: (`a -> `b -> `c) -> (`b -> `a -> `c)
+⇋ : (`a -> `b -> `c) -> (`b -> `a -> `c)
 ⇋ = callback -> b -> a -> callback a b
 
-ɩ :: `a -> `a
+ɩ : `a -> `a
 ɩ = a -> a
 
-const :: `a -> `b -> `a
+const : `a -> `b -> `a
 const = true

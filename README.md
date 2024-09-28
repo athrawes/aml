@@ -27,24 +27,24 @@ a = 5
 |> to_string # "5"; also, `a` is bound to an integer 5
 ```
 
-#### Type declaration `::`, ``` ` ```
+#### Type declaration `:`, ``` ` ```
 
 When binding variables, a type declaration may be provided
 
 ```aml
-a :: Integer = 5
+a : Integer = 5
 ```
 
 To mark a type parameter, simply prepend with a ``` ` ``` character:
 
 ```aml
-my_function :: `a -> String
+my_function : `a -> String
 ```
 
 #### Type Bounds
 
 ```aml
-my_function :: Orderable `a, Functor `a, Map `b => `a -> `b -> `c
+my_function : Orderable `a, Functor `a, Map `b => `a -> `b -> `c
 my_function = a -> b -> c
 ```
 
@@ -73,7 +73,7 @@ return_42 = _ -> 42
 forty_two = compose return_42 to_string
 forty_two _ # forty_two is "42"
 
-operationThatCanFail :: ℤ -> ℤ -> Maybe<Float>
+operationThatCanFail : ℤ -> ℤ -> Maybe<Float>
 operationThatCanFail = a -> b -> a / b
 ```
 
@@ -83,7 +83,7 @@ To define an infix function, (ie, a function whose argument may be placed in
 front of the function call), place the name of the function in parenthesis:
 
 ```aml
-(%) :: ℤ -> ℤ -> Maybe<ℤ>
+(%) : ℤ -> ℤ -> Maybe<ℤ>
 (%) = a -> b -> (a / b)
 	>>= to_integer
 	>>= (multiply b)
@@ -104,7 +104,7 @@ To call a function, simply specify an argument after the function name:
 
 ```aml
 # add_1 will add 1 to any integer
-add_1 :: ℤ -> ℤ
+add_1 : ℤ -> ℤ
 
 add_1 1
 # 2
@@ -116,7 +116,7 @@ add_1 2
 For infix functions, specify the arguments both before and after the function:
 
 ```aml
-(%) :: ℤ -> ℤ -> Maybe<ℤ>
+(%) : ℤ -> ℤ -> Maybe<ℤ>
 
 6 % 3
 # (Some 0)
@@ -148,7 +148,7 @@ To indicate that subsequent lines should be considered as part of the scope of
 the function definition, simply indent the subsequent lines:
 
 ```aml
-add_two :: ℤ -> ℤ
+add_two : ℤ -> ℤ
 add_two = arg ->
 	one = 1
 	two = add one one

@@ -1,7 +1,5 @@
-{ ENTRYPOINT, IO } = use "POSIX"
+main : List<String> -> IO<i32>
+main = argv ->
+	IO.println "Hello, world!" ;
+	0
 
-@platform "POSIX" ENTRYPOINT
-main :: List<String> -> IO<i32>
-main = _ ->
-	IO.stdout "Hello, world!\n"
-	<$ 0

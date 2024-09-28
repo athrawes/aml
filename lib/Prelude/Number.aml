@@ -1,12 +1,26 @@
-type UnsignedInteger =
-	| u8 of INTRINSIC_UNSIGNED_8BIT
-	| u16 of INTRINSIC_UNSIGNED_16BIT
-	| u32 of INTRINSIC_UNSIGNED_32BIT
-	| u64 of INTRINSIC_UNSIGNED_64BIT
-	| u128 of INTRINSIC_UNSIGNED_128BIT
-	| usize of INTRINSIC_UNSIGNED_DEFAULT_SIZE
+type u8 = 0x__
+cast : u8 -> u16
+cast = ι
 
-	𝟘 = 0b0
+type u16 = 0x____
+type u32 = 0x________
+type u64 = 0x________________
+type u128 = 0x________________________________
+
+#{macro <USIZE> match TARGET_POINTER_WIDTH}
+#{case 8}
+type usize = u8
+#{case 16}
+type usize = u16
+#{case 32}
+type usize = u32
+#{case 64}
+type usize = u64
+#{case _}
+type usize = u128
+#{end <USIZE>}
+
+type UnsignedInteger = u8 | u16 | u32 | u64 | u128 | usize
 
 type SignedInteger =
 	| i8 of INTRINSIC_SIGNED_8BIT

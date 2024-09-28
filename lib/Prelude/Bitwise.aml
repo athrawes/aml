@@ -1,9 +1,9 @@
 { ℤ } = use "Primitives/Number"
 
-bitshift_left :: ℤ -> ℤ -> ℤ
+bitshift_left : ℤ -> ℤ -> ℤ
 bitshift_left = INTRINSIC_BITSHIFT_LEFT
 (<<<) = bitshift_left
 
-bitshift_right :: ℤ -> ℤ -> ℤ
+bitshift_right : ℤ -> ℤ -> ℤ
 bitshift_right = INTRINSIC_BITSHIFT_RIGHT
 (>>>) = bitshift_right

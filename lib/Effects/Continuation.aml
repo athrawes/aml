@@ -1,13 +1,13 @@
 type Continuation<`r, `a> extends Monad<`a> = (`a -> `r) -> `r
 
-run :: Continuation<`r, `a> -> (`a -> `r) -> `r
+run : Continuation<`r, `a> -> (`a -> `r) -> `r
 run = continuation -> callback ->
 	case continuation | Continuation (k) => k callback
 
-new :: `a -> Continuation<`r, `a>
+new : `a -> Continuation<`r, `a>
 new = value -> Continuation (callback -> callback value)
 
-(>>=) :: Continuation<`r, `a>
+(>>=) : Continuation<`r, `a>
 	-> (`a -> Continuation<`r, `b>)
 	-> Continuation<`r, `b>
 (>>=) = continuation -> callback ->
