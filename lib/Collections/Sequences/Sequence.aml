@@ -304,7 +304,7 @@ length = seq -> reduce seq ((+ 1) ∘∘∘ const) 0
 # 1 :: [2, 3]
 # # [1, 2, 3]
 # ```
-(::) :: Sequence `m => `t -> `m<`t> -> `m<`t>
+(::) : Sequence `m => `t -> `m<`t> -> `m<`t>
 
 # Reduce a sequence to a single value by applying a function to each element and
 # passing an accumulator value between each application.
@@ -359,5 +359,5 @@ tail : Sequence `m => `m<`t> -> `m<`t>
 # [1, 2, 3] ∪ [2, 3, 4]
 # # [1, 2, 3, 4]
 # ```
-(∪) :: Sequence `m => `m<`t> -> `m<`t> -> `m<`t>
+(∪) : Sequence `m => `m<`t> -> `m<`t> -> `m<`t>
 (∪) = a -> b -> a ++ (b \ a)
