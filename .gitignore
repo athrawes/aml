@@ -2,6 +2,7 @@ bin/
 obj/
 build/
 
+vcpkg_installed/
 node_modules/
 
 output/
