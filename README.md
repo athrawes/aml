@@ -14,7 +14,7 @@ The main goals are:
 
 ## Syntax
 
-### Variable binding `==`, `:`, ``` ` ```, `extends`
+### Variable binding `==`, `:`, ``` ` ```
 
 ```aml
 a = 5
@@ -44,7 +44,10 @@ my_function : `a -> String
 #### Type Bounds
 
 ```aml
-my_function : Orderable `a, Functor `a, Map `b => `a -> `b -> `c
+my_function : `a -> `b -> `c
+    where `a is Orderable
+    where `a is Functor
+    where `b is Map
 my_function = a -> b -> c
 ```
 
@@ -160,13 +163,13 @@ add_two = arg ->
 
 Parenthesis may be used to group expressions
 
-### Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `extends`, `module`, `_`
+### Structures `{}`, `,`, `as`, `...`, `.`, `:`, `[]`, `_`
 
 ```aml
 a = { b: 1, c: 2 }
 { b, c } = a   # b is 1, c is 2
 { b as d } = a # partial destructuring is allowed, and aliasing is available
-Name = use "Some/Module" # collect all from structure/module as alias
+from "Some/Module" import * as Name
 ```
 
 Punning is allowed:
@@ -208,32 +211,6 @@ documentation comments.
 
 ### Pattern matching: `case`, `|`, `=>`, `with`, `,`
 
-If a given pattern has only one variant (e.g., the `Identity` monad which only
-has the value in the monad), then a `with` destructuring may be easier to use.
-
-```aml
-i = Identity 42
-
-with i (value) => value`
-```
-
-To be clear, this is syntactic sugar for a `case` statement that only has a
-single arm:
-
-```aml
-i = Identity 42
-
-# These two code blocks are equivalent
-# ---
-
-case i
-| Identity (value) => value * 2
-
-# ---
-
-with i (value) => value * 2
-```
-
 ### Modules
 
 #### Importing modules
@@ -241,7 +218,7 @@ with i (value) => value * 2
 Importing everything from a module
 
 ```aml
-{ ... } = use "Collections"
+from "Collections" import *
 
 # All items from the System.Collections namespace, including `List` and
 # `Sequence`, have been imported into the current namespace
@@ -253,7 +230,7 @@ Importing multiple items from a module
 Note: multi-item imports may span multiple lines
 
 ```aml
-{ to_upper, to_lower } = use "String"
+from "String" import { to_upper, to_lower }
 
 "Hello, World!" |> to_upper # "HELLO, WORLD!"
 "Hello, World!" |> to_lower # "hello, world!"
@@ -262,34 +239,8 @@ Note: multi-item imports may span multiple lines
 Aliasing imports
 
 ```aml
-{ map as list_map } = use "Collections/List"
-{ map as seq_map } = use "Collections/Sequence"
-```
-
-#### Declaring a module
-
-By default, every file declares a module with the same name as the file. So a
-a file in the root of the project `/Foo.aml` will define a module named `Foo`.
-Files in subfolders will declare namespaced modules; so a file `/Foo/Bar.aml`
-will create a module `Foo/Bar`, and so on.
-
-These module definitions are implicit, and do not need to be stated if the
-module definition does not require any modification.
-
-If a module definition needs to be modified, for example to extend the module
-from another, a `module` statement can be added as the first statement in the
-file:
-
-```aml
-module MyModule
-# methods, constants, etc...
-```
-
-To extend the current module with the methods from other modules, add the
-`extends` operator and a list of the modules to extend from:
-
-```aml
-module Foo extends Bar Baz
+from "Collections/List" import { map as list_map }
+from "Collections/Sequence" import { map as seq_map }
 ```
 
 ### Traits
@@ -343,9 +294,10 @@ Precedence in AML is as follows:
 2. Lines implicitly group all expressions on that line
 3. Infix functions implicitly create a group expression with their immediately
    left and right neighbor expressions
-4. Expressions are evaluated strictly right to left. Does _not_ respect
+4. Expressions are evaluated strictly left to right. Does _not_ respect
    PEMDAS/BODMAS or other mathematical conventions.
-5. Functions are greedy and will attempt to take as many arguments as possible
+5. Functions are greedy and will attempt to take as many arguments as possible,
+   taking into account the types of any following expressions.
 
 Some examples:
 
@@ -396,14 +348,14 @@ Some examples:
 
     ```aml
     # 2.0 |> divide   4.0
-    # ------------------
+    # -------------------
     # (2.0 |> divide) 4.0
-    # ---------------  |
-    # fn divide 2.0 $  |
-    # ---------------  |
-    # fn divide 2.0  4.0
-    # ------------------
-    #                0.5
+    # ---------------   |
+    # fn divide 2.0 $   |
+    # ---------------   |
+    # fn divide 2.0   4.0
+    # -------------------
+    #                 0.5
     ```
 
 5. Greedy evaluation

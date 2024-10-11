@@ -1,0 +1,8 @@
+type Apply<`a> = Functor<`a>
+
+(<*>) : `m<(`a -> `b)> -> `m<`a> -> `m<`b>
+	where `m is Apply
+
+(<**>) : `m<`a> -> `m<(`a -> `b)> -> `m<`b>
+	where `m is Apply
+(<**>) = ⇋ <*>

@@ -1,0 +1,13 @@
+type Composable<`a, `b>
+
+# A composition function which takes two objects of the same type and returns
+# a new object which represents 'gluing' the two objects together.
+#
+# Objects implementing `Composable` should have a reasonable implementation
+# of `compose` which behaves nicely with respect to associativity. So, given
+# values `a`, `b`, and `c` of the same type:
+#
+# - `a ∘ (b ∘ c)` should be the same as `(a ∘ b) ∘ c`
+(∘) : `m<`a, `b> -> `m<`b, `c> -> `m<`a, `c>
+	where `m is Composable
+(<∘) = ⇋ (∘)

@@ -1,0 +1,4 @@
+type Group<`a> = Monoid<`a>
+
+invert : `m<`a> -> `m<`a>
+	where `m is Group

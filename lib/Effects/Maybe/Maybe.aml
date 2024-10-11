@@ -1,0 +1,12 @@
+type Some<`a> = `a
+type None = unit
+
+type Maybe<`a> = Monad<`a> & (Some<`a> | None)
+
+new = Some
+
+(>>=) : Maybe<`a> -> (`a -> Maybe<`b>) -> Maybe<`b>
+(>>=) = maybe -> callback ->
+	case maybe
+	| Some (value) => callback value
+	| None => None

@@ -1,0 +1,134 @@
+from "Collections/Pair" import { Pair, fst, snd }
+from "Collections/Sequence" import { Sequence }
+from "Effects/Maybe" import { None }
+
+type NonEmpty = Pair<`t, List<`t>>
+type Empty = None
+type List<`t> = Sequence<`t> & (NonEmpty<`t> | Empty)
+
+# Determines whether two lists are equal. Two lists are equal if they have the
+# same elements in the same order.
+#
+# ```aml
+# [1, 2, 3] == [1, 2, 3]
+# # true
+#
+# [1, 2, 3] == [1, 2, 4]
+# # false
+# ```
+(==) : List<`t> -> List<`t> -> 𝔹
+	where `t is Comparable
+(==) = a -> b ->
+	case a, b
+	| Empty, Empty => true
+	| NonEmpty (p1), NonEmpty (p2) => p1 == p2
+	| _ => false
+
+# Returns a new list which has the given item appended to the end of it.
+#
+# ```aml
+# append [1, 2, 3] 4
+# # [1, 2, 3, 4]
+# ```
+append = list -> item ->
+	case list
+	| Empty => new item
+	| NonEmpty (pair) => Pair.new
+		(fst pair)
+		(append (snd pair) item)
+
+# Returns a new list which is the result of appending two lists together. The
+# lists are concatenated left to right, so the elements from the first list
+# provided come first in the list, and the elements from the second list
+# provided come later.
+#
+# ```aml
+# concat [1, 2, 3] [4, 5, 6]
+# # [1, 2, 3, 4, 5, 6]
+# ```
+concat = first -> second ->
+	case first
+	| Empty => second
+	| NonEmpty (pair) => Pair.new
+		(fst pair)
+		(concat (snd pair) second)
+
+# Returns a new list with the given item as the first and only element.
+#
+# ```aml
+# new 1
+# # [1]
+# ```
+new = value -> Pair.new value Empty
+
+# Returns the first element of a list, if it exists.
+#
+# ```aml
+# head [1, 2, 3]
+# # Some 1
+#
+# head []
+# # None
+# ```
+head : List<`t> -> Maybe<`t>
+head = list ->
+	case list
+	| Empty => None
+	| NonEmpty (pair) => Some (fst pair)
+
+# Creates a new list from a given list and a callback to transform each element
+# in the list.
+#
+# ```aml
+# [1, 2, 3] <$> (x -> x + 1)
+# # [2, 3, 4]
+# ```
+(<$>) = list -> callback ->
+	case list
+	| Empty => list
+	| NonEmpty (pair) => Pair.new
+		(callback (fst pair))
+		((snd pair) <$> callback)
+
+# Returns a new list which has all elements of the input list except for the
+# first element. If the input list is empty or has only one element, an empty
+# list is returned.
+#
+# ```aml
+# tail [1, 2, 3]
+# # [2, 3]
+#
+# tail [1]
+# # []
+#
+# tail []
+# # []
+# ```
+tail : List<`t> -> List<`t>
+tail = list ->
+	case list
+	| Empty => list
+	| NonEmpty (pair) => snd pair
+
+# Returns a new list with a given item prepended to it.
+#
+# ```aml
+# 1 :: [2, 3]
+# # [1, 2, 3]
+# ```
+(∷) : `t -> List<`t> -> List<`t>
+(∷) = Pair.new
+
+# Returns a new list which is in the reverse order of the input list.
+#
+# ```aml
+# reverse [1, 2, 3]
+# # [3, 2, 1]
+# ```
+reverse : List<`t> -> List<`t>
+reverse = list ->
+	case list
+	| Empty => list
+	| NonEmpty (pair) => concat
+		(reverse (snd pair))
+		(new (fst pair))

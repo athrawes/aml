@@ -1,0 +1,4 @@
+type Functor<`a>
+
+(<$>) : `m<`a> -> (`a -> `b) -> `m<`b>
+	where `m is Functor

@@ -1,0 +1,4 @@
+type Alt<`a> = Functor<`a>
+
+alt : `m<`a> -> `m<`a> -> `m<`a>
+	where `m is Alt

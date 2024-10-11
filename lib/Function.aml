@@ -1,0 +1,33 @@
+type Function<`a, `b> =
+	& Functor<`b>,
+	& Composable<`a, `b>,
+
+(<$>) : Function<`a, `b> -> Function<`b, `c> -> Function<`a, `c>
+(<$>) = (∘)
+
+(|>) : `a -> (`a -> `b) -> `b
+(|>) = argument -> callback -> callback argument
+
+(<|) : (`a -> `b) -> `a -> `b
+(<|) = ⇋ |>
+
+(∘) : Function<`a, `b> -> Function<`b, `c> -> Function<`a, `c>
+(∘) = ab -> bc -> a -> bc (ab a)
+
+(<∘) : Function<`b, `c> -> Function<`a, `b> -> Function<`a, `c>
+(<∘) = ⇋ ∘
+
+(∘∘∘) : (`a -> `b) -> (`c -> `d -> `a) -> (`c -> `d -> `b)
+(∘∘∘) = (∘) ∘ (∘)
+
+(<∘∘) : (`c -> `d -> `a) -> (`a -> `b) -> (`c -> `d -> `b)
+(<∘∘) = ⇋ ∘∘∘
+
+⇋ : (`a -> `b -> `c) -> (`b -> `a -> `c)
+⇋ = callback -> b -> a -> callback a b
+
+ɩ : `a -> `a
+ɩ = a -> a
+
+const : `a -> `b -> `a
+const = true

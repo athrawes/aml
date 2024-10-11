@@ -1,0 +1,9 @@
+type Monad<`a> = Applicative<`a> & Chainable<`a>
+
+(<$>) : `m<`a> -> (`a -> `b) -> `m<`b>
+	where `m is Monad
+(<$>) = ma -> f -> ma >>= (a -> new (f a))
+
+flatten : `m<`m<`a>> -> `m<`a>
+	where `m is Monad
+flatten = mma -> mma >>= ι

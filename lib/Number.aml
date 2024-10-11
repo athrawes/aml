@@ -1,0 +1,78 @@
+type u8 = 0x__
+cast : u8 -> u16
+cast = ι
+
+type u16 = 0x____
+type u32 = 0x________
+type u64 = 0x________________
+type u128 = 0x________________________________
+
+#{macro <USIZE> match TARGET_POINTER_WIDTH}
+#{case 8}
+type usize = u8
+#{case 16}
+type usize = u16
+#{case 32}
+type usize = u32
+#{case 64}
+type usize = u64
+#{case _}
+type usize = u128
+#{end <USIZE>}
+
+type UnsignedInteger = u8 | u16 | u32 | u64 | u128 | usize
+
+type SignedInteger =
+	| i8 of INTRINSIC_SIGNED_8BIT
+	| i16 of INTRINSIC_SIGNED_16BIT
+	| i32 of INTRINSIC_SIGNED_32BIT
+	| i64 of INTRINSIC_SIGNED_64BIT
+	| i128 of INTRINSIC_SIGNED_128BIT
+	| isize of INTRINSIC_SIGNED_DEFAULT_SIZE
+
+	𝟘 = 0b0
+
+# A natural number is a non-negative integer.
+type ℕ = UnsignedInteger
+
+type ℤ = Integer
+type Integer = Orderable & (SignedInteger | UnsignedInteger)
+
+	(==) = a -> b -> case (a, b)
+		| (`t _, `t _) => INTRINSIC_OPERATOR_EQUALS a b
+		| (`t _, `u _) when sizeof<`t> > sizeof<`u> =>
+			INTRINSIC_OPERATOR_EQUALS a (b :> `t)
+		| (`t _, `u _) =>
+			INTRINSIC_OPERATOR_EQUALS (a :> `u) b
+
+# IEEE 754 floating point numbers.
+type Float =
+	| f32 of INTRINSIC_FLOAT_32BIT
+	| f64 of INTRINSIC_FLOAT_64BIT
+
+# A rational number is a number that can be expressed as the quotient or
+# fraction p/q of two integers, a numerator p and a non-zero denominator q.
+# In AML, this is represented by a pair of an integer and a natural number,
+# where the first number is the numerator and the second number is the
+# denominator. Note that the denominator cannot be 0.
+type Rational = Pair<ℤ, Omit<ℕ, 𝟘>>
+type ℚ = Rational
+
+# A real number is a value that represents a quantity along a continuous line.
+# In AML, this is represented by a sum type of integers, rationals, and floats.
+# Note that this is not a complete representation of the real numbers, as it
+# does not include irrational numbers such as π or √2 due to the limits of
+# floating point arithmetic. Approximations of these numbers can be represented
+# using the `Float` type.
+type ℝ = Real
+type Real =
+	| Integer
+	| Rational
+	| Float
+
+# A complex number is a number that can be expressed in the form a + bⅈ, where a
+# is the real part and b is the imaginary part of the complex number. In AML,
+# this is represented by a pair of real numbers, where the first number is the
+# real part and the second number is the imaginary part.
+type Complex = Pair<ℝ, ℝ>
+type ℂ = Complex

@@ -1,0 +1,4 @@
+type Bifunctor<`a, `b> = Functor<`b>
+
+bimap : `m<`a, `c> -> (`a -> `b) -> (`c -> `d) -> `m<`b, `d>
+	where `m is Bifunctor

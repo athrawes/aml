@@ -1,0 +1,7 @@
+type Identity<`a> = Monad<`a>
+
+new = Identity
+
+(>>=) : Identity<`a> -> (`a -> Identity<`b>) -> Identity<`b>
+(>>=) = identity -> callback ->
+	case identity | Identity (value) => callback value

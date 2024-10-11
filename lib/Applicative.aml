@@ -1,0 +1,36 @@
+type Applicative<`a> = Apply<`a>
+
+new : `a -> `m<`a>
+	where `m is Applicative
+
+(<$>) : `m<`a> -> (`a -> `b) -> `m<`b>
+	where `m is Applicative
+(<$>) = ma -> callback -> ma <*> (new callback)
+
+(<$) : `m<`a> -> `b -> `m<`b>
+	where `m is Applicative
+(<$) = ma -> b -> ma <$> (const b)
+
+(;) : `m<`a> -> `b -> `m<`b>
+	where `m is Applicative
+(;) = <$
+
+($>) : `b -> `m<`a> -> `m<`b>
+	where `m is Applicative
+($>) = ⇋ <$
+
+↑¹ : (`a -> `b) -> `m<`a> -> `m<`b>
+	where `m is Applicative
+↑¹ = callback -> ma -> (new callback) <*> ma
+
+↑² : (`a -> `b -> `c) -> `m<`a> -> `m<`b> -> `m<`c>
+	where `m is Applicative
+↑² = callback -> ma -> mb -> (new callback) <*> ma <*> mb
+
+↑³ : (`a -> `b -> `c -> `d)
+	-> `m<`a>
+	-> `m<`b>
+	-> `m<`c>
+	-> `m<`d>
+	where `m is Applicative
+↑³ = callback -> ma -> mb -> mc -> (new callback) <*> ma <*> mb <*> mc

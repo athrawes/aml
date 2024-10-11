@@ -1,0 +1,1 @@
+type Alternative<`a> = Applicative<`a> & Plus<`a>

@@ -1,0 +1,31 @@
+type Chainable<`a> = Apply<`a> & Functor<`a>
+
+# Allows chaining functions which return instances of the current type.
+#
+# ```aml
+# Some 42
+# >>= (value -> value / 2) # Maybe<Float> (21.0)
+# >>= (value -> value / 5.0) # Maybe<Float> (4.2)
+# ```
+(>>=) : `m<`a> -> (`a -> `m<`b>) -> `m<`b>
+	where `m is Chainable
+
+# An infix alias for `>>=`, but with the arguments reversed.
+#
+# ```aml
+# (value -> value / 2)
+# =<< (Some 42) # Maybe<Float> (21)
+# ```
+(=<<) = ⇋ (>>=)
+
+# Composes two functions by Kleisli composition.
+(>=>) : (`a -> `m<`b>) -> (`b -> `m<`c>) -> (`a -> `m<`c>)
+(>=>) = amb -> bmc -> amb ∘ ((⇋ >>=) bmc)
+
+# An infix alias for `>=>`, but with the arguments reversed.
+(<=<) = ⇋ (>=>)
+
+(<*>) : `m<(`a -> `b)> -> `m<`a> -> `m<`b>
+	where `m is Chainable
+(<*>) = mf -> ma ->
+	mf >>= (f -> ma >>= (a -> new (f a)))

@@ -1,0 +1,4 @@
+type Extend<`a> = Functor<`a>
+
+extend : `m<`a> -> (`m<`a> -> `b) -> `m<`b>
+	where `m is Extend

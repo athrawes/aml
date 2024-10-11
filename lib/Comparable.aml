@@ -1,0 +1,19 @@
+type Comparable
+
+# An equality function for comparing two values of the same type. Equality
+# should behave nicely here, so that `==` is reflexive, symmetric, and
+# transitive. So, given values `a`, `b`, and `c` of the same type:
+#
+# - `a == a` should be true
+# - `a == b` should be the same as `b == a`
+# - if `a == b` and `b == c` are both true, then `a == c` should also be true
+# - if one of `a == b` or `b == c` are false, then `a == c` should also be false
+# - if both are false, `a == c` may be either true or false
+(==) : `a -> `a -> 𝔹
+	where `a is Comparable
+
+# An inequality function for comparing two values of the same type. Simply
+# negates the result of the equality function.
+(!=) : `a -> `a -> 𝔹
+	where `a is Comparable
+(!=) = ¬ ∘∘∘ ==

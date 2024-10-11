@@ -1,0 +1,7 @@
+type Foldable<`a>
+
+fold : `m<`a> -> (`a -> `a -> `a) -> `a
+	where `m is Foldable
+
+reduce : `m<`a> -> (`b -> `a -> `b) -> `b -> `b
+	where `m is Foldable

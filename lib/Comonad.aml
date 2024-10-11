@@ -1,0 +1,4 @@
+trait Comonad<`a> = Extend<`a>
+
+extract : `m<`a> -> `a
+	where `m is Comonad

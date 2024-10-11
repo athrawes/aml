@@ -1,0 +1,13 @@
+type Result<`ok, `error> = Monad<`ok> & (
+	| Ok `ok
+	| Error `error )
+
+new = Ok
+
+(>>=) : Result<`ok, `error>
+	-> (`ok -> Result<`ok2, `error2>)
+	-> Result<`ok2, `error2>
+(>>=) = result -> callback ->
+	case result
+	| Ok (value) => callback value
+	| Error _ => result

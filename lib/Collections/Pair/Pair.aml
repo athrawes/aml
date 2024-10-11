@@ -1,0 +1,20 @@
+type First<`a> = `a
+type Second<`b> = `b
+type Pair<`a, `b> = Bifunctor<`a, `b> & (First<`a> | Second<`b>)
+
+(==) : Pair<`a, `b> -> Pair<`a, `b> -> 𝔹
+	where `a is Comparable
+	where `b is Comparable
+(==) = a -> b -> ((fst a) == (fst b)) ∧ ((snd a) == (snd b))
+
+# Constructs a new pair from two arguments
+new : `a -> `b -> Pair<`a, `b>
+new = a -> b -> which -> which a b
+
+# Grabs the first item from a Pair
+fst : Pair<`a, `b> -> `a
+fst = pair -> pair true
+
+# Grabs the second item from a Pair
+snd : Pair<`a, `b> -> `b
+snd = pair -> pair false

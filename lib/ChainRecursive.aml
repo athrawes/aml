@@ -1,0 +1,3 @@
+type ChainRecurisve<`a> = Chainable<`a>
+chain_rec : ((`a -> `c) -> (`b -> `c) -> `a -> `m<`c>) -> `a -> `m<`b>
+	where `m is ChainRecursive
