@@ -1,0 +1,4 @@
+[submodule "compiler/vendors/PEGTL"]
+	path = compiler/vendors/PEGTL
+	url = https://github.com/taocpp/PEGTL.git
+	branch = 3.x
