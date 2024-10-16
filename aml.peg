@@ -1,0 +1,64 @@
+# Whitespace and comments
+Whitespace <- [ \t\n\r]*
+Comment <- '#' (!'\n' .)* '\n'
+
+# Identifiers (allowing emoji, special characters, and hyphens within, but not at the start or end, excluding `_`)
+Identifier <- [\p{L}\p{N}\p{S}\p{M}] [\p{L}\p{N}\p{S}\p{M}_-]* [\p{L}\p{N}\p{S}\p{M}_]
+
+# Generic Type Parameter
+GenericTypeParameter <- '`' Identifier
+
+# Types
+Type <- TypePrimary (Intersection | Union)?
+TypePrimary <- Identifier ('<' (Type / GenericTypeParameter) '>')? / UnitType
+Union <- '|' Type
+Intersection <- '&' Type
+
+# Unit/Ignore Type outside of pattern matching
+UnitType <- '_'
+
+# Type Declarations (including nominal types and alias types)
+TypeDeclaration <- NominalTypeDeclaration / AliasTypeDeclaration
+AliasTypeDeclaration <- 'type' Identifier '=' Type
+NominalTypeDeclaration <- 'type' Identifier
+
+# Function Signatures (with infix and prefix functions)
+FunctionSignature <- (InfixFunction / PrefixFunction) ':' Type ('->' Type)* TypeBounds?
+InfixFunction <- '(' Identifier ')'
+PrefixFunction <- Identifier
+
+# Type Bounds with Multi-Parameter Constraints
+TypeBounds <- (WhereClause)+
+WhereClause <- 'where' GenericTypeParameter 'is' Constraint (ConstraintParameter)?
+ConstraintParameter <- '<' Type (',' Type)* '>'
+Constraint <- Identifier
+
+# Expressions
+Expression <- InfixCall / FunctionCall / GroupedExpression / Accessor / StringLiteral / UnitType / Identifier
+GroupedExpression <- '(' Expression ')'
+
+# Infix Call Syntax (left-to-right evaluation of infix operators)
+InfixCall <- Expression InfixOperator Expression
+InfixOperator <- Identifier
+
+# Record Accessor Syntax
+Accessor <- Identifier '.' Identifier
+
+# Function Calls (OCaml/Haskell-like syntax, lower precedence than InfixCall)
+FunctionCall <- Identifier Expression+
+
+# String Literals (allowing both single and double quotes, but must match)
+StringLiteral <- SingleQuotedString / DoubleQuotedString
+SingleQuotedString <- "'" (!"'" .)* "'"
+DoubleQuotedString <- '"' (!'"' .)* '"'
+
+# Pattern Matching (OCaml-style, with advanced destructuring)
+CaseExpression <- 'case' Expression ',' Expression '\n' (Pattern '=>' Expression '\n')+
+Pattern <- TuplePattern / ListPattern / RecordPattern / IdentifierPattern / WildcardPattern
+
+TuplePattern <- '(' Pattern (',' Pattern)+ ')'
+ListPattern <- '[' (Pattern (',' Pattern)*)? ']'
+RecordPattern <- '{' (FieldPattern (',' FieldPattern)*)? '}'
+FieldPattern <- Identifier ':' Pattern
+IdentifierPattern <- Identifier
+WildcardPattern <- '_'
