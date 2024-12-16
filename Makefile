@@ -1,5 +1,10 @@
 CXX = g++
-CXX_FLAGS = -Icompiler/include -Wall -Wextra -std=c++23
+CXX_FLAGS = \
+	-Wall \
+	-Wextra \
+	-std=c++23 \
+	-Icompiler/include \
+	-Icompiler/vendors/PEGTL/include
 
 CXX_SOURCES = $(wildcard compiler/src/*.cpp) $(wildcard compiler/src/**/*.cpp)
 CXX_OBJECTS = $(patsubst compiler/src/%.cpp,build/objs/%.o,$(CXX_SOURCES)) 
