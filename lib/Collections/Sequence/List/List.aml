@@ -2,9 +2,9 @@ from "Collections/Pair" import { Pair, fst, snd }
 from "Collections/Sequence" import { Sequence }
 from "Effects/Maybe" import { None }
 
-type NonEmpty = Pair<`t, List<`t>>
+type NonEmpty<.t> = Pair<.t, List<.t>>
 type Empty = None
-type List<`t> = Sequence<`t> & (NonEmpty<`t> | Empty)
+type List<.t> = Sequence<.t> & (NonEmpty<.t> | Empty)
 
 # Determines whether two lists are equal. Two lists are equal if they have the
 # same elements in the same order.
@@ -16,8 +16,8 @@ type List<`t> = Sequence<`t> & (NonEmpty<`t> | Empty)
 # [1, 2, 3] == [1, 2, 4]
 # # false
 # ```
-(==) : List<`t> -> List<`t> -> 𝔹
-	where `t is Comparable
+(==) : List<.t> -> List<.t> -> 𝔹
+	where .t is Comparable
 (==) = a -> b ->
 	case a, b
 	| Empty, Empty => true
@@ -70,7 +70,7 @@ new = value -> Pair.new value Empty
 # head []
 # # None
 # ```
-head : List<`t> -> Maybe<`t>
+head : List<.t> -> Maybe<.t>
 head = list ->
 	case list
 	| Empty => None
@@ -104,7 +104,7 @@ head = list ->
 # tail []
 # # []
 # ```
-tail : List<`t> -> List<`t>
+tail : List<.t> -> List<.t>
 tail = list ->
 	case list
 	| Empty => list
@@ -116,7 +116,7 @@ tail = list ->
 # 1 :: [2, 3]
 # # [1, 2, 3]
 # ```
-(∷) : `t -> List<`t> -> List<`t>
+(∷) : .t -> List<.t> -> List<.t>
 (∷) = Pair.new
 
 # Returns a new list which is in the reverse order of the input list.
@@ -125,7 +125,7 @@ tail = list ->
 # reverse [1, 2, 3]
 # # [3, 2, 1]
 # ```
-reverse : List<`t> -> List<`t>
+reverse : List<.t> -> List<.t>
 reverse = list ->
 	case list
 	| Empty => list

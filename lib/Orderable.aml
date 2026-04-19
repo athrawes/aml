@@ -2,23 +2,23 @@ type Orderable = Comparable
 
 # Less than or equal to. Returns true if the first argument is less than or
 # equal to the second argument.
-(≤) : `a -> `a -> 𝔹
-	where `a is Orderable
+(≤) : .a -> .a -> 𝔹
+	where .a is Orderable
 
 # Strictly less than. Returns true if the first argument is strictly less than
 # the second argument.
-(<) : `a -> `a -> 𝔹
-	where `a is Orderable
+(<) : .a -> .a -> 𝔹
+	where .a is Orderable
 (<) = a -> b -> ¬ (a == b) ∧ (a ≤ b)
 
 # Greater than or equal to. Returns true if the first argument is greater than
 # or equal to the second argument.
-(≥) : `a -> `a -> 𝔹
-	where `a is Orderable
+(≥) : .a -> .a -> 𝔹
+	where .a is Orderable
 (≥) = a -> b -> (a == b) ∨ (¬ (a ≤ b))
 
 # Strict greater than. Returns true if the first argument is strictly greater
 # than the second argument.
-(>) : `a -> `a -> 𝔹
-	where `a is Orderable
-(>) = ¬ ∘∘∘ ≤
+(>) : .a -> .a -> 𝔹
+	where .a is Orderable
+(>) = ¬ ∘: ≤

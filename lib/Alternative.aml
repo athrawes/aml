@@ -1,1 +1,1 @@
-type Alternative<`a> = Applicative<`a> & Plus<`a>
+type Alternative<.a> = Applicative<.a> & Plus<.a>

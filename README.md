@@ -14,7 +14,7 @@ The main goals are:
 
 ## Syntax
 
-### Variable binding `==`, `:`, ``` ` ```
+### Variable binding `==`, `:`, `.`
 
 ```aml
 a = 5
@@ -27,7 +27,7 @@ a = 5
 |> to_string # "5"; also, `a` is bound to an integer 5
 ```
 
-#### Type declaration `:`, ``` ` ```
+#### Type declaration `:`, `.`
 
 When binding variables, a type declaration may be provided
 
@@ -35,19 +35,19 @@ When binding variables, a type declaration may be provided
 a : Integer = 5
 ```
 
-To mark a type parameter, simply prepend with a ``` ` ``` character:
+To mark a type parameter, simply prepend with a `.` character:
 
 ```aml
-my_function : `a -> String
+my_function : .a -> String
 ```
 
 #### Type Bounds
 
 ```aml
-my_function : `a -> `b -> `c
-    where `a is Orderable
-    where `a is Functor
-    where `b is Map
+my_function : .a -> .b -> .c
+    where .a is Orderable
+    where .a is Functor
+    where .b is Map
 my_function = a -> b -> c
 ```
 
@@ -175,7 +175,7 @@ from "Some/Module" import * as Name
 Punning is allowed:
 
 ```aml
-value -> { value } # `a -> Map<String, `a>
+value -> { value } # .a -> Map<String, .a>
 ```
 
 #### Tuples `()`
@@ -207,7 +207,7 @@ When used in a guard expression, represents the default case.
 Comments immediately above modules and functions are interpreted as
 documentation comments.
 
-### Primitive values: `"`, ``` ` ```, `0`, `0.0`, `{}`, `()`
+### Primitive values: `"`, `'`, `0`, `0.0`, `{}`, `()`
 
 ### Pattern matching: `case`, `|`, `=>`, `with`, `,`
 
@@ -251,7 +251,7 @@ TODO: fill this out. Basically, Rust traits.
 
 Borrowing some concepts from Haskell, AML has fully managed effects. Most
 noticeably, this means that most functions in the `IO` namespace don't
-immediately perform an operation, and instead return an ```IO<`a>``` computation
+immediately perform an operation, and instead return an `IO<.a>` computation
 which must be passed to the `IO.run` function in order to be executed.
 
 For example, to write "Hello, World!" to stdout, you'd write:
@@ -261,8 +261,8 @@ IO.stdout "Hello, World!"
 |> IO.run
 ```
 
-```IO<`a>``` has all of the usual FP goodies one would expect here, allowing users
-to bind, map, apply, and compose IO operations. To be more specific, ```IO<`a>``` is
+`IO<.a>` has all of the usual FP goodies one would expect here, allowing users
+to bind, map, apply, and compose IO operations. To be more specific, `IO<.a>` is
 an Effect, AKA Monad. This makes creating IO pipelines a breeze:
 
 ```aml
@@ -380,7 +380,7 @@ Some examples:
 ### Casing
 
 Type parameters should either be a single lowercase letter or a short
-descriptor in camelCase. For example, ``` `a ``` or ``` `myParameter ```
+descriptor in camelCase. For example, `.a` or `.myParameter`
 
 Type names should be in PascalCase.
 

@@ -1,11 +1,11 @@
 from "Boolean" import { 𝔹, false, ∨, ¬ }
 
-type Sequence<`a> =
-	& Foldable<`a>
-	& Filterable<`a>
-	& Monoid<`a>
-	& Monad<`a>
-	& Traversable<`a>
+type Sequence<.a> =
+	& Foldable<.a>
+	& Filterable<.a>
+	& Monoid<.a>
+	& Monad<.a>
+	& Traversable<.a>
 
 # Returns true if all elements in the sequence satisfy the given predicate
 # function. Returns false otherwise.
@@ -17,8 +17,8 @@ type Sequence<`a> =
 # ∀ [1, 2, 3] (x -> x < 3)
 # # false
 # ```
-∀ : `m<`t> -> (`t -> 𝔹) -> 𝔹
-	where `m is Sequence
+∀ : .m<.t> -> (.t -> 𝔹) -> 𝔹
+	where .m is Sequence
 ∀ = seq -> predicate -> ¬ (∃ seq (¬ ∘ predicate))
 
 # Returns true if there exists any element in the sequence satisfies the given
@@ -34,8 +34,8 @@ type Sequence<`a> =
 # ∃ [1, 2, 3] (x -> x == 4)
 # # false
 # ```
-∃ : `m<`t> -> (`t -> 𝔹) -> 𝔹
-	where `m is Sequence
+∃ : .m<.t> -> (.t -> 𝔹) -> 𝔹
+	where .m is Sequence
 ∃ = seq -> predicate -> reduce seq (∨ ∘ predicate) false
 
 # Returns true if there exists exactly one element in the sequence that
@@ -55,8 +55,8 @@ type Sequence<`a> =
 # ∃! [1, 2, 3] (x -> x < 3)
 # # false
 # ```
-∃! : `m<`t> -> (`t -> 𝔹) -> 𝔹
-	where `m is Sequence
+∃! : .m<.t> -> (.t -> 𝔹) -> 𝔹
+	where .m is Sequence
 ∃! = seq -> predicate ->
 	case seq
 	| [] => false
@@ -75,7 +75,7 @@ type Sequence<`a> =
 # [1, 2, 3] ∄ (x -> x == 4)
 # # true
 # ```
-(∄) = ¬ ∘∘∘ ∃
+(∄) = ¬ ∘: ∃
 
 # Applies a sequence of functions to a sequence of values, returning a new
 # sequence with the results.
@@ -84,8 +84,8 @@ type Sequence<`a> =
 # [(+ 1), (* 10)] <*> [1, 2]
 # # [2, 3, 10, 20]
 # ```
-(<*>) : `m<(`a -> `b)> -> `m<`a> -> `m<`b>
-	where `m is Sequence
+(<*>) : .m<(.a -> .b)> -> .m<.a> -> .m<.b>
+	where .m is Sequence
 (<*>) = fs -> xs ->
 	case xs
 	| [] => []
@@ -104,9 +104,9 @@ type Sequence<`a> =
 # [1, 2, 3] ∋ 4
 # # false
 # ```
-(∋) : `m<`t> -> `t -> 𝔹
-	where `m is Sequence
-	where `t is Comparable
+(∋) : .m<.t> -> .t -> 𝔹
+	where .m is Sequence
+	where .t is Comparable
 (∋) = seq -> element -> ∃ seq (== element)
 
 # Determines if the given element is not in the sequence. The elements of the
@@ -119,7 +119,7 @@ type Sequence<`a> =
 # 4 ∌ [1, 2, 3]
 # # true
 # ```
-(∌) = ¬ ∘∘∘ (∋)
+(∌) = ¬ ∘: (∋)
 
 # Returns a new sequence which contains all the elements of the first sequence
 # which are not in the second sequence.
@@ -128,8 +128,8 @@ type Sequence<`a> =
 # [1, 2, 3] \ [2, 3, 4]
 # # [1]
 # ```
-(\) : `m<`t> -> `m<`t> -> `m<`t>
-	where `m is Sequence
+(\) : .m<.t> -> .m<.t> -> .m<.t>
+	where .m is Sequence
 (\) = a -> b -> filter a (∌ b)
 
 # Drops the first `count` elements from the sequence and returns a new sequence
@@ -140,8 +140,8 @@ type Sequence<`a> =
 # drop 2 [1, 2, 3]
 # # [3]
 # ```
-drop : `m<`t> -> ℕ -> `m<`t>
-	where `m is Sequence
+drop : .m<.t> -> ℕ -> .m<.t>
+	where .m is Sequence
 drop = seq -> count ->
 	case (count < 1)
 	| true => seq
@@ -155,8 +155,8 @@ drop = seq -> count ->
 # drop_while [1, 2, 3, 1, 2, 3] (x -> x < 3)
 # # [3, 1, 2, 3]
 # ```
-drop_while : `m<`t> -> (`t -> 𝔹) -> `m<`t>
-	where `m is Sequence
+drop_while : .m<.t> -> (.t -> 𝔹) -> .m<.t>
+	where .m is Sequence
 drop_while = seq -> predicate ->
 	case head seq
 	| None => seq
@@ -175,8 +175,8 @@ drop_while = seq -> predicate ->
 # [1, 2, 3] @ 3
 # # None
 # ```
-(@) : `m<`t> -> ℤ -> Maybe<`t>
-	where `m is Sequence
+(@) : .m<.t> -> ℤ -> Maybe<.t>
+	where .m is Sequence
 (@) = seq -> index ->
 	case (index < 0)
 	| true => None
@@ -195,8 +195,8 @@ drop_while = seq -> predicate ->
 # filter [1, 2, 3] (x -> x < 3)
 # # [1, 2]
 # ```
-filter : `m<`t> -> (`t -> 𝔹) -> `m<`t>
-	where `m is Sequence
+filter : .m<.t> -> (.t -> 𝔹) -> .m<.t>
+	where .m is Sequence
 filter = seq -> predicate ->
 	filter_helper = seq' -> predicate' -> acc ->
 		case head seq'
@@ -215,8 +215,8 @@ filter = seq -> predicate ->
 # ↓ [[1, 2], [3, 4]]
 # # [1, 2, 3, 4]
 # ```
-↓ : `m<`m<`t>> -> `m<`t>
-	where `m is Sequence
+↓ : .m<.m<.t>> -> .m<.t>
+	where .m is Sequence
 ↓ = seq -> fold seq (++)
 
 # Folds a sequence into a single value by applying a function pairwise to
@@ -226,9 +226,9 @@ filter = seq -> predicate ->
 # fold [1, 2, 3] (+)
 # # 6
 # ```
-fold : `m<`t> -> (`t -> `t -> `t) -> `t
-	where `m is Sequence
-	where `t is Plus
+fold : .m<.t> -> (.t -> .t -> .t) -> .t
+	where .m is Sequence
+	where .t is Plus
 fold = seq -> callback ->
 	case seq
 	| [ ] => 𝟘
@@ -244,8 +244,8 @@ fold = seq -> callback ->
 # head []
 # # None
 # ```
-head : `m<`t> -> Maybe<`t>
-	where `m is Sequence
+head : .m<.t> -> Maybe<.t>
+	where .m is Sequence
 
 # Returns true if the given element is in the sequence. Returns false otherwise.
 #
@@ -256,9 +256,9 @@ head : `m<`t> -> Maybe<`t>
 # 4 ∈ [1, 2, 3]
 # # false
 # ```
-(∈) : `t -> `m<`t> -> 𝔹
-	where `m is Sequence
-	where `t is Comparable
+(∈) : .t -> .m<.t> -> 𝔹
+	where .m is Sequence
+	where .t is Comparable
 (∈) = ⇋ ∋
 
 # Returns true if the given element is not in the sequence. Returns false
@@ -271,7 +271,7 @@ head : `m<`t> -> Maybe<`t>
 # 4 ∉ [1, 2, 3]
 # # true
 # ```
-(∉) = ¬ ∘∘∘ (∈)
+(∉) = ¬ ∘: (∈)
 
 # Returns true if the first sequence is a subset of the second sequence; in
 # other words, if all elements in the first sequence are also in the second
@@ -287,9 +287,9 @@ head : `m<`t> -> Maybe<`t>
 # [1, 2, 3] ⊂ [1, 2]
 # # false
 # ```
-(⊂) : `m<`t> -> `m<`t> -> 𝔹
-	where `m is Sequence
-	where `t is Comparable
+(⊂) : .m<.t> -> .m<.t> -> 𝔹
+	where .m is Sequence
+	where .t is Comparable
 (⊂) = a -> b -> ∀ a (∋ b)
 
 # Checks to see if the first sequence is not a subset of the second sequence, or
@@ -306,7 +306,7 @@ head : `m<`t> -> Maybe<`t>
 # [1, 2, 3] ⊄ [1, 2]
 # # true
 # ```
-(⊄) = ¬ ∘∘∘ (⊂)
+(⊄) = ¬ ∘: (⊂)
 
 # Returns the length of the sequence.
 #
@@ -314,9 +314,9 @@ head : `m<`t> -> Maybe<`t>
 # length [1, 2, 3]
 # # 3
 # ```
-length : `m<`t> -> ℕ
-	where `m is Sequence
-length = seq -> reduce seq ((+ 1) ∘∘∘ const) 0
+length : .m<.t> -> ℕ
+	where .m is Sequence
+length = seq -> reduce seq ((+ 1) ∘: const) 0
 
 # Returns a new sequence with the given element added on the front.
 #
@@ -324,8 +324,8 @@ length = seq -> reduce seq ((+ 1) ∘∘∘ const) 0
 # 1 :: [2, 3]
 # # [1, 2, 3]
 # ```
-(::) : `t -> `m<`t> -> `m<`t>
-	where `m is Sequence
+(::) : .t -> .m<.t> -> .m<.t>
+	where .m is Sequence
 
 # Reduce a sequence to a single value by applying a function to each element and
 # passing an accumulator value between each application.
@@ -334,8 +334,8 @@ length = seq -> reduce seq ((+ 1) ∘∘∘ const) 0
 # reduce [1, 2, 3] (+) 0
 # # 6
 # ```
-reduce : `m<`t> -> (`a -> `t -> `a) -> `a -> `a
-	where `m is Sequence
+reduce : .m<.t> -> (.a -> .t -> .a) -> .a -> .a
+	where .m is Sequence
 reduce = seq -> callback -> initial ->
 	case head seq
 	| Some x => reduce (tail seq) callback (callback initial x)
@@ -347,8 +347,8 @@ reduce = seq -> callback -> initial ->
 # reverse [1, 2, 3]
 # # [3, 2, 1]
 # ```
-reverse : `m<`t> -> `m<`t>
-	where `m is Sequence
+reverse : .m<.t> -> .m<.t>
+	where .m is Sequence
 reverse = seq ->
 	reverse_helper = seq' -> acc ->
 		case head seq'
@@ -363,9 +363,9 @@ reverse = seq ->
 # ∑ [1, 2, 3] ι
 # # 6
 # ```
-∑ : `m<`a> -> (`a -> `t) -> `t
-	where `m is Sequence
-∑ = seq -> map -> reduce (seq <$> map) (+) 0
+∑ : .m<.a> -> (.a -> .t) -> .t
+	where .m is Sequence
+∑ = seq -> map -> reduce (seq <$> map) (+) 't.𝟘
 
 # Returns a new sequence with all elements in the input sequence except the
 # first one. If the input sequence is empty, an empty sequence is returned.
@@ -374,8 +374,8 @@ reverse = seq ->
 # tail [1, 2, 3]
 # # [2, 3]
 # ```
-tail : `m<`t> -> `m<`t>
-	where `m is Sequence
+tail : .m<.t> -> .m<.t>
+	where .m is Sequence
 
 # Returns a new sequence which contains all the unique elements of both input
 # sequences.
@@ -384,6 +384,6 @@ tail : `m<`t> -> `m<`t>
 # [1, 2, 3] ∪ [2, 3, 4]
 # # [1, 2, 3, 4]
 # ```
-(∪) : `m<`t> -> `m<`t> -> `m<`t>
-	where `m is Sequence
+(∪) : .m<.t> -> .m<.t> -> .m<.t>
+	where .m is Sequence
 (∪) = a -> b -> a ++ (b \ a)

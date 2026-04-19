@@ -1,7 +1,7 @@
-type Plus<`a> = Alt<`a>
+type Plus<.a> = Alt<.a>
 
-𝟘 : `m<`a>
-	where `m is Plus
+𝟘 : .m<.a>
+	where .m is Plus
 
-(+) : `m<`a> -> `m<`a> -> `m<`a>
-	where `m is Plus
+(+) : .m<.a> -> .m<.a> -> .m<.a>
+	where .m is Plus

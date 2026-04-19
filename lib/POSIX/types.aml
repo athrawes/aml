@@ -1,0 +1,4 @@
+# A reference to an open file via its file descriptor
+type FileDescriptor = u16
+
+type FilePath = u8[]

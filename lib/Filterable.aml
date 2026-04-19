@@ -1,4 +1,4 @@
-type Filterable<`a>
+type Filterable<.a>
 
-filter : `m<`a> -> (`a -> 𝔹) -> `m<`a>
-	where `m is Filterable
+filter : .m<.a> -> (.a -> 𝔹) -> .m<.a>
+	where .m is Filterable

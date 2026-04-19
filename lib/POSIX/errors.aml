@@ -1,0 +1,235 @@
+# A system error has occurred where the argument list sent to a syscall is too
+# long. See E2BIG in ERRNO(7).
+type ArgumentListTooLong
+
+# Access to a file was denied. See EACCES in ERRNO(7).
+type AccessDenied
+
+# The address is already in use. See EADDRINUSE in ERRNO(7).
+type AddressInUse
+
+# The address is not available. See EADDRNOTAVAIL in ERRNO(7).
+type AddressNotAvailable
+
+# The address family is not supported. See EAFNOSUPPORT in ERRNO(7).
+type AddressFamilyNotSupported
+
+# Resource temporarily unavailable. See EAGAIN in ERRNO(7).
+type ResourceTemporarilyUnavailable
+
+# The operation is already in progress. See EALREADY in ERRNO(7).
+type OperationAlreadyInProgress
+
+# Bad file descriptor. See EBADF in ERRNO(7).
+type BadFileDescriptor
+
+# Bad message. See EBADMSG in ERRNO(7).
+type BadMessage
+
+# Device or resource busy. See EBUSY in ERRNO(7).
+type DeviceOrResourceBusy
+
+# Operation canceled. See ECANCELED in ERRNO(7).
+type OperationCancelled
+
+# No child processes. See ECHILD in ERRNO(7).
+type NoChildProcesses
+
+# Connection aborted. See ECONNABORTED in ERRNO(7).
+type ConnectionAborted
+
+# Connection refused. See ECONNREFUSED in ERRNO(7).
+type ConnectionRefused
+
+# Connection reset. See ECONNRESET in ERRNO(7).
+type ConnectionReset
+
+# Resource deadlock would occur. See EDEADLK in ERRNO(7).
+type ResourceDeadlockWouldOccur
+
+# Destination address required. See EDESTADDRREQ in ERRNO(7).
+type DestinationAddressRequired
+
+# Mathematics argument out of domain of function. See EDOM in ERRNO(7).
+type MathematicsArgumentOutOfDomain
+
+# Disk quota exceeded. See EDQUOT in ERRNO(7).
+type DiskQuotaExceeded
+
+# Reserved.
+type Reserved
+
+# File exists. See EEXIST in ERRNO(7).
+type FileExists
+
+# Bad address. See EFAULT in ERRNO(7).
+type BadAddress
+
+# File too large. See EFBIG in ERRNO(7).
+type FileTooLarge
+
+# Host is unreachable. See EHOSTUNREACH in ERRNO(7).
+type HostIsUnreachable
+
+# Identifier removed. See EIDRM in ERRNO(7).
+type IdentifierRemoved
+
+# Illegal byte sequence. See EILSEQ in ERRNO(7).
+type IllegalByteSequence
+
+# Operation in progress. See EINPROGRESS in ERRNO(7).
+type OperationInProgress
+
+# Interrupted function. See EINTR in ERRNO(7).
+type Interrupted
+
+# Invalid argument. See EINVAL in ERRNO(7).
+type InvalidArgument
+
+# I/O error. See EIO in ERRNO(7).
+type GenericIOError
+
+# Socket is connected. See EISCONN in ERRNO(7).
+type SocketIsConnected
+
+# Is a directory. See EISDIR in ERRNO(7).
+type IsADirectory
+
+# Too many levels of symbolic links. See ELOOP in ERRNO(7).
+type TooManyLevelsOfSymbolicLinks
+
+# File descriptor value too large. See EMFILE in ERRNO(7).
+type FileDescriptorValueTooLarge
+
+# Too many links. See EMLINK in ERRNO(7).
+type TooManyLinks
+
+# Message too large. See EMSGSIZE in ERRNO(7).
+type MessageTooLarge
+
+# Reserved. See EMULTIHOP in ERRNO(7).
+type ReservedMultihop
+
+# Filename too long. See ENAMETOOLONG in ERRNO(7).
+type FilenameTooLong
+
+# Network is down. See ENETDOWN in ERRNO(7).
+type NetworkIsDown
+
+# Connection aborted by network. See ENETRESET in ERRNO(7).
+type ConnectionAbortedByNetwork
+
+# Network unreachable. See ENETUNREACH in ERRNO(7).
+type NetworkIsUnreachable
+
+# Too many files open in system. See ENFILE in ERRNO(7).
+type TooManyFilesOpenInSystem
+
+# No buffer space available. See ENOBUFS in ERRNO(7).
+type NoBufferSpaceAvailable
+
+# No such device. See ENODEV in ERRNO(7).
+type NoSuchDevice
+
+# No such file or directory. See ENOENT in ERRNO(7).
+type NoSuchFileOrDirectory
+
+# Executable file format error. See ENOEXEC in ERRNO(7).
+type ExecutableFileFormatError
+
+# No locks available. See ENOLCK in ERRNO(7).
+type NoLocksAvailable
+
+# Reserved. See ENOLINK in ERRNO(7).
+type ReservedNoLink
+
+# Not enough space. See ENOMEM in ERRNO(7).
+type NotEnoughSpace
+
+# No message of the desired type. See ENOMSG in ERRNO(7).
+type NoMessageOfDesiredType
+
+# Protocol not available. See ENOPROTOOPT in ERRNO(7).
+type ProtocolNotAvailable
+
+# No space left on device. See ENOSPC in ERRNO(7).
+type NoSpaceLeftOnDevice
+
+# Function not implemented. See ENOSYS in ERRNO(7).
+type FunctionNotImplemented
+
+# Socket is not connected. See ENOTCONN in ERRNO(7).
+type SocketIsNotConnected
+
+# Not a directory. See ENOTDIR in ERRNO(7).
+type NotADirectory
+
+# Directory not empty. See ENOTEMPTY in ERRNO(7).
+type DirectoryNotEmpty
+
+# Not recoverable. See ENOTRECOVERABLE in ERRNO(7).
+type NotRecoverable
+
+# Not a socket. See ENOTSOCK in ERRNO(7).
+type NotASocket
+
+# Not supported. See ENOTSUP in ERRNO(7).
+type NotSupported
+
+# Inappropriate I/O control operation. See ENOTTY in ERRNO(7).
+type InappropriateIOControlOperation
+
+# No such device or address. See ENXIO in ERRNO(7).
+type NoSuchDeviceOrAddress
+
+# Operation not supported on socket. See EOPNOTSUPP in ERRNO(7).
+type OperationNotSupportedOnSocket
+
+# Value too large to be stored in data type. See EOVERFLOW in ERRNO(7).
+type ValueTooLarge
+
+# Operation not permitted. See EPERM in ERRNO(7).
+type OperationNotPermitted
+
+# Broken pipe. See EPIPE in ERRNO(7).
+type BrokenPipe
+
+# Protocol error. See EPROTO in ERRNO(7).
+type ProtocolError
+
+# Protocol not supported. See EPROTONOSUPPORT in ERRNO(7).
+type ProtocolNotSupported
+
+# Protocol wrong type for socket. See EPROTOTYPE in ERRNO(7).
+type ProtocolWrongTypeForSocket
+
+# Result too large. See ERANGE in ERRNO(7).
+type ResultTooLarge
+
+# Read-only file system. See EROFS in ERRNO(7).
+type ReadOnlyFileSystem
+
+# Invalid seek. See ESPIPE in ERRNO(7).
+type InvalidSeek
+
+# No such process. See ESRCH in ERRNO(7).
+type NoSuchProcess
+
+# Reserved. See ESTALE in ERRNO(7).
+type ReservedStale
+
+# Stream ioctl() timeout. See ETIME in ERRNO(7).
+type StreamIOControlTimeout
+
+# Connection timed out. See ETIMEDOUT in ERRNO(7).
+type ConnectionTimedOut
+
+# Text file busy. See ETXTBSY in ERRNO(7).
+type TextFileBusy
+
+# Operation would block. See EWOULDBLOCK in ERRNO(7).
+type OperationWouldBlock
+
+# Cross-device link. See EXDEV in ERRNO(7).
+type CrossDeviceLink
+

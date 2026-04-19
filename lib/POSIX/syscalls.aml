@@ -1,0 +1,127 @@
+# Wrappers for POSIX.1 system calls (IEEE Std 1003.1-2024)
+
+# Makes a complex number from two 32-bit floating point numbers
+CMPLXF : f32 -> f32 -> ComplexNumber<f32, f32>
+
+# Makes a complex number from two 64-bit floating point numbers
+CMPLX : f64 -> f64 -> ComplexNumber<f64, f64>
+
+# Makes a complex number from two 128-bit floating point numbers
+CMPLXL : f128 -> f128 -> ComplexNumber<f128, f128>
+
+# Returns a FileDescriptorSet without the given FileDescriptor
+FD_CLR : FileDescriptor -> FileDescriptorSet -> FileDescriptorSet
+
+# Shows whether a FileDescriptor is in a FileDescriptorSet
+FD_ISSET : FileDescriptor -> FileDescriptorSet -> bool
+
+# Returns a FileDescriptorSet with the given FileDescriptor added
+FD_SET : FileDescriptor -> FileDescriptorSet -> FileDescriptorSet
+
+# Returns a new empty FileDescriptorSet
+FD_ZERO : FileDescriptorSet
+
+_Exit : int -> never
+_exit : int -> never
+
+type ForkError =
+	| ResourceTemporarilyUnavailable
+	| NotEnoughSpace
+_Fork : () -> IO<ProcessID, ForkError>
+
+a64l : Ref<u8[]> -> int64
+
+abort : () -> never
+
+# Takes the absolute value of a 16-bit signed integer.
+# This is a wrapper for the POSIX abs function.
+#
+# NOTE: Due to the way the POSIX abs function is defined, this function may
+# fail to return a value if the input is the minimum value of a 16-bit signed
+# integer (i.e., -32768). In this case, the function will return None.
+abs : i16 -> Maybe<i16>
+
+type AcceptError
+	| ResourceTemporarilyUnavailable
+	| OperationWouldBlock
+	| BadFileDescriptor
+	| ConnectionAborted
+	| Interrupted
+	| InvalidArgument
+	| TooManyFilesOpenInSystem
+	| NoBufferSpaceAvailable
+	| NotEnoughSpace
+	| NotASocket
+	| OperationNotSupported
+	| ProtocolError
+accept : Socket
+	-> Ref<SocketAddress>
+	-> Maybe<SocketLength>
+	-> IO<FileDescriptor, AcceptError>
+
+# TODO: Fix the SocketOption type with actual values
+type SocketOption
+	| _ of int // SOCK_CLOEXEC
+	| _ of int // SOCK_CLOFORK
+	| _ of int // SOCK_NONBLOCK
+accept4 : Socket
+	-> Ref<SocketAddress>
+	-> Maybe<SocketLength>
+	-> Bitmask<SocketOption>
+	-> IO<FileDescriptor, AcceptError>
+
+type AccessError =
+	| AccessDenied
+	| TooManyLevelsOfSymbolicLinks
+	| FilenameTooLong
+	| NoSuchFileOrDirectory
+	| NotADirectory
+	| ReadOnlyFileSystem
+access : OsPath -> FileAccessMode -> IO<(), AccessError>
+
+# Calculates the arc cosine of a 64-bit number
+acos : f64 -> f64
+
+# Calculates the arc cosine of a 32-bit number
+acosf : f32 -> f32
+
+# Calculates the inverse hyperbolic cosine of a 64-bit number
+acosh : f64 -> f64
+
+# Calculates the inverse hyperbolic cosine of a 32-bit number
+acoshf : f32 -> f32
+
+# Calculates the inverse hyperbolic cosine of a 128-bit number
+acoshl : f128 -> f128
+
+# Calculates the arc cosine of a 128-bit number
+acosl : f128 -> f128
+
+aio_cancel : !!! "TODO: aio_cancel"
+
+type ReadError =
+	| ResourceTemporarilyUnavailable
+	| OperationWouldBlock
+	| BadFileDescriptor
+	| BadAddress
+	| Interrupted
+	| InvalidArgument
+	| GenericIOError
+	| IsDirectory
+read : FileDescriptor -> u16 -> IO<Ref<u8[]>, ReadError>
+
+type WriteError =
+	| ResourceTemporarilyUnavailable
+	| OperationWouldBlock
+	| BadFileDescriptor
+	| DestinationAddressRequired
+	| DiskQuotaExceeded
+	| BadAddress
+	| FileTooLarge
+	| Interrupted
+	| InvalidArgument
+	| GenericIOError
+	| NoSpaceLeftOnDevice
+	| BrokenPipe
+write : FileDescriptor -> Ref<u8[]> -> usize -> IO<usize, WriteError>
+

@@ -1,7 +1,7 @@
-type Monoid<`a> = Appendable<`a>
+type Monoid<.a> = Appendable<.a>
 
 # The empty value for a monoid.
-∅ : `m<`a>
-	where `m is Monoid
+∅ : .m<.a>
+	where .m is Monoid
 
 empty = ∅

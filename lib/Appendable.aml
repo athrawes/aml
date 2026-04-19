@@ -1,5 +1,5 @@
-type Appendable<`a>
+type Appendable<.a>
 
 # Combines two values by appending them together.
-(++) : `m<`a> -> `m<`a> -> `m<`a>
-	where `m is Appendable
+(++) : .m<.a> -> .m<.a> -> .m<.a>
+	where .m is Appendable
